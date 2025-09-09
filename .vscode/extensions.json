@@ -1,0 +1,11 @@
+{
+    "recommendations": [
+        "ms-dotnettools.csharp",
+        "ms-dotnettools.vscode-dotnet-runtime",
+        "visualstudioexptteam.vscodeintellicode",
+        "vscodevim.vim",
+        "k--kato.docomment",
+        "streetsidesoftware.code-spell-checker",
+        "visualstudiotoolsforunity.vstuc"
+    ]
+}

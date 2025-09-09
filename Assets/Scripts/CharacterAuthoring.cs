@@ -1,11 +1,12 @@
-using UnityEngine;
+using Unity.Burst;
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Physics;
-using Unity.Burst;
+using UnityEngine;
 
 namespace Roguelike
 {
+	public struct InitializeCharacterFlag : IComponentData, IEnableableComponent { }
 	public struct CharacterMoveDirection : IComponentData
 	{
 		public float2 value;
@@ -25,8 +26,22 @@ namespace Roguelike
 			public override void Bake(CharacterAuthoring authoring)
 			{
 				var entity = GetEntity(TransformUsageFlags.Dynamic);
+				AddComponent<InitializeCharacterFlag>(entity);
 				AddComponent<CharacterMoveDirection>(entity);
 				AddComponent(entity, new CharacterMoveSpeed { value = authoring.MoveSpeed });
+			}
+		}
+	}
+	[UpdateInGroup(typeof(InitializationSystemGroup))]
+	public partial struct CharacterInitializationSystem : ISystem
+	{
+		[BurstCompile]
+		public void OnUpdate(ref SystemState state)
+		{
+			foreach (var (mass, should_initialize) in SystemAPI.Query<RefRW<PhysicsMass>, EnabledRefRW<InitializeCharacterFlag>>())
+			{
+				mass.ValueRW.InverseInertia = float3.zero;
+				should_initialize.ValueRW = false;
 			}
 		}
 	}

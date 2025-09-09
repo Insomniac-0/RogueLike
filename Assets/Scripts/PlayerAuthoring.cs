@@ -1,10 +1,17 @@
-using UnityEngine;
 using Unity.Entities;
 using Unity.Mathematics;
+using UnityEngine;
 
 namespace Roguelike
 {
 	public struct PlayerTag : IComponentData { }
+
+	public struct CameraTarget : IComponentData
+	{
+		public UnityObjectRef<Transform> CameraTransform;
+	}
+
+	public struct InitializeCameraTargetTag : IComponentData { }
 
 	public class PlayerAuthoring : MonoBehaviour
 	{
@@ -14,6 +21,27 @@ namespace Roguelike
 			{
 				var entity = GetEntity(TransformUsageFlags.Dynamic);
 				AddComponent<PlayerTag>(entity);
+				AddComponent<InitializeCameraTargetTag>(entity);
+				AddComponent<CameraTarget>(entity);
+			}
+		}
+	}
+	[UpdateInGroup(typeof(InitializationSystemGroup))]
+	public partial struct CameraInitializationSystem : ISystem
+	{
+		public void OnCreate(ref SystemState state)
+		{
+			state.RequireForUpdate<InitializeCameraTargetTag>();
+		}
+
+		public void OnUpdate(ref SystemState state)
+		{
+			if (CameraTargetSingelton.Instance == null) return;
+			var camera_target_transform = CameraTargetSingelton.Instance.transform;
+
+			foreach (var camera_target in SystemAPI.Query<RefRW<CameraTarget>>().WithAll<InitializeCameraTargetTag, PlayerTag>())
+			{
+				camera_target.ValueRW.CameraTransform = camera_target_transform;
 			}
 		}
 	}
