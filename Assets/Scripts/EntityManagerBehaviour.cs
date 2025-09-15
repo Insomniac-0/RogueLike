@@ -1,33 +1,40 @@
 using Unity.Collections;
 using Unity.Jobs;
 using Unity.Mathematics;
+using Unity.Physics;
+using UnityEditor;
 using UnityEditor.Experimental.GraphView;
 using UnityEditor.ShaderGraph;
 using UnityEngine;
+using UnityEngine.Analytics;
 using UnityEngine.Rendering;
 
 public class EntityManagerBehaviour : MonoBehaviour
 {
-    [SerializeField]
-    InputBehaviour input_behaviour;
+    [SerializeField] InputBehaviour input_behaviour;
 
-    [SerializeField]
-    Player player_ref;
-    Player player_object;
+    // REFS
+    [SerializeField] Projectile bullet_ref;
+    [SerializeField] Player player_ref;
+    [SerializeField] Enemy enemy_ref;
+
+    // FLOAT
+    [SerializeField] float bullet_speed;
+    [SerializeField] float enemy_speed;
+    [SerializeField] float player_speed;
+
+    // INT
+    [SerializeField] int entity_count;
+    [SerializeField] int bullet_count;
 
 
-    [SerializeField]
-    int entity_count;
-
-    [SerializeField]
-    Enemy enemy_ref;
-    Enemy[] enemy_objects;
-
-    [SerializeField]
-    float enemy_speed;
-
-    [SerializeField]
-    float player_speed;
+    // TYPES
+    enum EntityType
+    {
+        PLAYER,
+        ENEMY,
+        PROJECTILE,
+    }
 
     struct Entity
     {
@@ -35,21 +42,28 @@ public class EntityManagerBehaviour : MonoBehaviour
         public float3 direction;
         public float3 position;
         public float speed;
+        public bool active;
     }
 
+
+    // ARRAYS
+    Enemy[] enemy_objects;
+    Projectile[] bullet_objects;
+
     NativeArray<Entity> entities;
+    NativeArray<Entity> bullet_entities;
 
     NativeArray<float> delta_time;
+
     NativeArray<float3> player_position;
 
-    Entity player_entity;
-    Vector3 mouse_position;
 
+    Entity player_entity;
+    Player player_object;
     float3 RED, GREEN, BLUE;
 
     private void Awake()
     {
-        Cursor.visible = true;
         Cursor.lockState = CursorLockMode.Confined;
 
         player_object = Instantiate(player_ref);
@@ -64,16 +78,15 @@ public class EntityManagerBehaviour : MonoBehaviour
         player_entity.speed = player_speed;
         player_entity.color = BLUE;
 
-
-
-
         entities = new NativeArray<Entity>(entity_count, Allocator.Persistent);
+        bullet_entities = new NativeArray<Entity>(bullet_count, Allocator.Persistent);
 
         delta_time = new NativeArray<float>(1, Allocator.Persistent);
         player_position = new NativeArray<float3>(1, Allocator.Persistent);
 
 
         enemy_objects = new Enemy[entity_count];
+        bullet_objects = new Projectile[bullet_count];
 
         for (int i = 0; i < enemy_objects.Length; i++)
         {
@@ -82,6 +95,7 @@ public class EntityManagerBehaviour : MonoBehaviour
                 UnityEngine.Random.Range(-20f, 20f),
                 UnityEngine.Random.Range(-20f, 20f),
                 0);
+            enemy_objects[i].gameObject.SetActive(true);
         }
 
 
@@ -93,12 +107,10 @@ public class EntityManagerBehaviour : MonoBehaviour
             entity.direction = float3.zero;
             entity.speed = enemy_speed;
             entity.color = RED;
+            entity.active = true;
 
             entities[i] = entity;
         }
-
-
-
     }
 
     private void OnDestroy()
@@ -106,6 +118,7 @@ public class EntityManagerBehaviour : MonoBehaviour
         entities.Dispose();
         delta_time.Dispose();
         player_position.Dispose();
+        bullet_entities.Dispose();
     }
 
 
@@ -123,6 +136,9 @@ public class EntityManagerBehaviour : MonoBehaviour
         player_position[0] = player_object.GetPosition();
 
 
+
+
+
         EntityMovementJob entity_job = new EntityMovementJob
         {
             entities = entities,
@@ -131,22 +147,29 @@ public class EntityManagerBehaviour : MonoBehaviour
 
         };
 
+
         JobHandle handle = entity_job.Schedule(entity_count, 16);
 
         handle.Complete();
 
+
         for (int i = 0; i < entity_count; i++)
         {
+            if (!entities[i].active) continue;
             enemy_objects[i].SetPosition(entities[i].position);
             enemy_objects[i].SetColor(entities[i].color);
 
         }
 
         player_entity.direction.xy = input_behaviour.GetMoveDirection();
-        player_entity.position += player_entity.direction * Time.deltaTime * player_entity.speed;
+        player_entity.position += math.normalizesafe(player_entity.direction) * Time.deltaTime * player_entity.speed;
         player_object.SetPosition(player_entity.position);
         player_object.SetColor(player_entity.color);
+        Camera.main.transform.position = player_object.GetPosition();
     }
+
+
+
 
 
     struct EntityMovementJob : IJobParallelFor
@@ -163,6 +186,8 @@ public class EntityManagerBehaviour : MonoBehaviour
         public void Execute(int index)
         {
             Entity entity = entities[index];
+
+            if (!entity.active) return;
 
             entity.direction = math.normalizesafe(player_position[0] - entity.position);
             entity.position += entity.direction * entity.speed * delta_time[0];

@@ -25,9 +25,27 @@
                     "initialStateCheck": true
                 },
                 {
-                    "name": "MouseButton",
+                    "name": "Shoot",
                     "type": "Button",
                     "id": "34434598-a3f2-4a96-b9be-86aecdf37021",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "AltShoot",
+                    "type": "Button",
+                    "id": "62fa9405-8c07-422c-9ca6-fbb0fbd0870d",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Ability",
+                    "type": "Button",
+                    "id": "31cb01fb-a5b1-4660-97b3-a440311b5d03",
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
@@ -108,18 +126,29 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "MouseButton",
+                    "action": "Shoot",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
                 {
                     "name": "",
-                    "id": "21a6297a-57f7-439d-8526-6c23f48d4203",
+                    "id": "2898d8aa-c638-44df-a982-24367cfc7647",
                     "path": "<Mouse>/rightButton",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "MouseButton",
+                    "action": "AltShoot",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "ab22b9cd-9065-41df-9a9d-41ede059898a",
+                    "path": "<Keyboard>/space",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Ability",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

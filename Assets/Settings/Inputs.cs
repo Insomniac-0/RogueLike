@@ -111,9 +111,27 @@ public partial class @Inputs: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": true
                 },
                 {
-                    ""name"": ""MouseButton"",
+                    ""name"": ""Shoot"",
                     ""type"": ""Button"",
                     ""id"": ""34434598-a3f2-4a96-b9be-86aecdf37021"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""AltShoot"",
+                    ""type"": ""Button"",
+                    ""id"": ""62fa9405-8c07-422c-9ca6-fbb0fbd0870d"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Ability"",
+                    ""type"": ""Button"",
+                    ""id"": ""31cb01fb-a5b1-4660-97b3-a440311b5d03"",
                     ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
@@ -194,18 +212,29 @@ public partial class @Inputs: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""MouseButton"",
+                    ""action"": ""Shoot"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
                 {
                     ""name"": """",
-                    ""id"": ""21a6297a-57f7-439d-8526-6c23f48d4203"",
+                    ""id"": ""2898d8aa-c638-44df-a982-24367cfc7647"",
                     ""path"": ""<Mouse>/rightButton"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""MouseButton"",
+                    ""action"": ""AltShoot"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""ab22b9cd-9065-41df-9a9d-41ede059898a"",
+                    ""path"": ""<Keyboard>/space"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Ability"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -218,7 +247,9 @@ public partial class @Inputs: IInputActionCollection2, IDisposable
         m_PlayerActions = asset.FindActionMap("PlayerActions", throwIfNotFound: true);
         m_PlayerActions_MousePosition = m_PlayerActions.FindAction("MousePosition", throwIfNotFound: true);
         m_PlayerActions_Move = m_PlayerActions.FindAction("Move", throwIfNotFound: true);
-        m_PlayerActions_MouseButton = m_PlayerActions.FindAction("MouseButton", throwIfNotFound: true);
+        m_PlayerActions_Shoot = m_PlayerActions.FindAction("Shoot", throwIfNotFound: true);
+        m_PlayerActions_AltShoot = m_PlayerActions.FindAction("AltShoot", throwIfNotFound: true);
+        m_PlayerActions_Ability = m_PlayerActions.FindAction("Ability", throwIfNotFound: true);
     }
 
     ~@Inputs()
@@ -301,7 +332,9 @@ public partial class @Inputs: IInputActionCollection2, IDisposable
     private List<IPlayerActionsActions> m_PlayerActionsActionsCallbackInterfaces = new List<IPlayerActionsActions>();
     private readonly InputAction m_PlayerActions_MousePosition;
     private readonly InputAction m_PlayerActions_Move;
-    private readonly InputAction m_PlayerActions_MouseButton;
+    private readonly InputAction m_PlayerActions_Shoot;
+    private readonly InputAction m_PlayerActions_AltShoot;
+    private readonly InputAction m_PlayerActions_Ability;
     /// <summary>
     /// Provides access to input actions defined in input action map "PlayerActions".
     /// </summary>
@@ -322,9 +355,17 @@ public partial class @Inputs: IInputActionCollection2, IDisposable
         /// </summary>
         public InputAction @Move => m_Wrapper.m_PlayerActions_Move;
         /// <summary>
-        /// Provides access to the underlying input action "PlayerActions/MouseButton".
+        /// Provides access to the underlying input action "PlayerActions/Shoot".
         /// </summary>
-        public InputAction @MouseButton => m_Wrapper.m_PlayerActions_MouseButton;
+        public InputAction @Shoot => m_Wrapper.m_PlayerActions_Shoot;
+        /// <summary>
+        /// Provides access to the underlying input action "PlayerActions/AltShoot".
+        /// </summary>
+        public InputAction @AltShoot => m_Wrapper.m_PlayerActions_AltShoot;
+        /// <summary>
+        /// Provides access to the underlying input action "PlayerActions/Ability".
+        /// </summary>
+        public InputAction @Ability => m_Wrapper.m_PlayerActions_Ability;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -357,9 +398,15 @@ public partial class @Inputs: IInputActionCollection2, IDisposable
             @Move.started += instance.OnMove;
             @Move.performed += instance.OnMove;
             @Move.canceled += instance.OnMove;
-            @MouseButton.started += instance.OnMouseButton;
-            @MouseButton.performed += instance.OnMouseButton;
-            @MouseButton.canceled += instance.OnMouseButton;
+            @Shoot.started += instance.OnShoot;
+            @Shoot.performed += instance.OnShoot;
+            @Shoot.canceled += instance.OnShoot;
+            @AltShoot.started += instance.OnAltShoot;
+            @AltShoot.performed += instance.OnAltShoot;
+            @AltShoot.canceled += instance.OnAltShoot;
+            @Ability.started += instance.OnAbility;
+            @Ability.performed += instance.OnAbility;
+            @Ability.canceled += instance.OnAbility;
         }
 
         /// <summary>
@@ -377,9 +424,15 @@ public partial class @Inputs: IInputActionCollection2, IDisposable
             @Move.started -= instance.OnMove;
             @Move.performed -= instance.OnMove;
             @Move.canceled -= instance.OnMove;
-            @MouseButton.started -= instance.OnMouseButton;
-            @MouseButton.performed -= instance.OnMouseButton;
-            @MouseButton.canceled -= instance.OnMouseButton;
+            @Shoot.started -= instance.OnShoot;
+            @Shoot.performed -= instance.OnShoot;
+            @Shoot.canceled -= instance.OnShoot;
+            @AltShoot.started -= instance.OnAltShoot;
+            @AltShoot.performed -= instance.OnAltShoot;
+            @AltShoot.canceled -= instance.OnAltShoot;
+            @Ability.started -= instance.OnAbility;
+            @Ability.performed -= instance.OnAbility;
+            @Ability.canceled -= instance.OnAbility;
         }
 
         /// <summary>
@@ -435,11 +488,25 @@ public partial class @Inputs: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnMove(InputAction.CallbackContext context);
         /// <summary>
-        /// Method invoked when associated input action "MouseButton" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// Method invoked when associated input action "Shoot" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
         /// </summary>
         /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
-        void OnMouseButton(InputAction.CallbackContext context);
+        void OnShoot(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "AltShoot" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnAltShoot(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "Ability" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnAbility(InputAction.CallbackContext context);
     }
 }
