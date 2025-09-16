@@ -1,0 +1,32 @@
+boundingbox(entity e)
+{
+    entities sorted by x;
+
+    e.min = e.pos - radius;
+    e.max = e.pos + radius;
+    add entities where other.min < e.max; to collision group
+}
+
+
+
+
+# Object pooling
+
+
+
+Queue<Index> ??
+int active_count
+
+entities[]
+entity_objects[]
+
+index = q.dequeue()
+
+Entity entity = entities[index]
+
+void Spawn()
+{
+    entity.pos = spawn_pos;
+    entity.dir = spawn_dir;
+    entity.speed = spawn_speed;
+}

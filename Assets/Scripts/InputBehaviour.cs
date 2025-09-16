@@ -9,8 +9,8 @@ public class InputBehaviour : MonoBehaviour
     Camera cam;
 
     private Inputs inputs;
-    private Vector2 mouse_position;
-    private Vector2 move_direction;
+    private float2 mouse_position;
+    private float2 move_direction;
 
     public event Action OnShoot;
     public event Action OnAltShoot;
@@ -19,6 +19,7 @@ public class InputBehaviour : MonoBehaviour
     void Awake()
     {
         inputs = new Inputs();
+        cam = Camera.main;
 
 
         inputs.PlayerActions.MousePosition.performed += (e) => mouse_position = e.ReadValue<Vector2>();
@@ -36,9 +37,9 @@ public class InputBehaviour : MonoBehaviour
     private void OnDisable() => inputs.Disable();
 
 
-    public Vector2 GetMoveDirection() => move_direction;
+    public float3 GetMoveDirection() => new float3(move_direction.xy, 0);
 
-    public Vector2 GetMousePositionSS() => mouse_position;
-    public float3 GetMousePositionWS() => cam.ScreenToWorldPoint(new float3(mouse_position.x, mouse_position.y, 0f));
+    public float2 GetMousePositionSS() => mouse_position;
+    public float3 GetMousePositionWS() => cam.ScreenToWorldPoint(new float3(mouse_position.xy, 0f));
 
 }

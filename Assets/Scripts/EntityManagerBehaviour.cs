@@ -1,17 +1,28 @@
+using System;
+using System.Runtime.CompilerServices;
+using Unity.Burst;
 using Unity.Collections;
+using Unity.Collections.LowLevel.Unsafe;
+using Unity.Entities;
 using Unity.Jobs;
 using Unity.Mathematics;
 using Unity.Physics;
+using Unity.VisualScripting;
 using UnityEditor;
+using UnityEditor.Build.Pipeline.Utilities;
 using UnityEditor.Experimental.GraphView;
 using UnityEditor.ShaderGraph;
 using UnityEngine;
 using UnityEngine.Analytics;
+using UnityEngine.InputSystem;
 using UnityEngine.Rendering;
+using UnityEngine.Splines;
 
-public class EntityManagerBehaviour : MonoBehaviour
+[BurstCompile]
+public unsafe class EntityManagerBehaviour : MonoBehaviour
 {
     [SerializeField] InputBehaviour input_behaviour;
+
 
     // REFS
     [SerializeField] Projectile bullet_ref;
@@ -19,13 +30,13 @@ public class EntityManagerBehaviour : MonoBehaviour
     [SerializeField] Enemy enemy_ref;
 
     // FLOAT
-    [SerializeField] float bullet_speed;
+    [SerializeField] float projectile_speed;
     [SerializeField] float enemy_speed;
     [SerializeField] float player_speed;
 
     // INT
     [SerializeField] int entity_count;
-    [SerializeField] int bullet_count;
+    [SerializeField] int projectile_count;
 
 
     // TYPES
@@ -41,29 +52,39 @@ public class EntityManagerBehaviour : MonoBehaviour
         public float3 color;
         public float3 direction;
         public float3 position;
+        public float3 velocity;
         public float speed;
         public bool active;
     }
 
-
     // ARRAYS
     Enemy[] enemy_objects;
-    Projectile[] bullet_objects;
+    Projectile[] projectile_objects;
 
     NativeArray<Entity> entities;
-    NativeArray<Entity> bullet_entities;
+    NativeArray<Entity> projectiles;
+    //NativeArray<Entity> bullet_entities;
 
     NativeArray<float> delta_time;
-
     NativeArray<float3> player_position;
+
+
+    // QUEUES
+    NativeQueue<int> enemy_pool;
+    NativeQueue<int> projectile_index;
 
 
     Entity player_entity;
     Player player_object;
     float3 RED, GREEN, BLUE;
 
+    float3 mouse_pos;
+
     private void Awake()
     {
+        input_behaviour.OnAbility += SpawnEntity;
+        input_behaviour.OnShoot += SpawnBullet;
+        Span<int> asd = stackalloc int[5];
         Cursor.lockState = CursorLockMode.Confined;
 
         player_object = Instantiate(player_ref);
@@ -72,6 +93,11 @@ public class EntityManagerBehaviour : MonoBehaviour
         GREEN = new float3(0f, 1f, 0f);
         BLUE = new float3(0f, 0f, 1f);
 
+        NativeList<int> ints = new(Allocator.Persistent);
+        ints.AsDeferredJobArray();
+
+        //Entity* lmao = (Entity*)entities.GetUnsafePtr();
+
         player_object.transform.position = new Vector3(0f, 0f, 0f);
         player_entity.position = player_object.transform.position;
         player_entity.direction = float3.zero;
@@ -79,25 +105,44 @@ public class EntityManagerBehaviour : MonoBehaviour
         player_entity.color = BLUE;
 
         entities = new NativeArray<Entity>(entity_count, Allocator.Persistent);
-        bullet_entities = new NativeArray<Entity>(bullet_count, Allocator.Persistent);
+        projectiles = new NativeArray<Entity>(projectile_count, Allocator.Persistent);
+
+        enemy_pool = new NativeQueue<int>(Allocator.Persistent);
+        projectile_index = new NativeQueue<int>(Allocator.Persistent);
+
+
+
+
 
         delta_time = new NativeArray<float>(1, Allocator.Persistent);
         player_position = new NativeArray<float3>(1, Allocator.Persistent);
 
 
         enemy_objects = new Enemy[entity_count];
-        bullet_objects = new Projectile[bullet_count];
+        projectile_objects = new Projectile[projectile_count];
+        //bullet_objects = new Projectile[bullet_count];
 
         for (int i = 0; i < enemy_objects.Length; i++)
         {
             enemy_objects[i] = Instantiate(enemy_ref);
-            enemy_objects[i].transform.position = new Vector3(
-                UnityEngine.Random.Range(-20f, 20f),
-                UnityEngine.Random.Range(-20f, 20f),
-                0);
-            enemy_objects[i].gameObject.SetActive(true);
+            enemy_objects[i].transform.position = float3.zero;
+            enemy_objects[i].gameObject.SetActive(false);
+
+            enemy_pool.Enqueue(i);
         }
 
+        for (int i = 0; i < projectile_count; i++)
+        {
+            projectile_objects[i] = Instantiate(bullet_ref);
+            projectile_objects[i].transform.position = float3.zero;
+            projectile_objects[i].gameObject.SetActive(false);
+
+            Entity e = projectiles[i];
+            e.active = false;
+            projectiles[i] = e;
+
+            projectile_index.Enqueue(i);
+        }
 
         for (int i = 0; i < entity_count; i++)
         {
@@ -107,7 +152,7 @@ public class EntityManagerBehaviour : MonoBehaviour
             entity.direction = float3.zero;
             entity.speed = enemy_speed;
             entity.color = RED;
-            entity.active = true;
+            entity.active = false;
 
             entities[i] = entity;
         }
@@ -118,7 +163,8 @@ public class EntityManagerBehaviour : MonoBehaviour
         entities.Dispose();
         delta_time.Dispose();
         player_position.Dispose();
-        bullet_entities.Dispose();
+        enemy_pool.Dispose();
+        projectiles.Dispose();
     }
 
 
@@ -128,13 +174,17 @@ public class EntityManagerBehaviour : MonoBehaviour
         QualitySettings.vSyncCount = -1;
     }
 
-    void Update()
+
+    [MethodImpl(MethodImplOptions.NoOptimization)]
+    void FixedUpdate()
     {
 
 
-        delta_time[0] = Time.deltaTime;
-        player_position[0] = player_object.GetPosition();
 
+        player_position[0] = player_object.GetPosition();
+        mouse_pos = input_behaviour.GetMousePositionWS();
+        mouse_pos.z = 0;
+        delta_time[0] = Time.deltaTime;
 
 
 
@@ -147,31 +197,66 @@ public class EntityManagerBehaviour : MonoBehaviour
 
         };
 
+        float3 a, b, c;
+        a = float3.zero;
+        b = 1f;
+        c = 2f;
+        ComputeFunnyNumber(ref a, ref b, ref c);
 
         JobHandle handle = entity_job.Schedule(entity_count, 16);
 
         handle.Complete();
 
-
-        for (int i = 0; i < entity_count; i++)
+        for (int i = 0; i < projectile_count; i++)
         {
-            if (!entities[i].active) continue;
-            enemy_objects[i].SetPosition(entities[i].position);
-            enemy_objects[i].SetColor(entities[i].color);
+            Entity* ptr = &((Entity*)entities.GetUnsafePtr())[i];
+            if (!ptr->active) continue;
+            projectile_objects[i].SetPosition(ptr->position);
 
         }
 
-        player_entity.direction.xy = input_behaviour.GetMoveDirection();
+        for (int i = 0; i < entity_count; i++)
+        {
+            Entity* ptr = &((Entity*)entities.GetUnsafePtr())[i];
+            if (!ptr->active) continue;
+
+
+
+            enemy_objects[i].SetVelocity(ptr->velocity);
+            enemy_objects[i].SetColor(ptr->color);
+
+            ptr->position = enemy_objects[i].GetPosition();
+
+            // enemy_objects[i].SetVelocity(entities[i].velocity);
+            // enemy_objects[i].SetColor(entities[i].color);
+
+            // Entity entity = entities[i];
+
+            // entity.position = enemy_objects[i].GetPosition();
+
+            // entities[i] = entity;
+
+        }
+
+        player_entity.direction = input_behaviour.GetMoveDirection();
         player_entity.position += math.normalizesafe(player_entity.direction) * Time.deltaTime * player_entity.speed;
         player_object.SetPosition(player_entity.position);
         player_object.SetColor(player_entity.color);
         Camera.main.transform.position = player_object.GetPosition();
+
     }
 
 
 
 
 
+    [BurstCompile(FloatMode = FloatMode.Fast, FloatPrecision = FloatPrecision.Low)]
+    public static void ComputeFunnyNumber(ref float3 output, ref float3 a, ref float3 b)
+    {
+        float3 intermediate = a / b;
+        output *= intermediate;
+    }
+    [BurstCompile]
     struct EntityMovementJob : IJobParallelFor
     {
         [NativeDisableParallelForRestriction]
@@ -185,15 +270,56 @@ public class EntityManagerBehaviour : MonoBehaviour
 
         public void Execute(int index)
         {
-            Entity entity = entities[index];
+            Entity* ptr = &((Entity*)entities.GetUnsafePtr())[index];
 
-            if (!entity.active) return;
 
-            entity.direction = math.normalizesafe(player_position[0] - entity.position);
-            entity.position += entity.direction * entity.speed * delta_time[0];
+            if (!ptr->active) return;
+            ptr->direction = math.normalizesafe(player_position[0] - ptr->position);
+            ptr->velocity = ptr->direction * ptr->speed;
 
-            entities[index] = entity;
+            //Entity entity = entities[index];
+            // entity.direction = math.normalizesafe(player_position[0] - entity.position);
+            // entity.velocity = entity.direction * entity.speed;
+            //entities[index] = entity;
         }
+    }
+
+    public void SpawnEntity()
+    {
+        int index = enemy_pool.Dequeue();
+
+
+        Entity entity = entities[index];
+
+        entity.position = float3.zero;
+        enemy_objects[index].SetPosition(float3.zero);
+
+        enemy_objects[index].gameObject.SetActive(true);
+        entity.active = true;
+
+        entities[index] = entity;
+    }
+
+    public void SpawnBullet()
+    {
+
+        int index = projectile_index.Dequeue();
+        Entity projectile = projectiles[index];
+        projectile.speed = projectile_speed;
+        projectile.position = player_entity.position;
+        projectile.position.z = 0;
+        projectile.direction = mouse_pos - projectile.position;
+        Debug.Log(mouse_pos);
+        projectile.velocity = projectile.direction * projectile.speed;
+        projectile.active = true;
+
+        projectiles[index] = projectile;
+
+
+        projectile_objects[index].gameObject.SetActive(true);
+        projectile_objects[index].SetPosition(projectile.position);
+
+
     }
 
 }

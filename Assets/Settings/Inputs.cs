@@ -72,7 +72,7 @@ using UnityEngine.InputSystem.Utilities;
 /// }
 /// </code>
 /// </example>
-public partial class @Inputs: IInputActionCollection2, IDisposable
+public partial class @Inputs : IInputActionCollection2, IDisposable
 {
     /// <summary>
     /// Provides access to the underlying asset instance.
@@ -96,7 +96,7 @@ public partial class @Inputs: IInputActionCollection2, IDisposable
                     ""name"": ""MousePosition"",
                     ""type"": ""Value"",
                     ""id"": ""8c0ff79c-cf16-4bd2-88f7-b68318e3c7b6"",
-                    ""expectedControlType"": ""Vector3"",
+                    ""expectedControlType"": ""Vector2"",
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true

@@ -1,0 +1,37 @@
+FEATURES
+
+[ ] - Player:
+    [ ] - Combat
+    [ ] - Upgrades
+    [ ] - Movement
+    [ ] - UI
+    [ ] - Camera
+
+====================
+
+[ ] - Enemies
+    [ ] - Spawning
+    [ ] - Movement
+    [ ] - Enemy Types (min 2)
+
+====================
+
+[ ] - Achitecture
+    [ ] - States
+        [ ] - Game Over
+        [ ] - Pause
+        [ ] - Main Menu
+        [ ] - Settings
+    [ ] - Progression
+        [ ] - 
+        [ ] - 
+
+====================
+
+
+[ ] - 
+
+
+
+
+[ ] - Projectile system

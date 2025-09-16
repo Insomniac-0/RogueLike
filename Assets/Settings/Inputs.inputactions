@@ -10,7 +10,7 @@
                     "name": "MousePosition",
                     "type": "Value",
                     "id": "8c0ff79c-cf16-4bd2-88f7-b68318e3c7b6",
-                    "expectedControlType": "Vector3",
+                    "expectedControlType": "Vector2",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": true
