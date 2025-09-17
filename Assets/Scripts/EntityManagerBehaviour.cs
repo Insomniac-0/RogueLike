@@ -25,18 +25,15 @@ public unsafe class EntityManagerBehaviour : MonoBehaviour
 
 
     // REFS
-    [SerializeField] Projectile bullet_ref;
     [SerializeField] Player player_ref;
     [SerializeField] Enemy enemy_ref;
 
     // FLOAT
-    [SerializeField] float projectile_speed;
     [SerializeField] float enemy_speed;
     [SerializeField] float player_speed;
 
     // INT
     [SerializeField] int entity_count;
-    [SerializeField] int projectile_count;
 
 
     // TYPES
@@ -59,10 +56,8 @@ public unsafe class EntityManagerBehaviour : MonoBehaviour
 
     // ARRAYS
     Enemy[] enemy_objects;
-    Projectile[] projectile_objects;
 
     NativeArray<Entity> entities;
-    NativeArray<Entity> projectiles;
     //NativeArray<Entity> bullet_entities;
 
     NativeArray<float> delta_time;
@@ -71,7 +66,6 @@ public unsafe class EntityManagerBehaviour : MonoBehaviour
 
     // QUEUES
     NativeQueue<int> enemy_pool;
-    NativeQueue<int> projectile_index;
 
 
     Entity player_entity;
@@ -83,7 +77,6 @@ public unsafe class EntityManagerBehaviour : MonoBehaviour
     private void Awake()
     {
         input_behaviour.OnAbility += SpawnEntity;
-        input_behaviour.OnShoot += SpawnBullet;
         Span<int> asd = stackalloc int[5];
         Cursor.lockState = CursorLockMode.Confined;
 
@@ -105,10 +98,8 @@ public unsafe class EntityManagerBehaviour : MonoBehaviour
         player_entity.color = BLUE;
 
         entities = new NativeArray<Entity>(entity_count, Allocator.Persistent);
-        projectiles = new NativeArray<Entity>(projectile_count, Allocator.Persistent);
 
         enemy_pool = new NativeQueue<int>(Allocator.Persistent);
-        projectile_index = new NativeQueue<int>(Allocator.Persistent);
 
 
 
@@ -119,8 +110,6 @@ public unsafe class EntityManagerBehaviour : MonoBehaviour
 
 
         enemy_objects = new Enemy[entity_count];
-        projectile_objects = new Projectile[projectile_count];
-        //bullet_objects = new Projectile[bullet_count];
 
         for (int i = 0; i < enemy_objects.Length; i++)
         {
@@ -131,18 +120,6 @@ public unsafe class EntityManagerBehaviour : MonoBehaviour
             enemy_pool.Enqueue(i);
         }
 
-        for (int i = 0; i < projectile_count; i++)
-        {
-            projectile_objects[i] = Instantiate(bullet_ref);
-            projectile_objects[i].transform.position = float3.zero;
-            projectile_objects[i].gameObject.SetActive(false);
-
-            Entity e = projectiles[i];
-            e.active = false;
-            projectiles[i] = e;
-
-            projectile_index.Enqueue(i);
-        }
 
         for (int i = 0; i < entity_count; i++)
         {
@@ -164,7 +141,6 @@ public unsafe class EntityManagerBehaviour : MonoBehaviour
         delta_time.Dispose();
         player_position.Dispose();
         enemy_pool.Dispose();
-        projectiles.Dispose();
     }
 
 
@@ -175,7 +151,6 @@ public unsafe class EntityManagerBehaviour : MonoBehaviour
     }
 
 
-    [MethodImpl(MethodImplOptions.NoOptimization)]
     void FixedUpdate()
     {
 
@@ -207,14 +182,6 @@ public unsafe class EntityManagerBehaviour : MonoBehaviour
 
         handle.Complete();
 
-        for (int i = 0; i < projectile_count; i++)
-        {
-            Entity* ptr = &((Entity*)entities.GetUnsafePtr())[i];
-            if (!ptr->active) continue;
-            projectile_objects[i].SetPosition(ptr->position);
-
-        }
-
         for (int i = 0; i < entity_count; i++)
         {
             Entity* ptr = &((Entity*)entities.GetUnsafePtr())[i];
@@ -242,7 +209,6 @@ public unsafe class EntityManagerBehaviour : MonoBehaviour
         player_entity.position += math.normalizesafe(player_entity.direction) * Time.deltaTime * player_entity.speed;
         player_object.SetPosition(player_entity.position);
         player_object.SetColor(player_entity.color);
-        Camera.main.transform.position = player_object.GetPosition();
 
     }
 
@@ -300,26 +266,5 @@ public unsafe class EntityManagerBehaviour : MonoBehaviour
         entities[index] = entity;
     }
 
-    public void SpawnBullet()
-    {
-
-        int index = projectile_index.Dequeue();
-        Entity projectile = projectiles[index];
-        projectile.speed = projectile_speed;
-        projectile.position = player_entity.position;
-        projectile.position.z = 0;
-        projectile.direction = mouse_pos - projectile.position;
-        Debug.Log(mouse_pos);
-        projectile.velocity = projectile.direction * projectile.speed;
-        projectile.active = true;
-
-        projectiles[index] = projectile;
-
-
-        projectile_objects[index].gameObject.SetActive(true);
-        projectile_objects[index].SetPosition(projectile.position);
-
-
-    }
 
 }

@@ -5,12 +5,15 @@ using UnityEngine.InputSystem;
 
 public class InputBehaviour : MonoBehaviour
 {
+
     [SerializeField]
     Camera cam;
 
-    private Inputs inputs;
+
     private float2 mouse_position;
     private float2 move_direction;
+
+    private Inputs inputs;
 
     public event Action OnShoot;
     public event Action OnAltShoot;
@@ -19,13 +22,12 @@ public class InputBehaviour : MonoBehaviour
     void Awake()
     {
         inputs = new Inputs();
-        cam = Camera.main;
 
 
         inputs.PlayerActions.MousePosition.performed += (e) => mouse_position = e.ReadValue<Vector2>();
 
         inputs.PlayerActions.Move.performed += (e) => move_direction = e.ReadValue<Vector2>();
-        inputs.PlayerActions.Move.canceled += (e) => move_direction = Vector2.zero;
+        inputs.PlayerActions.Move.canceled += _ => move_direction = float2.zero;
 
 
         inputs.PlayerActions.Shoot.performed += _ => OnShoot?.Invoke();

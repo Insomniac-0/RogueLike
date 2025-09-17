@@ -1,6 +1,6 @@
 FEATURES
 
-[ ] - Player:
+[/] - Player:
     [ ] - Combat
     [ ] - Upgrades
     [ ] - Movement
@@ -9,9 +9,9 @@ FEATURES
 
 ====================
 
-[ ] - Enemies
-    [ ] - Spawning
-    [ ] - Movement
+[/] - Enemies
+    [/] - Spawning
+    [/] - Movement
     [ ] - Enemy Types (min 2)
 
 ====================
@@ -32,6 +32,7 @@ FEATURES
 [ ] - 
 
 
+/ = WIP
+X = DONE
 
-
-[ ] - Projectile system
+[/] - Projectile system -
