@@ -671,7 +671,7 @@ CircleCollider2D:
   m_CompositeOperation: 0
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0}
-  m_Radius: 0.5
+  m_Radius: 0.35
 --- !u!50 &1401951788
 Rigidbody2D:
   serializedVersion: 5
@@ -698,7 +698,7 @@ Rigidbody2D:
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 1
-  m_Constraints: 0
+  m_Constraints: 4
 --- !u!114 &1401951789
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -714,9 +714,7 @@ MonoBehaviour:
   input_behaviour: {fileID: 236379323}
   sprites:
   - {fileID: 3349441569774732530, guid: 25910881a918f5f99a92e524ea4cd153, type: 3}
-  - {fileID: -3674885411524541699, guid: 25910881a918f5f99a92e524ea4cd153, type: 3}
   - {fileID: -6156793392640731306, guid: 25910881a918f5f99a92e524ea4cd153, type: 3}
-  - {fileID: 1171718068070361783, guid: 25910881a918f5f99a92e524ea4cd153, type: 3}
 --- !u!212 &1401951790
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -764,7 +762,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: 3349441569774732530, guid: 25910881a918f5f99a92e524ea4cd153, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -772,7 +770,7 @@ SpriteRenderer:
   m_Size: {x: 1, y: 1}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 0
+  m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!1 &1473395319

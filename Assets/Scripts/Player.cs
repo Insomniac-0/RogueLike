@@ -42,6 +42,7 @@ public class Player : MonoBehaviour
     public void UpdateDirection()
     {
         sprite_renderer.sprite = sprites[(int)input_behaviour.player_direction];
+        sprite_renderer.flipX = input_behaviour.flip;
     }
     public void Shoot()
     {

@@ -24,26 +24,27 @@ public class InputBehaviour : MonoBehaviour
 
     public enum Direction
     {
-        DOWN_RIGHT,
-        DOWN_LEFT,
-        UP_RIGHT,
-        UP_LEFT
+        UP,
+        DOWN,
     }
-
+    private int _direction;
+    public bool flip;
     public Direction player_direction;
     void Awake()
     {
         inputs = new Inputs();
+        _direction = 0;
         inputs.PlayerActions.MousePosition.performed += (e) => mouse_position = e.ReadValue<Vector2>();
-        player_direction = Direction.DOWN_LEFT;
 
         inputs.PlayerActions.Move.performed += (e) =>
         {
             move_direction = e.ReadValue<Vector2>();
-            if (move_direction.x > 0 && move_direction.y < 0) player_direction = Direction.DOWN_LEFT;
-            if (move_direction.x < 0 && move_direction.y < 0) player_direction = Direction.DOWN_RIGHT;
-            if (move_direction.x > 0 && move_direction.y > 0) player_direction = Direction.UP_LEFT;
-            if (move_direction.x < 0 && move_direction.y > 0) player_direction = Direction.UP_RIGHT;
+            if (move_direction.y < 0) _direction = 0;
+            if (move_direction.y > 0) _direction = (_direction + 1) % 2;
+            if (move_direction.x < 0) flip = true;
+            if (move_direction.x > 0) flip = false;
+
+            player_direction = (Direction)_direction;
             OnMove?.Invoke();
         };
 
