@@ -1,7 +1,6 @@
 using System;
 using System.Runtime.CompilerServices;
 using System.Runtime.ExceptionServices;
-using gthf;
 using Unity.Collections;
 using Unity.Collections.LowLevel.Unsafe;
 using Unity.Entities;
@@ -11,6 +10,7 @@ using Unity.VisualScripting;
 using UnityEditor.Build.Pipeline.Utilities;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
+using UnityEngine.Rendering.Universal;
 using UnityEngine.UIElements;
 
 public unsafe class ProjectileManager : MonoBehaviour
@@ -22,6 +22,11 @@ public unsafe class ProjectileManager : MonoBehaviour
 
     float delta_time;
 
+    float shoot_coldown;
+
+    float fire_rate;
+
+    float3 mouse_pos;
 
 
     // Unsafe.Read<Projectile>(ptr->obj_ptr).gameObject.SetActive(false);
@@ -30,38 +35,43 @@ public unsafe class ProjectileManager : MonoBehaviour
 
 
     // TYPES
-    struct S_Projectile
+    struct ProjectileData
     {
         public float3 position;
         public float3 direction;
-        public void* obj_ptr;
         public float speed;
+        public float lifetime;
         public bool active;
     }
 
 
     // ARRAYS
-    NativeArray<S_Projectile> projectiles;
+    NativeArray<ProjectileData> projectiles;
+
+    Projectile[] p_objects;
 
 
     private void Awake()
     {
-        input.OnAbility += SpawnProjectile;
-        projectiles = new NativeArray<S_Projectile>(projectile_count, Allocator.Persistent);
+        shoot_coldown = 0f;
+        fire_rate = 3f;
+        projectiles = new NativeArray<ProjectileData>(projectile_count, Allocator.Persistent);
+        p_objects = new Projectile[projectile_count];
 
         for (int i = 0; i < projectile_count; i++)
         {
+            // Objects
             Projectile p = Instantiate(projectile_ref);
             p.transform.position = Vector3.zero;
             p.gameObject.SetActive(false);
+            p_objects[i] = p;
 
-
-            S_Projectile* ptr = &((S_Projectile*)projectiles.GetUnsafePtr())[i];
+            // Data
+            ProjectileData* ptr = &((ProjectileData*)projectiles.GetUnsafePtr())[i];
             ptr->position = float3.zero;
             ptr->direction = float3.zero;
             ptr->speed = 0;
             ptr->active = false;
-            ptr->obj_ptr = Unsafe.AsPointer(ref p);
         }
     }
 
@@ -73,7 +83,18 @@ public unsafe class ProjectileManager : MonoBehaviour
 
     void Update()
     {
+        mouse_pos = input.GetMousePositionWS();
+        mouse_pos.z = 0;
         delta_time = Time.deltaTime;
+        shoot_coldown -= delta_time;
+
+        float3 direction = math.normalizesafe(mouse_pos - float3.zero);
+
+        if (input.is_shooting && shoot_coldown <= 0f)
+        {
+            SpawnProjectile(direction);
+            shoot_coldown = 1f / fire_rate;
+        }
 
         ProjectileMovementJob projectile_job = new ProjectileMovementJob
         {
@@ -87,44 +108,57 @@ public unsafe class ProjectileManager : MonoBehaviour
 
         for (int i = 0; i < projectile_count; i++)
         {
-            S_Projectile* ptr = &((S_Projectile*)projectiles.GetUnsafePtr())[i];
+            ProjectileData* ptr = &((ProjectileData*)projectiles.GetUnsafePtr())[i];
             if (!ptr->active) continue;
-            Unsafe.Read<Projectile>(ptr->obj_ptr).SetPosition(ptr->position);
+
+            if (ptr->lifetime > 0f)
+            {
+                p_objects[i].SetPosition(ptr->position);
+                ptr->lifetime -= delta_time;
+
+            }
+            else
+            {
+                ptr->active = false;
+                p_objects[i].gameObject.SetActive(false);
+            }
+
         }
+
     }
 
 
 
     struct ProjectileMovementJob : IJobParallelFor
     {
-        public NativeArray<S_Projectile> projectiles;
+        public NativeArray<ProjectileData> projectiles;
         public float delta_time;
 
         public void Execute(int index)
         {
-            S_Projectile* ptr = &((S_Projectile*)projectiles.GetUnsafePtr())[index];
+            ProjectileData* ptr = &((ProjectileData*)projectiles.GetUnsafePtr())[index];
             if (!ptr->active) return;
             ptr->position += ptr->direction * ptr->speed * delta_time;
-
         }
     }
 
-    public void SpawnProjectile()
+    public void SpawnProjectile(float3 dir)
     {
-        Debug.Log("PEWPEW");
         for (int i = 0; i < projectile_count; i++)
         {
             if (!projectiles[i].active)
             {
-                S_Projectile* ptr = &((S_Projectile*)projectiles.GetUnsafePtr())[i];
+                ProjectileData* ptr = &((ProjectileData*)projectiles.GetUnsafePtr())[i];
                 ptr->speed = 20;
+                ptr->lifetime = 2f;
                 ptr->position = float3.zero;
-                ptr->direction = math.normalizesafe(input.GetMousePositionWS() - ptr->position);
+                ptr->direction = dir;
                 ptr->active = true;
-                Unsafe.Read<Projectile>(ptr->obj_ptr).gameObject.SetActive(true);
+                p_objects[i].gameObject.SetActive(true);
+
+                return;
             }
         }
-        Debug.Log("No Inactive projectiles");
     }
 }
 

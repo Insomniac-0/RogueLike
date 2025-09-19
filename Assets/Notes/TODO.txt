@@ -33,6 +33,8 @@ FEATURES
 
 
 / = WIP
+~ ON HOLD
 X = DONE
 
-[/] - Projectile system -
+[~] - Projectile system - Structure is done
+[/] - Sprite Direction - Fix Direction logic (SR LATCH MBY??)

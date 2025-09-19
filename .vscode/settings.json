@@ -66,8 +66,11 @@
     "explorer.fileNesting.patterns": {
         "*.sln": "*.csproj"
     },
-    "dotnet.defaultSolution": "RogueLike.sln",
+    "dotnet.defaultSolution": "Roguelike.sln",
     "cSpell.words": [
-        "behaviour"
+        "behaviour",
+        "coldown",
+        "normalizesafe",
+        "Rigidbody"
     ]
 }

@@ -1,11 +1,15 @@
 using System;
 using System.Runtime.CompilerServices;
 using Unity.Mathematics;
+using Unity.VisualScripting;
 using UnityEngine;
 
+[RequireComponent(typeof(SpriteRenderer))]
+[RequireComponent(typeof(Rigidbody2D))]
 public class Player : MonoBehaviour
 {
     [SerializeField] InputBehaviour input_behaviour;
+    [SerializeField] Sprite[] sprites;
 
     private Rigidbody2D rb;
     private SpriteRenderer sprite_renderer;
@@ -14,29 +18,31 @@ public class Player : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
         sprite_renderer = GetComponent<SpriteRenderer>();
+        input_behaviour.OnMove += UpdateDirection;
     }
-
-    public float3 GetPosition() => transform.position;
-
-    public void SetColor(float3 color) => sprite_renderer.color = new Color(color.x, color.y, color.z);
-    public void SetPosition(float3 pos) => transform.position = pos;
-    public void SetVelocity(float3 velocity) => rb.linearVelocity = velocity.xy;
-
 
     private void OnEnable()
     {
-        input_behaviour.OnShoot += Shoot;
         input_behaviour.OnAltShoot += AltShoot;
         input_behaviour.OnAbility += UseAbility;
     }
 
     private void OnDisable()
     {
-        input_behaviour.OnShoot -= Shoot;
         input_behaviour.OnAltShoot -= AltShoot;
         input_behaviour.OnAbility -= UseAbility;
     }
 
+    public float3 GetPosition() => transform.position;
+    public void SetColor(float3 color) => sprite_renderer.color = new Color(color.x, color.y, color.z);
+    public void SetPosition(float3 pos) => transform.position = pos;
+    public void SetVelocity(float3 velocity) => rb.linearVelocity = velocity.xy;
+
+
+    public void UpdateDirection()
+    {
+        sprite_renderer.sprite = sprites[(int)input_behaviour.player_direction];
+    }
     public void Shoot()
     {
         Debug.Log("Shoot");

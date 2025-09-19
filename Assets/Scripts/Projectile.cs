@@ -3,8 +3,6 @@ using UnityEngine;
 
 public class Projectile : MonoBehaviour
 {
-
-
     private SpriteRenderer sprite_renderer;
 
     public float3 GetPosition() => transform.position;
@@ -15,5 +13,10 @@ public class Projectile : MonoBehaviour
     void Awake()
     {
         sprite_renderer = GetComponent<SpriteRenderer>();
+    }
+
+    void OnTriggerEnter2D(Collider2D collision)
+    {
+
     }
 }

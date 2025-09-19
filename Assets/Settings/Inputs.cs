@@ -72,7 +72,7 @@ using UnityEngine.InputSystem.Utilities;
 /// }
 /// </code>
 /// </example>
-public partial class @Inputs : IInputActionCollection2, IDisposable
+public partial class @Inputs: IInputActionCollection2, IDisposable
 {
     /// <summary>
     /// Provides access to the underlying asset instance.
@@ -116,7 +116,7 @@ public partial class @Inputs : IInputActionCollection2, IDisposable
                     ""id"": ""34434598-a3f2-4a96-b9be-86aecdf37021"",
                     ""expectedControlType"": """",
                     ""processors"": """",
-                    ""interactions"": """",
+                    ""interactions"": ""Hold"",
                     ""initialStateCheck"": false
                 },
                 {
