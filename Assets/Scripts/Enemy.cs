@@ -5,8 +5,11 @@ using UnityEngine.UIElements;
 
 public class Enemy : MonoBehaviour
 {
+    [SerializeField] public float Health;
+
     private Rigidbody2D rb;
     private SpriteRenderer sprite_renderer;
+
     void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -22,6 +25,7 @@ public class Enemy : MonoBehaviour
 
     public void TakeDamage(float dmg)
     {
+        Health -= dmg;
         Debug.Log(dmg + " Taken");
     }
 }

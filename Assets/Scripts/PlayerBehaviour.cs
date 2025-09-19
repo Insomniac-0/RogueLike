@@ -11,9 +11,6 @@ public class PlayerBehaviour : MonoBehaviour
 
 
     // TYPES
-    enum Gun
-    {
-    }
     struct PlayerData
     {
         public float3 position;

@@ -17,6 +17,7 @@ public unsafe class ProjectileManager : MonoBehaviour
 {
     [SerializeField] InputBehaviour input;
     [SerializeField] Projectile projectile_ref;
+    [SerializeField] Player player;
 
     [SerializeField] int projectile_count;
 
@@ -88,11 +89,10 @@ public unsafe class ProjectileManager : MonoBehaviour
         delta_time = Time.deltaTime;
         shoot_coldown -= delta_time;
 
-        float3 direction = math.normalizesafe(mouse_pos - float3.zero);
 
         if (input.is_shooting && shoot_coldown <= 0f)
         {
-            SpawnProjectile(direction);
+            SpawnProjectile(player.GetPosition(), mouse_pos);
             shoot_coldown = 1f / fire_rate;
         }
 
@@ -111,10 +111,11 @@ public unsafe class ProjectileManager : MonoBehaviour
             ProjectileData* ptr = &((ProjectileData*)projectiles.GetUnsafePtr())[i];
             if (!ptr->active) continue;
 
-            if (ptr->lifetime > 0f)
+            if (ptr->lifetime > 0f && p_objects[i].hits > 0)
             {
                 p_objects[i].SetPosition(ptr->position);
                 ptr->lifetime -= delta_time;
+
 
             }
             else
@@ -142,7 +143,7 @@ public unsafe class ProjectileManager : MonoBehaviour
         }
     }
 
-    public void SpawnProjectile(float3 dir)
+    public void SpawnProjectile(float3 src, float3 target)
     {
         for (int i = 0; i < projectile_count; i++)
         {
@@ -151,10 +152,12 @@ public unsafe class ProjectileManager : MonoBehaviour
                 ProjectileData* ptr = &((ProjectileData*)projectiles.GetUnsafePtr())[i];
                 ptr->speed = 20;
                 ptr->lifetime = 2f;
-                ptr->position = float3.zero;
-                ptr->direction = dir;
+                ptr->position = src;
+                ptr->direction = math.normalizesafe(target - src);
                 ptr->active = true;
                 p_objects[i].gameObject.SetActive(true);
+                p_objects[i].hits = 1;
+                p_objects[i].Collided = false;
 
                 return;
             }

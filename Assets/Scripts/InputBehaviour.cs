@@ -1,5 +1,7 @@
 using System;
 using Unity.Mathematics;
+using Unity.VisualScripting;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Pool;
@@ -10,7 +12,6 @@ public class InputBehaviour : MonoBehaviour
     [SerializeField]
     Camera cam;
 
-
     private float2 mouse_position;
     private float2 move_direction;
 
@@ -20,31 +21,33 @@ public class InputBehaviour : MonoBehaviour
     public event Action OnAbility;
     public event Action OnMove;
 
+    enum HorizontalDir
+    {
+        RIGHT,
+        LEFT
+    }
+
     public bool is_shooting;
 
-    public enum Direction
-    {
-        UP,
-        DOWN,
-    }
-    private int _direction;
     public bool flip;
-    public Direction player_direction;
+    public int sprite_index;
+    HorizontalDir current;
+
     void Awake()
     {
         inputs = new Inputs();
-        _direction = 0;
+        sprite_index = 0;
         inputs.PlayerActions.MousePosition.performed += (e) => mouse_position = e.ReadValue<Vector2>();
+        current = HorizontalDir.RIGHT;
 
         inputs.PlayerActions.Move.performed += (e) =>
         {
             move_direction = e.ReadValue<Vector2>();
-            if (move_direction.y < 0) _direction = 0;
-            if (move_direction.y > 0) _direction = (_direction + 1) % 2;
-            if (move_direction.x < 0) flip = true;
+            if (move_direction.x < 0 && current != HorizontalDir.LEFT) flip = true;
             if (move_direction.x > 0) flip = false;
 
-            player_direction = (Direction)_direction;
+            if (move_direction.y > 0) sprite_index = 1;
+            if (move_direction.y < 0) sprite_index = 0;
             OnMove?.Invoke();
         };
 
@@ -59,7 +62,6 @@ public class InputBehaviour : MonoBehaviour
 
     private void OnEnable() => inputs.PlayerActions.Enable();
     private void OnDisable() => inputs.PlayerActions.Disable();
-
 
     public float3 GetMoveDirection() => new(move_direction.xy, 0);
 

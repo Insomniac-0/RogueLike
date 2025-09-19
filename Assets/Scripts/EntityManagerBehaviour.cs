@@ -99,7 +99,6 @@ public unsafe class EntityManagerBehaviour : MonoBehaviour
             ptr->position = enemy_objects[i].transform.position;
             ptr->direction = float3.zero;
             ptr->speed = enemy_speed;
-            ptr->color = RED;
             ptr->active = false;
 
         }
@@ -146,14 +145,17 @@ public unsafe class EntityManagerBehaviour : MonoBehaviour
             Entity* ptr = &((Entity*)entities.GetUnsafePtr())[i];
             if (!ptr->active) continue;
 
-
-
-            enemy_objects[i].SetVelocity(ptr->velocity);
-            enemy_objects[i].SetColor(ptr->color);
-
-            ptr->position = enemy_objects[i].GetPosition();
-
-
+            if (enemy_objects[i].Health < 0)
+            {
+                ptr->active = false;
+                enemy_objects[i].gameObject.SetActive(false);
+                enemy_pool.Enqueue(i);
+            }
+            else
+            {
+                enemy_objects[i].SetVelocity(ptr->velocity);
+                ptr->position = enemy_objects[i].GetPosition();
+            }
         }
     }
 

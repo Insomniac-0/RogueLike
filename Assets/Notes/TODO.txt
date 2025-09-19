@@ -1,9 +1,16 @@
-FEATURES
+/ = WIP
+~ ON HOLD
+X = DONE
+
+[ ] - 
+
+
+FEATURES G
 
 [/] - Player:
     [ ] - Combat
     [ ] - Upgrades
-    [ ] - Movement
+    [X] - Movement
     [ ] - UI
     [ ] - Camera
 
@@ -29,12 +36,25 @@ FEATURES
 ====================
 
 
-[ ] - 
 
 
-/ = WIP
-~ ON HOLD
-X = DONE
+[/] - Achitecture
+    [ ] - Data
+    [ ] -
 
-[~] - Projectile system - Structure is done
-[/] - Sprite Direction - Fix Direction logic (SR LATCH MBY??)
+
+
+
+[ ] - Collision system
+    [ ] -
+    [ ] -
+
+[/] - Projectile system
+    [X] - Movement
+    [X] - Collision Detection
+    [ ] - Collision Resolution
+    [ ] - 
+    
+
+
+[X] - Sprite Direction - 

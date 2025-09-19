@@ -11,11 +11,14 @@ public class Player : MonoBehaviour
     [SerializeField] InputBehaviour input_behaviour;
     [SerializeField] Sprite[] sprites;
 
+    public float Health;
+
     private Rigidbody2D rb;
     private SpriteRenderer sprite_renderer;
 
     void Awake()
     {
+        Health = 100f;
         rb = GetComponent<Rigidbody2D>();
         sprite_renderer = GetComponent<SpriteRenderer>();
         input_behaviour.OnMove += UpdateDirection;
@@ -41,7 +44,7 @@ public class Player : MonoBehaviour
 
     public void UpdateDirection()
     {
-        sprite_renderer.sprite = sprites[(int)input_behaviour.player_direction];
+        sprite_renderer.sprite = sprites[input_behaviour.sprite_index];
         sprite_renderer.flipX = input_behaviour.flip;
     }
     public void Shoot()
