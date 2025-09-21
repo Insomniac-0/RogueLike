@@ -5,13 +5,20 @@ using UnityEngine.UIElements;
 
 public class Enemy : MonoBehaviour
 {
+    [SerializeField] private EnemyData enemy_blueprint;
     [SerializeField] public float Health;
+
+    public int id;
+    private float _current_healh;
+    private float _movement_speed;
 
     private Rigidbody2D rb;
     private SpriteRenderer sprite_renderer;
 
     void Awake()
     {
+        _current_healh = enemy_blueprint.MaxHealth;
+        _movement_speed = enemy_blueprint.MovementSpeed;
         rb = GetComponent<Rigidbody2D>();
         sprite_renderer = GetComponent<SpriteRenderer>();
     }

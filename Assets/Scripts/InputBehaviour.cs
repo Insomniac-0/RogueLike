@@ -20,6 +20,7 @@ public class InputBehaviour : MonoBehaviour
     public event Action OnAltShoot;
     public event Action OnAbility;
     public event Action OnMove;
+    public event Action OnMoveStop;
 
     enum HorizontalDir
     {
@@ -30,13 +31,11 @@ public class InputBehaviour : MonoBehaviour
     public bool is_shooting;
 
     public bool flip;
-    public int sprite_index;
     HorizontalDir current;
 
     void Awake()
     {
         inputs = new Inputs();
-        sprite_index = 0;
         inputs.PlayerActions.MousePosition.performed += (e) => mouse_position = e.ReadValue<Vector2>();
         current = HorizontalDir.RIGHT;
 
@@ -45,13 +44,14 @@ public class InputBehaviour : MonoBehaviour
             move_direction = e.ReadValue<Vector2>();
             if (move_direction.x < 0 && current != HorizontalDir.LEFT) flip = true;
             if (move_direction.x > 0) flip = false;
-
-            if (move_direction.y > 0) sprite_index = 1;
-            if (move_direction.y < 0) sprite_index = 0;
             OnMove?.Invoke();
         };
 
-        inputs.PlayerActions.Move.canceled += _ => move_direction = float2.zero;
+        inputs.PlayerActions.Move.canceled += _ =>
+        {
+            move_direction = float2.zero;
+            OnMoveStop?.Invoke();
+        };
 
 
         inputs.PlayerActions.Shoot.started += _ => is_shooting = true;
