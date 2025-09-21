@@ -73,7 +73,7 @@ public unsafe class EntityManagerBehaviour : MonoBehaviour
     private void Awake()
     {
         input_behaviour.OnAbility += SpawnEntity;
-        Cursor.lockState = CursorLockMode.Confined;
+
 
         RED = new float3(1f, 0f, 0f);
         GREEN = new float3(0f, 1f, 0f);

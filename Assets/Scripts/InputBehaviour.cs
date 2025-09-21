@@ -36,6 +36,10 @@ public class InputBehaviour : MonoBehaviour
     void Awake()
     {
         inputs = new Inputs();
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Confined;
+
+
         inputs.PlayerActions.MousePosition.performed += (e) => mouse_position = e.ReadValue<Vector2>();
         current = HorizontalDir.RIGHT;
 
