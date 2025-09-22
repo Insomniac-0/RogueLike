@@ -121,7 +121,7 @@ public unsafe class EntityManagerBehaviour : MonoBehaviour
     void FixedUpdate()
     {
         player_position = player.GetPosition();
-        mouse_pos = input_behaviour.GetMousePositionWS();
+        mouse_pos.xy = GameData.MousePosition;
         mouse_pos.z = 0;
         delta_time = Time.deltaTime;
 

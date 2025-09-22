@@ -7,6 +7,6 @@ public class CursorBehaviour : MonoBehaviour
 
     void Update()
     {
-        transform.position = new float3(input.GetMousePositionWS().xy, 0);
+        transform.position = new float3(GameData.MousePosition.xy, 0);
     }
 }

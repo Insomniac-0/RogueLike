@@ -8,9 +8,10 @@ using UnityEngine.Pool;
 
 public class InputBehaviour : MonoBehaviour
 {
+    [SerializeField] GlobalData global_data;
+    [SerializeField] Camera cam;
 
-    [SerializeField]
-    Camera cam;
+    GameManager game_manager;
 
     private float2 mouse_position;
     private float2 move_direction;
@@ -36,16 +37,16 @@ public class InputBehaviour : MonoBehaviour
     void Awake()
     {
         inputs = new Inputs();
+        current = HorizontalDir.RIGHT;
+
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Confined;
 
-
-        inputs.PlayerActions.MousePosition.performed += (e) => mouse_position = e.ReadValue<Vector2>();
-        current = HorizontalDir.RIGHT;
+        inputs.PlayerActions.MousePosition.performed += (e) => GameData.MousePosition = e.ReadValue<Vector2>();
 
         inputs.PlayerActions.Move.performed += (e) =>
         {
-            move_direction = e.ReadValue<Vector2>();
+            GameData.PlayerMoveDirection = e.ReadValue<Vector2>();
             if (move_direction.x < 0 && current != HorizontalDir.LEFT) flip = true;
             if (move_direction.x > 0) flip = false;
             OnMove?.Invoke();
@@ -53,7 +54,7 @@ public class InputBehaviour : MonoBehaviour
 
         inputs.PlayerActions.Move.canceled += _ =>
         {
-            move_direction = float2.zero;
+            GameData.PlayerMoveDirection = float2.zero;
             OnMoveStop?.Invoke();
         };
 

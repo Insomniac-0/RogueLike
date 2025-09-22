@@ -15,7 +15,7 @@ using UnityEngine.UIElements;
 
 public unsafe class ProjectileManager : MonoBehaviour
 {
-    [SerializeField] InputBehaviour input;
+
     [SerializeField] Projectile projectile_ref;
     [SerializeField] Player player;
 
@@ -84,13 +84,13 @@ public unsafe class ProjectileManager : MonoBehaviour
 
     void Update()
     {
-        mouse_pos = input.GetMousePositionWS();
+        mouse_pos.xy = GameData.MousePosition;
         mouse_pos.z = 0;
         delta_time = Time.deltaTime;
         shoot_coldown -= delta_time;
 
 
-        if (input.is_shooting && shoot_coldown <= 0f)
+        if (GameData.IsShooting && shoot_coldown <= 0f)
         {
             SpawnProjectile(player.GetPosition(), mouse_pos);
             shoot_coldown = 1f / fire_rate;

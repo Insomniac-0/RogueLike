@@ -881,6 +881,10 @@ PrefabInstance:
       propertyPath: cursor
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 7315786087296158929, guid: a0f4e4e78ed5e60b095b58279b76602f, type: 3}
+      propertyPath: global_data
+      value: 
+      objectReference: {fileID: 11400000, guid: d2a9c5d0fa789f24ea7cca5bc24d526b, type: 2}
     - target: {fileID: 7866398618738597131, guid: a0f4e4e78ed5e60b095b58279b76602f, type: 3}
       propertyPath: m_Name
       value: InputManager
@@ -1278,7 +1282,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a38aa0e92fa3a4f4796fa71a262e0f1b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ProjectileManager
-  input: {fileID: 236379323}
   projectile_ref: {fileID: -8366603719214645405, guid: 55bddd82c76b966fb99bfeccb0302516, type: 3}
   player: {fileID: 1401951789}
   projectile_count: 100
