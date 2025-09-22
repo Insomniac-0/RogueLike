@@ -23,7 +23,7 @@ public unsafe class EntityManagerBehaviour : MonoBehaviour
 {
     [SerializeField] InputBehaviour input_behaviour;
     [SerializeField] Player player;
-
+    [SerializeField] Float3Variable player_position;
 
     // REFS
     [SerializeField] Enemy enemy_ref;
@@ -59,7 +59,6 @@ public unsafe class EntityManagerBehaviour : MonoBehaviour
 
 
     float delta_time;
-    float3 player_position;
 
 
     // QUEUES
@@ -120,7 +119,6 @@ public unsafe class EntityManagerBehaviour : MonoBehaviour
 
     void FixedUpdate()
     {
-        player_position = player.GetPosition();
         mouse_pos.xy = GameData.MousePosition;
         mouse_pos.z = 0;
         delta_time = Time.deltaTime;
@@ -132,7 +130,7 @@ public unsafe class EntityManagerBehaviour : MonoBehaviour
         {
             entities = entities,
             delta_time = delta_time,
-            player_position = player_position,
+            player_position = player_position.Value,
 
         };
 

@@ -1,15 +1,20 @@
 using System;
+using System.Diagnostics;
 using Unity.Mathematics;
 using Unity.VisualScripting;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.iOS;
 using UnityEngine.Pool;
 
-public class InputBehaviour : MonoBehaviour
+public class InputReader : MonoBehaviour
 {
+    [SerializeField] Float2EventChannel _channel;
     [SerializeField] GlobalData global_data;
     [SerializeField] Camera cam;
+
+
 
     GameManager game_manager;
 
@@ -23,32 +28,48 @@ public class InputBehaviour : MonoBehaviour
     public event Action OnMove;
     public event Action OnMoveStop;
 
-    enum HorizontalDir
-    {
-        RIGHT,
-        LEFT
-    }
 
+    public enum PlayerMoveDirection
+    {
+        E,
+        NE,
+        N,
+        NW,
+        W,
+        SW,
+        S,
+        SE,
+    }
+    public PlayerMoveDirection current_direction;
     public bool is_shooting;
 
+
     public bool flip;
-    HorizontalDir current;
 
     void Awake()
     {
         inputs = new Inputs();
-        current = HorizontalDir.RIGHT;
 
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Confined;
 
-        inputs.PlayerActions.MousePosition.performed += (e) => GameData.MousePosition = e.ReadValue<Vector2>();
+        inputs.PlayerActions.MousePosition.performed += (e) =>
+        {
+            float2 mouse_position = e.ReadValue<Vector2>();
+            float2 direction = mouse_position - GameData.PlayerPosition.xy;
+            float angle_rad = math.atan2(direction.y, direction.x);
+            float angle_deg = angle_rad * (180 / math.PI);
+            if (angle_deg < 0) angle_deg += 360;
+
+            int dir = (int)((angle_deg + 22.5f) / 45.0f) % 8;
+            current_direction = (PlayerMoveDirection)dir;
+
+            GameData.MousePosition = e.ReadValue<Vector2>();
+        };
 
         inputs.PlayerActions.Move.performed += (e) =>
         {
-            GameData.PlayerMoveDirection = e.ReadValue<Vector2>();
-            if (move_direction.x < 0 && current != HorizontalDir.LEFT) flip = true;
-            if (move_direction.x > 0) flip = false;
+            move_direction = e.ReadValue<Vector2>();
             OnMove?.Invoke();
         };
 

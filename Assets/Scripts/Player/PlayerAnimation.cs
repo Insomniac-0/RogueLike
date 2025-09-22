@@ -1,18 +1,60 @@
 using System;
 using GameUtilities.Sprites;
 using Unity.Mathematics;
+using Unity.VisualScripting.Antlr3.Runtime;
 using UnityEngine;
 using UnityEngine.U2D;
 
 public class PlayerAnimation : MonoBehaviour
 {
     [SerializeField] private SpriteAtlas _player_atlas;
-    [SerializeField] InputBehaviour input_behaviour;
+    [SerializeField] InputReader input_reader;
+
+    // MAGE
+    [SerializeField] private Sprite[] _idle_frames_S;
+    [SerializeField] private Sprite[] _walk_frames_S;
+    [SerializeField] private Sprite[] _attack_frames_S;
+
+    [SerializeField] private Sprite[] _idle_frames_SW;
+    [SerializeField] private Sprite[] _walk_frames_SW;
+    [SerializeField] private Sprite[] _attack_frames_SW;
+
+
+    [SerializeField] private Sprite[] _idle_frames_W;
+    [SerializeField] private Sprite[] _walk_frames_W;
+    [SerializeField] private Sprite[] _attack_frames_W;
+
+    [SerializeField] private Sprite[] _idle_frames_NW;
+    [SerializeField] private Sprite[] _walk_frames_NW;
+    [SerializeField] private Sprite[] _attack_frames_NW;
+
+    [SerializeField] private Sprite[] _idle_frames_N;
+    [SerializeField] private Sprite[] _walk_frames_N;
+    [SerializeField] private Sprite[] _attack_frames_N;
+
+    [SerializeField] private Sprite[] _idle_frames_NE;
+    [SerializeField] private Sprite[] _walk_frames_NE;
+    [SerializeField] private Sprite[] _attack_frames_NE;
+
+    [SerializeField] private Sprite[] _idle_frames_E;
+    [SerializeField] private Sprite[] _walk_frames_E;
+    [SerializeField] private Sprite[] _attack_frames_E;
+
+    [SerializeField] private Sprite[] _idle_frames_SE;
+    [SerializeField] private Sprite[] _walk_frames_SE;
+    [SerializeField] private Sprite[] _attack_frames_SE;
+
+
+
+
+
+
+
+
 
     private SpriteRenderer _sprite_renderer;
     private Sprite[] _idle_frames;
     private Sprite[] _walking_frames;
-
 
 
     enum AnimationState
@@ -42,33 +84,141 @@ public class PlayerAnimation : MonoBehaviour
 
 
 
-        input_behaviour.OnMove += UpdateDirection;
-        input_behaviour.OnMoveStop += SetIdle;
+        input_reader.OnMove += UpdateDirection;
+        input_reader.OnMoveStop += SetIdle;
     }
 
     void Update()
     {
         animation_timer += Time.deltaTime;
-        switch (animation_state)
+        switch (input_reader.current_direction)
         {
-            case AnimationState.IDLE:
-                current_index = (int)(animation_timer * animation_FPS) % frame_count;
-                _sprite_renderer.sprite = _idle_frames[current_index];
-                break;
-            case AnimationState.WALK:
-                current_index = (int)(animation_timer * animation_FPS) % frame_count;
-                _sprite_renderer.sprite = _walking_frames[current_index];
+            case InputReader.PlayerMoveDirection.E:
+                switch (animation_state)
+                {
+                    case AnimationState.IDLE:
+                        break;
+                    case AnimationState.WALK:
+                        break;
+                    case AnimationState.ATTACK:
+                        break;
+                    default:
+                        break;
+                }
                 break;
 
+            case InputReader.PlayerMoveDirection.NE:
+                switch (animation_state)
+                {
+                    case AnimationState.IDLE:
+                        break;
+                    case AnimationState.WALK:
+                        break;
+                    case AnimationState.ATTACK:
+                        break;
+                    default:
+                        break;
+                }
+                break;
+
+            case InputReader.PlayerMoveDirection.N:
+                switch (animation_state)
+                {
+                    case AnimationState.IDLE:
+                        break;
+                    case AnimationState.WALK:
+                        break;
+                    case AnimationState.ATTACK:
+                        break;
+                    default:
+                        break;
+                }
+                break;
+
+            case InputReader.PlayerMoveDirection.NW:
+                switch (animation_state)
+                {
+                    case AnimationState.IDLE:
+                        break;
+                    case AnimationState.WALK:
+                        break;
+                    case AnimationState.ATTACK:
+                        break;
+                    default:
+                        break;
+                }
+                break;
+
+            case InputReader.PlayerMoveDirection.W:
+                switch (animation_state)
+                {
+                    case AnimationState.IDLE:
+                        break;
+                    case AnimationState.WALK:
+                        break;
+                    case AnimationState.ATTACK:
+                        break;
+                    default:
+                        break;
+                }
+                break;
+
+            case InputReader.PlayerMoveDirection.SW:
+                switch (animation_state)
+                {
+                    case AnimationState.IDLE:
+                        break;
+                    case AnimationState.WALK:
+                        break;
+                    case AnimationState.ATTACK:
+                        break;
+                    default:
+                        break;
+                }
+                break;
+
+            case InputReader.PlayerMoveDirection.S:
+                switch (animation_state)
+                {
+                    case AnimationState.IDLE:
+                        break;
+                    case AnimationState.WALK:
+                        break;
+                    case AnimationState.ATTACK:
+                        break;
+                    default:
+                        break;
+                }
+                break;
+
+            case InputReader.PlayerMoveDirection.SE:
+                switch (animation_state)
+                {
+                    case AnimationState.IDLE:
+                        break;
+                    case AnimationState.WALK:
+                        break;
+                    case AnimationState.ATTACK:
+                        break;
+                    default:
+                        break;
+                }
+                break;
             default:
                 break;
         }
+
+            current_index = (int)(animation_timer * animation_FPS) % frame_count;
+            _sprite_renderer.sprite = _idle_frames[current_index];
+            current_index = (int)(animation_timer * animation_FPS) % frame_count;
+            _sprite_renderer.sprite = _walking_frames[current_index];
+
     }
 
     public void UpdateDirection()
     {
         animation_state = AnimationState.WALK;
-        _sprite_renderer.flipX = input_behaviour.flip;
+        _sprite_renderer.flipX = input_reader.flip;
     }
     public void SetIdle()
     {

@@ -10,7 +10,7 @@ using UnityEngine.U2D;
 [RequireComponent(typeof(Rigidbody2D))]
 public class Player : MonoBehaviour
 {
-    [SerializeField] InputBehaviour input_behaviour;
+    [SerializeField] private Float3Variable player_location;
     // 4
     public float Health;
 
@@ -28,7 +28,6 @@ public class Player : MonoBehaviour
     private void OnDisable()
     {
     }
-
     public float3 GetPosition() => transform.position;
     //public void SetColor(float3 color) => _sprite_renderer.color = new Color(color.x, color.y, color.z);
     public void SetPosition(float3 pos) => transform.position = pos;
