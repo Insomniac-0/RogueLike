@@ -1,12 +1,14 @@
+using System.Linq.Expressions;
 using Unity.Mathematics;
 using UnityEngine;
 
 public class CursorBehaviour : MonoBehaviour
 {
-    [SerializeField] InputBehaviour input;
+    [SerializeField] InputReader _input;
 
     void Update()
     {
-        transform.position = new float3(GameData.MousePosition.xy, 0);
+        transform.position = new float3(_input.GetMousePositionWS().xy, 0f);
     }
+
 }

@@ -45,13 +45,6 @@ public class PlayerAnimation : MonoBehaviour
     [SerializeField] private Sprite[] _attack_frames_SE;
 
 
-
-
-
-
-
-
-
     private SpriteRenderer _sprite_renderer;
     private Sprite[] _idle_frames;
     private Sprite[] _walking_frames;
@@ -78,7 +71,7 @@ public class PlayerAnimation : MonoBehaviour
         _walking_frames = SpriteHelper.LoadAnimationFrames(_player_atlas, "Player_Walk_Scepter_Defence0", frame_count);
 
         animation_state = AnimationState.IDLE;
-        animation_FPS = 4;
+        animation_FPS = 12;
         animation_timer = 0f;
         current_index = 0;
 
@@ -97,8 +90,12 @@ public class PlayerAnimation : MonoBehaviour
                 switch (animation_state)
                 {
                     case AnimationState.IDLE:
+                        current_index = (int)(animation_timer * animation_FPS) % 5;
+                        _sprite_renderer.sprite = _idle_frames_E[current_index];
                         break;
                     case AnimationState.WALK:
+                        current_index = (int)(animation_timer * animation_FPS) % 6;
+                        _sprite_renderer.sprite = _walk_frames_E[current_index];
                         break;
                     case AnimationState.ATTACK:
                         break;
@@ -111,6 +108,8 @@ public class PlayerAnimation : MonoBehaviour
                 switch (animation_state)
                 {
                     case AnimationState.IDLE:
+                        current_index = (int)(animation_timer * animation_FPS) % 5;
+                        _sprite_renderer.sprite = _idle_frames_NE[current_index];
                         break;
                     case AnimationState.WALK:
                         break;
@@ -208,10 +207,6 @@ public class PlayerAnimation : MonoBehaviour
                 break;
         }
 
-            current_index = (int)(animation_timer * animation_FPS) % frame_count;
-            _sprite_renderer.sprite = _idle_frames[current_index];
-            current_index = (int)(animation_timer * animation_FPS) % frame_count;
-            _sprite_renderer.sprite = _walking_frames[current_index];
 
     }
 

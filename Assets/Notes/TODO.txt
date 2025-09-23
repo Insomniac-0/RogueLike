@@ -7,12 +7,12 @@ X = DONE
 
 FEATURES G
 
-[/] - Player:
-    [ ] - Combat
+[X] - Player:
+    [/] - Combat
     [ ] - Upgrades
     [X] - Movement
     [ ] - UI
-    [ ] - Camera
+    [X] - Camera
 
 ====================
 

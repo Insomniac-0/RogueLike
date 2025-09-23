@@ -1,5 +1,6 @@
 using System;
 using Unity.Mathematics;
+using Unity.VisualScripting.FullSerializer;
 using UnityEditorInternal;
 using UnityEngine;
 
@@ -13,6 +14,12 @@ public class PlayerBehaviour : MonoBehaviour
 
 
     // TYPES
+
+    struct PlayerStats
+    {
+
+    }
+
     struct PlayerData
     {
         public float3 position;
@@ -27,8 +34,8 @@ public class PlayerBehaviour : MonoBehaviour
     void Awake()
     {
         player_data.position = _player.GetPosition();
+        player_data.direction = _input.GetMoveDirection();
         player_data.speed = _initial_speed;
-        player_data.direction.z = 0;
     }
     void Update()
     {
@@ -37,11 +44,8 @@ public class PlayerBehaviour : MonoBehaviour
         player_position.Value = player_data.position;
 
         player_data.direction = math.normalizesafe(_input.GetMoveDirection());
+
         player_data.velocity = player_data.speed * player_data.direction;
         _player.SetVelocity(player_data.velocity);
-    }
-    public void OnMove(float2 value)
-    {
-        player_data.direction.xy = value;
     }
 }

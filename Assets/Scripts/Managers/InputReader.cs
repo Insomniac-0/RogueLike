@@ -10,9 +10,9 @@ using UnityEngine.Pool;
 
 public class InputReader : MonoBehaviour
 {
-    [SerializeField] Float2EventChannel _channel;
-    [SerializeField] GlobalData global_data;
+    //[SerializeField] Float2EventChannel _channel;
     [SerializeField] Camera cam;
+    [SerializeField] Player player;
 
 
 
@@ -49,24 +49,22 @@ public class InputReader : MonoBehaviour
     void Awake()
     {
         inputs = new Inputs();
+        is_shooting = false;
 
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Confined;
 
         inputs.PlayerActions.MousePosition.performed += (e) =>
         {
-            float2 mouse_position = e.ReadValue<Vector2>();
-            float2 direction = mouse_position - GameData.PlayerPosition.xy;
+            mouse_position = e.ReadValue<Vector2>();
+
+            float3 direction = new float3(mouse_position.xy, 0) - player.GetPosition();
             float angle_rad = math.atan2(direction.y, direction.x);
             float angle_deg = angle_rad * (180 / math.PI);
-            if (angle_deg < 0) angle_deg += 360;
 
-            int dir = (int)((angle_deg + 22.5f) / 45.0f) % 8;
+            int dir = (int)(angle_deg / 45.0f) % 8;
             current_direction = (PlayerMoveDirection)dir;
-
-            GameData.MousePosition = e.ReadValue<Vector2>();
         };
-
         inputs.PlayerActions.Move.performed += (e) =>
         {
             move_direction = e.ReadValue<Vector2>();
@@ -75,7 +73,7 @@ public class InputReader : MonoBehaviour
 
         inputs.PlayerActions.Move.canceled += _ =>
         {
-            GameData.PlayerMoveDirection = float2.zero;
+            move_direction = float2.zero;
             OnMoveStop?.Invoke();
         };
 

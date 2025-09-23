@@ -21,7 +21,7 @@ using UnityEngine.Splines;
 [BurstCompile]
 public unsafe class EntityManagerBehaviour : MonoBehaviour
 {
-    [SerializeField] InputBehaviour input_behaviour;
+    [SerializeField] InputReader input;
     [SerializeField] Player player;
     [SerializeField] Float3Variable player_position;
 
@@ -71,7 +71,7 @@ public unsafe class EntityManagerBehaviour : MonoBehaviour
 
     private void Awake()
     {
-        input_behaviour.OnAbility += SpawnEntity;
+        input.OnAbility += SpawnEntity;
 
 
         RED = new float3(1f, 0f, 0f);

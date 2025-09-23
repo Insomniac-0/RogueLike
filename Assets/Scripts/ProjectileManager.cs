@@ -18,6 +18,7 @@ public unsafe class ProjectileManager : MonoBehaviour
 
     [SerializeField] Projectile projectile_ref;
     [SerializeField] Player player;
+    [SerializeField] InputReader _input;
 
     [SerializeField] int projectile_count;
 
@@ -54,6 +55,7 @@ public unsafe class ProjectileManager : MonoBehaviour
 
     private void Awake()
     {
+        mouse_pos = _input.GetMousePositionWS();
         shoot_coldown = 0f;
         fire_rate = 3f;
         projectiles = new NativeArray<ProjectileData>(projectile_count, Allocator.Persistent);
@@ -84,13 +86,13 @@ public unsafe class ProjectileManager : MonoBehaviour
 
     void Update()
     {
-        mouse_pos.xy = GameData.MousePosition;
+        mouse_pos.xy = _input.GetMousePositionWS().xy;
         mouse_pos.z = 0;
         delta_time = Time.deltaTime;
         shoot_coldown -= delta_time;
 
 
-        if (GameData.IsShooting && shoot_coldown <= 0f)
+        if (_input.is_shooting && shoot_coldown <= 0f)
         {
             SpawnProjectile(player.GetPosition(), mouse_pos);
             shoot_coldown = 1f / fire_rate;
