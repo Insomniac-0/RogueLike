@@ -28,6 +28,9 @@ public class InputReader : MonoBehaviour
     public event Action OnMove;
     public event Action OnMoveStop;
 
+    public float angle;
+    public int dir;
+
 
     public enum PlayerMoveDirection
     {
@@ -58,11 +61,12 @@ public class InputReader : MonoBehaviour
         {
             mouse_position = e.ReadValue<Vector2>();
 
-            float3 direction = new float3(mouse_position.xy, 0) - player.GetPosition();
+            float3 mouse_ws = cam.ScreenToWorldPoint(new float3(mouse_position.xy, 0));
+            float2 direction = math.normalizesafe(mouse_position.xy - player.GetPosition().xy);
             float angle_rad = math.atan2(direction.y, direction.x);
-            float angle_deg = angle_rad * (180 / math.PI);
+            angle = math.degrees(angle_rad);
 
-            int dir = (int)(angle_deg / 45.0f) % 8;
+            dir = ((int)(angle / 45.0f)) % 8;
             current_direction = (PlayerMoveDirection)dir;
         };
         inputs.PlayerActions.Move.performed += (e) =>
