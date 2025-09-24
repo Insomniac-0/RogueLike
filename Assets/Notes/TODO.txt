@@ -9,6 +9,8 @@ FEATURES G
 
 [X] - Player:
     [/] - Combat
+        - [ ] Take Dmg
+        - [X] Deal Dmg
     [ ] - Upgrades
     [X] - Movement
     [ ] - UI

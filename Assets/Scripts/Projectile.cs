@@ -1,14 +1,15 @@
 using Unity.Mathematics;
+using UnityEditor;
 using UnityEditor.Search;
 using UnityEngine;
 
 public class Projectile : MonoBehaviour
 {
-    public float damage;
-    public int hits;
+    [SerializeField] private PlayerBehaviour _player;
+    public int ID;
 
     private SpriteRenderer sprite_renderer;
-    public bool Collided;
+    private int _prevID;
 
     public float3 GetPosition() => transform.position;
 
@@ -17,19 +18,18 @@ public class Projectile : MonoBehaviour
 
     void Awake()
     {
-        hits = 1;
+        _prevID = -1;
         sprite_renderer = GetComponent<SpriteRenderer>();
-        damage = 2f;
-        Collided = false;
     }
 
     void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.tag == "Enemy" && !Collided)
+        if (collision.tag == "Enemy" && collision.GetComponent<Enemy>().ID != _prevID)
         {
-            collision.GetComponent<Enemy>().TakeDamage(damage);
-            hits = 0;
-            Collided = true;
+            _prevID = collision.GetComponent<Enemy>().ID;
+            //collision.GetComponent<Enemy>().TakeDamage(damage);
+            collision.GetComponent<EnemySystem>().AddCollisionEvent(this.ID, collision.GetComponent<Enemy>().ID);
         }
+
     }
 }

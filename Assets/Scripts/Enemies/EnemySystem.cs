@@ -23,7 +23,8 @@ public unsafe class EnemySystem : MonoBehaviour
 
     public struct CollisionEvent
     {
-        public int entity_id;
+        public int sender_id;
+        public int reciever_id;
     }
 
     private NativeArray<EnemyData> _enemy_data;
@@ -46,9 +47,16 @@ public unsafe class EnemySystem : MonoBehaviour
         foreach (var collision in collision_events)
         {
 
-            EnemyData* ptr = &((EnemyData*)_enemy_data.GetUnsafePtr())[collision.entity_id];
+            EnemyData* ptr = &((EnemyData*)_enemy_data.GetUnsafePtr())[collision.reciever_id];
 
         }
     }
 
+    public void AddCollisionEvent(int senderID, int recieverID)
+    {
+        CollisionEvent e;
+        e.sender_id = senderID;
+        e.reciever_id = recieverID;
+        collision_events.Add(e);
+    }
 }

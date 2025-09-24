@@ -112,6 +112,8 @@ public class PlayerAnimation : MonoBehaviour
                         _sprite_renderer.sprite = _idle_frames_NE[current_index];
                         break;
                     case AnimationState.WALK:
+                        current_index = (int)(animation_timer * animation_FPS) % 6;
+                        _sprite_renderer.sprite = _walk_frames_NE[current_index];
                         break;
                     case AnimationState.ATTACK:
                         break;
@@ -124,8 +126,12 @@ public class PlayerAnimation : MonoBehaviour
                 switch (animation_state)
                 {
                     case AnimationState.IDLE:
+                        current_index = (int)(animation_timer * animation_FPS) % 5;
+                        _sprite_renderer.sprite = _idle_frames_N[current_index];
                         break;
                     case AnimationState.WALK:
+                        current_index = (int)(animation_timer * animation_FPS) % 6;
+                        _sprite_renderer.sprite = _walk_frames_N[current_index];
                         break;
                     case AnimationState.ATTACK:
                         break;
@@ -213,7 +219,6 @@ public class PlayerAnimation : MonoBehaviour
     public void UpdateDirection()
     {
         animation_state = AnimationState.WALK;
-        _sprite_renderer.flipX = input_reader.flip;
     }
     public void SetIdle()
     {

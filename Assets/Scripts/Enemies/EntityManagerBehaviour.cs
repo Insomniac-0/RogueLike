@@ -130,7 +130,7 @@ public unsafe class EntityManagerBehaviour : MonoBehaviour
         {
             entities = entities,
             delta_time = delta_time,
-            player_position = player_position.Value,
+            player_position = player.GetPosition(),
 
         };
 
@@ -156,6 +156,9 @@ public unsafe class EntityManagerBehaviour : MonoBehaviour
             }
         }
     }
+
+
+
 
     [BurstCompile]
     struct EntityMovementJob : IJobParallelFor

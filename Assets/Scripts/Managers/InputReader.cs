@@ -62,10 +62,9 @@ public class InputReader : MonoBehaviour
             mouse_position = e.ReadValue<Vector2>();
 
             float3 mouse_ws = cam.ScreenToWorldPoint(new float3(mouse_position.xy, 0));
-            float2 direction = math.normalizesafe(mouse_position.xy - player.GetPosition().xy);
+            float2 direction = math.normalizesafe(mouse_ws.xy - player.GetPosition().xy);
             float angle_rad = math.atan2(direction.y, direction.x);
             angle = math.degrees(angle_rad);
-
             dir = ((int)(angle / 45.0f)) % 8;
             current_direction = (PlayerMoveDirection)dir;
         };

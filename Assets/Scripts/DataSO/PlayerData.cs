@@ -3,9 +3,12 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "NewPlayerData", menuName = "Data/Player Data")]
 public class PlayerData : ScriptableObject
 {
-    [SerializeField] private float _max_health;
-    [SerializeField] private float _movement_speed;
 
     public float MaxHealth;
-    public float MovementSpeed;
+    public float BaseMovementSpeed;
+    public float AttackSpeed;
+    public float MS_Multiply;
+    public float XP_Multiply;
+    public float PickUpRange;
+
 }

@@ -15228,7 +15228,7 @@ Tilemap:
     m_Data: {r: 1, g: 1, b: 1, a: 1}
   m_TileObjectToInstantiateArray: []
   m_AnimationFrameRate: 1
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 1, g: 0.73346096, b: 0.5801887, a: 1}
   m_Origin: {x: -21, y: -18, z: 0}
   m_Size: {x: 46, y: 32, z: 1}
   m_TileAnchor: {x: 0.5, y: 0.5, z: 0}
@@ -16566,6 +16566,8 @@ GameObject:
   - component: {fileID: 1401951786}
   - component: {fileID: 1401951791}
   - component: {fileID: 1401951792}
+  - component: {fileID: 1401951794}
+  - component: {fileID: 1401951793}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -16601,9 +16603,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: '::'
   player_position: {fileID: 11400000, guid: 653b400c9b2fe239193bba001cf93107, type: 2}
+  _player_template: {fileID: 11400000, guid: a648df302064f64ecb0c3ff45fc78ff2, type: 2}
+  _weapon_template: {fileID: 11400000, guid: 4af0d66350733d5448a76632b48b1343, type: 2}
+  _projectile_manager: {fileID: 1749113967}
   _player: {fileID: 1401951789}
   _input: {fileID: 236379323}
-  _initial_speed: 5
 --- !u!58 &1401951787
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -16729,7 +16733,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: -7285376162372006033, guid: 24eaff84f4e9e01c1aab7c400d69d9c0, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 1, g: 0, b: 0, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -16752,7 +16756,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerAnimation
   _player_atlas: {fileID: 100100200, guid: cdbf30780b790707c85ec6b1122754c6, type: 3}
-  input_reader: {fileID: 0}
+  input_reader: {fileID: 236379323}
   _idle_frames_S:
   - {fileID: -7285376162372006033, guid: 24eaff84f4e9e01c1aab7c400d69d9c0, type: 3}
   - {fileID: 1377322663251520538, guid: 24eaff84f4e9e01c1aab7c400d69d9c0, type: 3}
@@ -16854,18 +16858,18 @@ MonoBehaviour:
   - {fileID: 2299817582873690737, guid: 24eaff84f4e9e01c1aab7c400d69d9c0, type: 3}
   - {fileID: -4135031067105134841, guid: 24eaff84f4e9e01c1aab7c400d69d9c0, type: 3}
   _idle_frames_NE:
-  - {fileID: -4471002176241886906, guid: 24eaff84f4e9e01c1aab7c400d69d9c0, type: 3}
-  - {fileID: 5167461112299645024, guid: 24eaff84f4e9e01c1aab7c400d69d9c0, type: 3}
-  - {fileID: 228632136296789537, guid: 24eaff84f4e9e01c1aab7c400d69d9c0, type: 3}
-  - {fileID: -3204575361912808976, guid: 24eaff84f4e9e01c1aab7c400d69d9c0, type: 3}
-  - {fileID: 8227832352254662933, guid: 24eaff84f4e9e01c1aab7c400d69d9c0, type: 3}
+  - {fileID: 349730918994429814, guid: 24eaff84f4e9e01c1aab7c400d69d9c0, type: 3}
+  - {fileID: -644575913999077528, guid: 24eaff84f4e9e01c1aab7c400d69d9c0, type: 3}
+  - {fileID: -2137097017266397255, guid: 24eaff84f4e9e01c1aab7c400d69d9c0, type: 3}
+  - {fileID: -8803557223799797123, guid: 24eaff84f4e9e01c1aab7c400d69d9c0, type: 3}
+  - {fileID: -225816953590909935, guid: 24eaff84f4e9e01c1aab7c400d69d9c0, type: 3}
   _walk_frames_NE:
-  - {fileID: 3934094953480862258, guid: 24eaff84f4e9e01c1aab7c400d69d9c0, type: 3}
-  - {fileID: 856818933534682953, guid: 24eaff84f4e9e01c1aab7c400d69d9c0, type: 3}
-  - {fileID: -3453639216999682542, guid: 24eaff84f4e9e01c1aab7c400d69d9c0, type: 3}
-  - {fileID: 758787493083475039, guid: 24eaff84f4e9e01c1aab7c400d69d9c0, type: 3}
-  - {fileID: 7030409628984703139, guid: 24eaff84f4e9e01c1aab7c400d69d9c0, type: 3}
-  - {fileID: 5845296290653412108, guid: 24eaff84f4e9e01c1aab7c400d69d9c0, type: 3}
+  - {fileID: 2787582530583265178, guid: 24eaff84f4e9e01c1aab7c400d69d9c0, type: 3}
+  - {fileID: 6402981654503328534, guid: 24eaff84f4e9e01c1aab7c400d69d9c0, type: 3}
+  - {fileID: 4640397681093068052, guid: 24eaff84f4e9e01c1aab7c400d69d9c0, type: 3}
+  - {fileID: -8933356133736499657, guid: 24eaff84f4e9e01c1aab7c400d69d9c0, type: 3}
+  - {fileID: -8748572030805621511, guid: 24eaff84f4e9e01c1aab7c400d69d9c0, type: 3}
+  - {fileID: 4725588990001898995, guid: 24eaff84f4e9e01c1aab7c400d69d9c0, type: 3}
   _attack_frames_NE:
   - {fileID: 8762516259130980088, guid: 24eaff84f4e9e01c1aab7c400d69d9c0, type: 3}
   - {fileID: -3126952394087111029, guid: 24eaff84f4e9e01c1aab7c400d69d9c0, type: 3}
@@ -16941,6 +16945,44 @@ MonoBehaviour:
           m_StringArgument: OnMove
           m_BoolArgument: 0
         m_CallState: 1
+--- !u!111 &1401951793
+Animation:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1401951784}
+  m_Enabled: 1
+  serializedVersion: 4
+  m_Animation: {fileID: 0}
+  m_Animations: []
+  m_WrapMode: 0
+  m_PlayAutomatically: 1
+  m_AnimatePhysics: 0
+  m_UpdateMode: 0
+  m_CullingType: 0
+--- !u!95 &1401951794
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1401951784}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: bdbfcf1293062554dbc14ae0b5383574, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &1473395319
 GameObject:
   m_ObjectHideFlags: 0

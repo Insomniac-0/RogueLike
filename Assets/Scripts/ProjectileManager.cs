@@ -24,9 +24,6 @@ public unsafe class ProjectileManager : MonoBehaviour
 
     float delta_time;
 
-    float shoot_coldown;
-
-    float fire_rate;
 
     float3 mouse_pos;
 
@@ -41,8 +38,15 @@ public unsafe class ProjectileManager : MonoBehaviour
     {
         public float3 position;
         public float3 direction;
+
+        public int ID;
+        public int hp;
+
+        public float dmg;
         public float speed;
         public float lifetime;
+
+
         public bool active;
     }
 
@@ -56,8 +60,6 @@ public unsafe class ProjectileManager : MonoBehaviour
     private void Awake()
     {
         mouse_pos = _input.GetMousePositionWS();
-        shoot_coldown = 0f;
-        fire_rate = 3f;
         projectiles = new NativeArray<ProjectileData>(projectile_count, Allocator.Persistent);
         p_objects = new Projectile[projectile_count];
 
@@ -65,12 +67,14 @@ public unsafe class ProjectileManager : MonoBehaviour
         {
             // Objects
             Projectile p = Instantiate(projectile_ref);
+            p.ID = i;
             p.transform.position = Vector3.zero;
             p.gameObject.SetActive(false);
             p_objects[i] = p;
 
             // Data
             ProjectileData* ptr = &((ProjectileData*)projectiles.GetUnsafePtr())[i];
+            ptr->ID = i;
             ptr->position = float3.zero;
             ptr->direction = float3.zero;
             ptr->speed = 0;
@@ -86,17 +90,7 @@ public unsafe class ProjectileManager : MonoBehaviour
 
     void Update()
     {
-        mouse_pos.xy = _input.GetMousePositionWS().xy;
-        mouse_pos.z = 0;
         delta_time = Time.deltaTime;
-        shoot_coldown -= delta_time;
-
-
-        if (_input.is_shooting && shoot_coldown <= 0f)
-        {
-            SpawnProjectile(player.GetPosition(), mouse_pos);
-            shoot_coldown = 1f / fire_rate;
-        }
 
         ProjectileMovementJob projectile_job = new ProjectileMovementJob
         {
@@ -113,7 +107,7 @@ public unsafe class ProjectileManager : MonoBehaviour
             ProjectileData* ptr = &((ProjectileData*)projectiles.GetUnsafePtr())[i];
             if (!ptr->active) continue;
 
-            if (ptr->lifetime > 0f && p_objects[i].hits > 0)
+            if (ptr->lifetime > 0f && ptr->hp > 0)
             {
                 p_objects[i].SetPosition(ptr->position);
                 ptr->lifetime -= delta_time;
@@ -145,21 +139,21 @@ public unsafe class ProjectileManager : MonoBehaviour
         }
     }
 
-    public void SpawnProjectile(float3 src, float3 target)
+    public void SpawnProjectile(float3 src, float3 target, int HP, float Speed, float DMG)
     {
         for (int i = 0; i < projectile_count; i++)
         {
             if (!projectiles[i].active)
             {
                 ProjectileData* ptr = &((ProjectileData*)projectiles.GetUnsafePtr())[i];
-                ptr->speed = 20;
+                ptr->speed = Speed;
+                ptr->hp = HP;
+                ptr->dmg = DMG;
                 ptr->lifetime = 2f;
                 ptr->position = src;
                 ptr->direction = math.normalizesafe(target - src);
                 ptr->active = true;
                 p_objects[i].gameObject.SetActive(true);
-                p_objects[i].hits = 1;
-                p_objects[i].Collided = false;
 
                 return;
             }

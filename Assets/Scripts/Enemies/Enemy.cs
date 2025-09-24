@@ -8,7 +8,7 @@ public class Enemy : MonoBehaviour
     [SerializeField] private EnemyData enemy_blueprint;
     [SerializeField] public float Health;
 
-    public int id;
+    public int ID;
     private float _current_healh;
     private float _movement_speed;
 
