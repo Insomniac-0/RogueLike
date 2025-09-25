@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class Projectile : MonoBehaviour
 {
-    [SerializeField] private PlayerBehaviour _player;
+    [SerializeField] ProjectileManager manager;
     public int ID;
 
     private SpriteRenderer sprite_renderer;
@@ -24,12 +24,11 @@ public class Projectile : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.tag == "Enemy" && collision.GetComponent<Enemy>().ID != _prevID)
+        if (collision.TryGetComponent<Enemy>(out Enemy collider_ref) && _prevID != collider_ref.GetID())
         {
-            _prevID = collision.GetComponent<Enemy>().ID;
-            //collision.GetComponent<Enemy>().TakeDamage(damage);
-            collision.GetComponent<EnemySystem>().AddCollisionEvent(this.ID, collision.GetComponent<Enemy>().ID);
+            _prevID = collider_ref.GetID();
+            collider_ref.GetComponent<EntityManagerBehaviour>().TakeDmg(_prevID, 5);
+            gameObject.GetComponent<ProjectileManager>().TakeDMG(this.ID);
         }
-
     }
 }

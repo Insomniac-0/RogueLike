@@ -15228,7 +15228,7 @@ Tilemap:
     m_Data: {r: 1, g: 1, b: 1, a: 1}
   m_TileObjectToInstantiateArray: []
   m_AnimationFrameRate: 1
-  m_Color: {r: 1, g: 0.73346096, b: 0.5801887, a: 1}
+  m_Color: {r: 1, g: 0.7877358, b: 0.7877358, a: 1}
   m_Origin: {x: -21, y: -18, z: 0}
   m_Size: {x: 46, y: 32, z: 1}
   m_TileAnchor: {x: 0.5, y: 0.5, z: 0}
@@ -15858,7 +15858,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &874886155
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -15871,9 +15871,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cd9beb5108a41040abae7a185d537a7b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EntityManagerBehaviour
-  input: {fileID: 236379323}
   player: {fileID: 1401951789}
-  player_position: {fileID: 11400000, guid: 653b400c9b2fe239193bba001cf93107, type: 2}
   enemy_ref: {fileID: 20494445584451619, guid: d3dffe71d1c01c1f0bc8dc5ea29f9275, type: 3}
   enemy_speed: 2.5
   entity_count: 100
@@ -16565,9 +16563,6 @@ GameObject:
   - component: {fileID: 1401951787}
   - component: {fileID: 1401951786}
   - component: {fileID: 1401951791}
-  - component: {fileID: 1401951792}
-  - component: {fileID: 1401951794}
-  - component: {fileID: 1401951793}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -16602,7 +16597,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 177257853e681c5bfafc167629d24589, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
-  player_position: {fileID: 11400000, guid: 653b400c9b2fe239193bba001cf93107, type: 2}
   _player_template: {fileID: 11400000, guid: a648df302064f64ecb0c3ff45fc78ff2, type: 2}
   _weapon_template: {fileID: 11400000, guid: 4af0d66350733d5448a76632b48b1343, type: 2}
   _projectile_manager: {fileID: 1749113967}
@@ -16683,7 +16677,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ff2ba7f47e61e7d369b00a3a263cc01c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Player
-  player_location: {fileID: 11400000, guid: 653b400c9b2fe239193bba001cf93107, type: 2}
   Health: 100
 --- !u!212 &1401951790
 SpriteRenderer:
@@ -16917,72 +16910,6 @@ MonoBehaviour:
   - {fileID: 45797367087620409, guid: 24eaff84f4e9e01c1aab7c400d69d9c0, type: 3}
   - {fileID: 7915875706963445287, guid: 24eaff84f4e9e01c1aab7c400d69d9c0, type: 3}
   - {fileID: 6325515545187203512, guid: 24eaff84f4e9e01c1aab7c400d69d9c0, type: 3}
---- !u!114 &1401951792
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1401951784}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0a6cddcbbf1a0a0beb307b3c320b4b21, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Float2EventListener
-  _channel: {fileID: 11400000, guid: 78b89744e3d94f3bba6b97e4d5991670, type: 2}
-  _OnEventRaised:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 11500000, guid: 177257853e681c5bfafc167629d24589, type: 3}
-        m_TargetAssemblyTypeName: UnityEditor.MonoScript, UnityEditor.CoreModule
-        m_MethodName: set_name
-        m_Mode: 5
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: OnMove
-          m_BoolArgument: 0
-        m_CallState: 1
---- !u!111 &1401951793
-Animation:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1401951784}
-  m_Enabled: 1
-  serializedVersion: 4
-  m_Animation: {fileID: 0}
-  m_Animations: []
-  m_WrapMode: 0
-  m_PlayAutomatically: 1
-  m_AnimatePhysics: 0
-  m_UpdateMode: 0
-  m_CullingType: 0
---- !u!95 &1401951794
-Animator:
-  serializedVersion: 7
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1401951784}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: bdbfcf1293062554dbc14ae0b5383574, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_AnimatePhysics: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorStateOnDisable: 0
-  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &1473395319
 GameObject:
   m_ObjectHideFlags: 0
@@ -17211,7 +17138,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1749113966
 Transform:
   m_ObjectHideFlags: 0
@@ -17240,7 +17167,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ProjectileManager
   projectile_ref: {fileID: -8366603719214645405, guid: 55bddd82c76b966fb99bfeccb0302516, type: 3}
-  player: {fileID: 1401951789}
   _input: {fileID: 236379323}
   projectile_count: 100
 --- !u!1 &1784168530

@@ -7,6 +7,7 @@ public class Enemy : MonoBehaviour
 {
     [SerializeField] private EnemyData enemy_blueprint;
     [SerializeField] public float Health;
+    [SerializeField] EntityManagerBehaviour manager;
 
     public int ID;
     private float _current_healh;
@@ -24,6 +25,8 @@ public class Enemy : MonoBehaviour
     }
 
     public float3 GetPosition() => transform.position;
+
+    public int GetID() => ID;
 
     public void SetColor(float3 color) => sprite_renderer.color = new Color(color.x, color.y, color.z);
     public void SetPosition(float3 position) => transform.position = position;

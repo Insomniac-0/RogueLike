@@ -6,7 +6,6 @@ using UnityEngine;
 
 public class PlayerBehaviour : MonoBehaviour
 {
-    [SerializeField] private Float3Variable player_position;
     [SerializeField] private PlayerData _player_template;
     [SerializeField] private WeaponData _weapon_template;
     [SerializeField] private ProjectileManager _projectile_manager;
@@ -64,7 +63,6 @@ public class PlayerBehaviour : MonoBehaviour
         player_data.direction = _input.GetMoveDirection();
         player_data.speed = player_stats.base_move_speed * player_stats.ms_multiply;
 
-        player_position.Value = player_data.position;
     }
     void Update()
     {

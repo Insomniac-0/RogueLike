@@ -65,6 +65,7 @@ public class InputReader : MonoBehaviour
             float2 direction = math.normalizesafe(mouse_ws.xy - player.GetPosition().xy);
             float angle_rad = math.atan2(direction.y, direction.x);
             angle = math.degrees(angle_rad);
+            if (angle < 0) angle += 360;
             dir = ((int)(angle / 45.0f)) % 8;
             current_direction = (PlayerMoveDirection)dir;
         };

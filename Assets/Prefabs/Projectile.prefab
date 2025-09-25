@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 7393499534953191893}
   - component: {fileID: -8366603719214645405}
   - component: {fileID: 2675777420018395318}
+  - component: {fileID: 5303701524228787614}
   m_Layer: 0
   m_Name: Projectile
   m_TagString: Untagged
@@ -104,9 +105,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 41b180edc1f17517da9b7e26f833eb31, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Projectile
-  damage: 0
-  hits: 0
-  Collided: 0
+  _player: {fileID: 0}
+  ID: 0
 --- !u!58 &2675777420018395318
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -143,3 +143,30 @@ CircleCollider2D:
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0}
   m_Radius: 0.5
+--- !u!50 &5303701524228787614
+Rigidbody2D:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8385749403093170385}
+  m_BodyType: 0
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
+  m_GravityScale: 0
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 1
+  m_Constraints: 0

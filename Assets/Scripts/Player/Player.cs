@@ -10,8 +10,6 @@ using UnityEngine.U2D;
 [RequireComponent(typeof(Rigidbody2D))]
 public class Player : MonoBehaviour
 {
-    [SerializeField] private Float3Variable player_location;
-    // 4
     public float Health;
 
     private Rigidbody2D rb;

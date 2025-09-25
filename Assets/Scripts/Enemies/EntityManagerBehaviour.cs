@@ -4,6 +4,7 @@ using Unity.Burst;
 using Unity.Collections;
 using Unity.Collections.LowLevel.Unsafe;
 using Unity.Entities;
+using Unity.Entities.UniversalDelegates;
 using Unity.Jobs;
 using Unity.Mathematics;
 using Unity.Physics;
@@ -21,9 +22,9 @@ using UnityEngine.Splines;
 [BurstCompile]
 public unsafe class EntityManagerBehaviour : MonoBehaviour
 {
-    [SerializeField] InputReader input;
     [SerializeField] Player player;
-    [SerializeField] Float3Variable player_position;
+    //[SerializeField] InputReader input;
+    Inputs inputs;
 
     // REFS
     [SerializeField] Enemy enemy_ref;
@@ -36,21 +37,18 @@ public unsafe class EntityManagerBehaviour : MonoBehaviour
 
 
     // TYPES
-    enum EntityType
-    {
-        PLAYER,
-        ENEMY,
-        PROJECTILE,
-    }
 
-    struct Entity
+    public struct Entity
     {
         public float3 color;
         public float3 direction;
         public float3 position;
         public float3 velocity;
         public float speed;
+        public float hp;
+        public int ID;
         public bool active;
+
     }
 
     // ARRAYS
@@ -71,7 +69,11 @@ public unsafe class EntityManagerBehaviour : MonoBehaviour
 
     private void Awake()
     {
-        input.OnAbility += SpawnEntity;
+        inputs = new Inputs();
+        inputs.Enable();
+        inputs.PlayerActions.Ability.performed += _ => SpawnEntity();
+        //InitResources.Instance.OnAbility += SpawnEntity;
+        //InitResources.Instance.InputHandler.PlayerActions.Ability.performed
 
 
         RED = new float3(1f, 0f, 0f);
@@ -87,26 +89,27 @@ public unsafe class EntityManagerBehaviour : MonoBehaviour
             enemy_objects[i] = Instantiate(enemy_ref);
             enemy_objects[i].transform.position = float3.zero;
             enemy_objects[i].gameObject.SetActive(false);
+            enemy_objects[i].ID = i;
 
             enemy_pool.Enqueue(i);
-        }
 
-        for (int i = 0; i < entity_count; i++)
-        {
             Entity* ptr = &((Entity*)entities.GetUnsafePtr())[i];
 
             ptr->position = enemy_objects[i].transform.position;
             ptr->direction = float3.zero;
             ptr->speed = enemy_speed;
             ptr->active = false;
+            ptr->ID = i;
 
         }
+
     }
 
     private void OnDestroy()
     {
         entities.Dispose();
         enemy_pool.Dispose();
+        inputs.Dispose();
     }
 
 
@@ -119,12 +122,7 @@ public unsafe class EntityManagerBehaviour : MonoBehaviour
 
     void FixedUpdate()
     {
-        mouse_pos.xy = GameData.MousePosition;
-        mouse_pos.z = 0;
         delta_time = Time.deltaTime;
-
-
-
 
         EntityMovementJob entity_job = new EntityMovementJob
         {
@@ -178,6 +176,16 @@ public unsafe class EntityManagerBehaviour : MonoBehaviour
         }
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public Entity* GetEntity(int i) => &((Entity*)entities.GetUnsafePtr())[i];
+
+    public void TakeDmg(int index, float dmg)
+    {
+        //Entity* ptr = GetEntity(index);
+        Entity* ptr = &((Entity*)entities.GetUnsafePtr())[index];
+        ptr->hp -= dmg;
+        if (ptr->hp <= 0) enemy_objects[index].gameObject.SetActive(false);
+    }
     public void SpawnEntity()
     {
         int index = enemy_pool.Dequeue();
@@ -190,6 +198,7 @@ public unsafe class EntityManagerBehaviour : MonoBehaviour
 
         // Data
         ptr->position = float3.zero;
+        ptr->hp = 10;
         ptr->active = true;
     }
 }
