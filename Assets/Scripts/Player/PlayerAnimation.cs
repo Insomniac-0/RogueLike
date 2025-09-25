@@ -77,14 +77,18 @@ public class PlayerAnimation : MonoBehaviour
 
 
 
-        input_reader.OnMove += UpdateDirection;
-        input_reader.OnMoveStop += SetIdle;
-    }
 
+    }
+    void Start()
+    {
+        InitResources.GetInputReader.OnMove += UpdateDirection;
+        InitResources.GetInputReader.OnMoveStop += SetIdle;
+    }
     void Update()
     {
         animation_timer += Time.deltaTime;
-        switch (input_reader.current_direction)
+        InputReader IMP() => InitResources.GetInputReader;
+        switch (IMP().current_direction)
         {
             case InputReader.PlayerMoveDirection.E:
                 switch (animation_state)

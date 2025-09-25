@@ -5,7 +5,6 @@ using UnityEngine;
 
 public class Projectile : MonoBehaviour
 {
-    [SerializeField] ProjectileManager manager;
     public int ID;
 
     private SpriteRenderer sprite_renderer;

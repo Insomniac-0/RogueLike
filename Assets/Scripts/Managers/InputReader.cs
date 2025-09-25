@@ -11,10 +11,6 @@ using UnityEngine.Pool;
 public class InputReader : MonoBehaviour
 {
     //[SerializeField] Float2EventChannel _channel;
-    [SerializeField] Camera cam;
-    [SerializeField] Player player;
-
-
 
     GameManager game_manager;
 
@@ -51,24 +47,32 @@ public class InputReader : MonoBehaviour
 
     void Awake()
     {
+
+    }
+    void Start()
+    {
         inputs = new Inputs();
-        is_shooting = false;
-
-        Cursor.visible = false;
-        Cursor.lockState = CursorLockMode.Confined;
-
         inputs.PlayerActions.MousePosition.performed += (e) =>
         {
+            if (!InitResources.GetCamera) return;
+            if (!InitResources.GetPlayer) return;
             mouse_position = e.ReadValue<Vector2>();
 
-            float3 mouse_ws = cam.ScreenToWorldPoint(new float3(mouse_position.xy, 0));
-            float2 direction = math.normalizesafe(mouse_ws.xy - player.GetPosition().xy);
+            float3 mouse_ws = InitResources.GetCamera.ScreenToWorldPoint(new float3(mouse_position.xy, 0));
+            float2 direction = math.normalizesafe(mouse_ws.xy - InitResources.GetNullableObjects.player.GetPosition().xy);
             float angle_rad = math.atan2(direction.y, direction.x);
             angle = math.degrees(angle_rad);
             if (angle < 0) angle += 360;
             dir = ((int)(angle / 45.0f)) % 8;
             current_direction = (PlayerMoveDirection)dir;
         };
+
+        is_shooting = false;
+
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Confined;
+
+
         inputs.PlayerActions.Move.performed += (e) =>
         {
             move_direction = e.ReadValue<Vector2>();
@@ -86,15 +90,16 @@ public class InputReader : MonoBehaviour
         inputs.PlayerActions.Shoot.canceled += _ => is_shooting = false;
         inputs.PlayerActions.AltShoot.performed += _ => OnAltShoot?.Invoke();
         inputs.PlayerActions.Ability.performed += _ => OnAbility?.Invoke();
+        inputs.Enable();
     }
 
-    private void OnEnable() => inputs.PlayerActions.Enable();
-    private void OnDisable() => inputs.PlayerActions.Disable();
+
+
 
     public float3 GetMoveDirection() => new(move_direction.xy, 0);
 
     public float2 GetMousePositionSS() => mouse_position;
-    public float3 GetMousePositionWS() => cam.ScreenToWorldPoint(new float3(mouse_position.xy, 0f));
+    public float3 GetMousePositionWS() => InitResources.GetCamera ? InitResources.GetCamera.ScreenToWorldPoint(new float3(mouse_position.xy, 0f)) : float3.zero;
 
 
 }

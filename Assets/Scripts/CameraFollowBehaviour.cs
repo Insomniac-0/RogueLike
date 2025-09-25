@@ -4,10 +4,20 @@ using UnityEngine;
 
 public class CameraFollowBehaviour : MonoBehaviour
 {
-    [SerializeField] Player p;
+    Player player;
+
+
+    void Awake()
+    {
+        InitResources.GetNullableObjects.AssignCamera(GetComponent<Camera>());
+    }
+    void Start()
+    {
+        player = InitResources.GetPlayer;
+    }
     void Update()
     {
-        transform.position = new float3(p.GetPosition().xy, -10f);
+        transform.position = new float3(player.GetPosition().xy, -10f);
     }
 }
 

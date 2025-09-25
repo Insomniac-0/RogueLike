@@ -22,7 +22,6 @@ using UnityEngine.Splines;
 [BurstCompile]
 public unsafe class EntityManagerBehaviour : MonoBehaviour
 {
-    [SerializeField] Player player;
     //[SerializeField] InputReader input;
     Inputs inputs;
 
@@ -122,13 +121,14 @@ public unsafe class EntityManagerBehaviour : MonoBehaviour
 
     void FixedUpdate()
     {
+        if (!InitResources.GetPlayer) return;
         delta_time = Time.deltaTime;
 
         EntityMovementJob entity_job = new EntityMovementJob
         {
             entities = entities,
             delta_time = delta_time,
-            player_position = player.GetPosition(),
+            player_position = InitResources.GetNullableObjects.player.GetPosition(),
 
         };
 
@@ -201,4 +201,5 @@ public unsafe class EntityManagerBehaviour : MonoBehaviour
         ptr->hp = 10;
         ptr->active = true;
     }
+
 }

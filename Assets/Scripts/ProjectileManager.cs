@@ -20,7 +20,6 @@ public unsafe class ProjectileManager : MonoBehaviour
 
     [SerializeField] Projectile projectile_ref;
     Player player;
-    [SerializeField] InputReader _input;
 
 
     float delta_time;
@@ -64,7 +63,7 @@ public unsafe class ProjectileManager : MonoBehaviour
 
     private void Awake()
     {
-        mouse_pos = _input.GetMousePositionWS();
+        mouse_pos = GetComponent<InputReader>().GetMousePositionWS();
         projectiles = new NativeList<ProjectileData>(InitialAllocSize, Allocator.Persistent);
 
         p_objects = new List<Projectile>(InitialAllocSize);
@@ -106,26 +105,36 @@ public unsafe class ProjectileManager : MonoBehaviour
             delta_time = delta_time,
         };
 
-        JobHandle handle = projectile_job.Schedule(projectiles.Count(), ProjectileJobBatchSize);
+        JobHandle handle = projectile_job.Schedule(p_objects.Count, ProjectileJobBatchSize);
 
         handle.Complete();
 
-        for (int i = 0; i < projectiles.Count(); i++)
+        for (int i = p_objects.Count - 1; i >= 0; i--)
         {
             ProjectileData* ptr = &((ProjectileData*)projectiles.GetUnsafePtr())[i];
+            ProjectileData p = projectiles[i];
             if (!ptr->active) continue;
 
             if (ptr->lifetime > 0f && ptr->hp > 0)
             {
                 p_objects[i].SetPosition(ptr->position);
                 ptr->lifetime -= delta_time;
-
-
             }
             else
             {
-                ptr->active = false;
+                int count = p_objects.Count;
+                p.active = false;
                 p_objects[i].gameObject.SetActive(false);
+                p_ready_objects.Add(p_objects[i]);
+
+                p_objects[i] = p_objects[count - 1];
+                p_objects.RemoveAt(count - 1);
+                if (count - 1 < i) p_objects[i].ID = i;
+
+                projectiles[i] = projectiles[count - 1];
+                projectiles.RemoveAt(count - 1);
+                p.ID = i;
+                if (count - 1 < i) projectiles[i] = p;
             }
 
         }
@@ -161,6 +170,28 @@ public unsafe class ProjectileManager : MonoBehaviour
     {
         if (p_ready_objects.Count == 0)
         {
+            int newID = p_objects.Count;
+            // Objects
+            Projectile p = Instantiate(projectile_ref);
+            p.ID = newID;
+            p.transform.position = Vector3.zero;
+            p.gameObject.SetActive(true);
+            p_objects.Add(p);
+
+            // Data
+
+
+            projectiles.Add(new ProjectileData());
+            ProjectileData* ptr = &((ProjectileData*)projectiles.GetUnsafePtr())[newID];
+
+            ptr->ID = newID;
+            ptr->hp = HP;
+            ptr->lifetime = 2f;
+            ptr->position = src;
+            ptr->direction = math.normalizesafe(target - src);
+            ptr->speed = Speed;
+            ptr->dmg = DMG;
+            ptr->active = true;
 
         }
         else

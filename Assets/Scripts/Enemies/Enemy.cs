@@ -7,7 +7,6 @@ public class Enemy : MonoBehaviour
 {
     [SerializeField] private EnemyData enemy_blueprint;
     [SerializeField] public float Health;
-    [SerializeField] EntityManagerBehaviour manager;
 
     public int ID;
     private float _current_healh;

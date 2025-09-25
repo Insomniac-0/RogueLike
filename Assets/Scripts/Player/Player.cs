@@ -17,6 +17,11 @@ public class Player : MonoBehaviour
     void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
+        InitResources.GetNullableObjects.AssignPlayer(this);
+    }
+
+    void Start()
+    {
     }
 
     private void OnEnable()

@@ -4,11 +4,10 @@ using UnityEngine;
 
 public class CursorBehaviour : MonoBehaviour
 {
-    [SerializeField] InputReader _input;
 
     void Update()
     {
-        transform.position = new float3(_input.GetMousePositionWS().xy, 0f);
+        transform.position = new float3(InitResources.GetInputReader.GetMousePositionWS().xy, 0f);
     }
 
 }
