@@ -9,14 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b787ca0c06ad2bf4f86f00ec2221c3d0, type: 3}
-  m_Name: GlobalData
-  m_EditorClassIdentifier: Assembly-CSharp::GlobalData
-  MousePosition:
-    x: 0
-    y: 0
-  PlayerMoveDirection:
-    x: 0
-    y: 0
-  IsShooting: 0
-  Flip: 0
+  m_Script: {fileID: 11500000, guid: 077d0f7c75941f474b50e1167f0d5556, type: 3}
+  m_Name: DefaultEnemyData
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyData
+  MaxHealth: 10
+  BaseMovementSpeed: 2.5
+  BaseDMG: 1

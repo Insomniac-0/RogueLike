@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Collections.LowLevel.Unsafe;
@@ -14,39 +15,28 @@ public unsafe class ProjectileManager : MonoBehaviour
     [SerializeField] Projectile projectile_ref;
     Player player;
 
-
     float delta_time;
 
     float3 mouse_pos;
+
     const int InitialAllocSize = 100;
-
-
-
     const int ProjectileJobBatchSize = 16;
-
-
-
-    // TYPES
-
-
 
     // ARRAYS
 
     NativeList<ProjectileData> projectiles;
 
-    List<Projectile> p_objects;
-    List<Projectile> p_ready_objects;
+    List<Projectile> projectile_objects;
+    List<Projectile> projectile_pool;
 
 
     private void Awake()
     {
         projectiles = new NativeList<ProjectileData>(InitialAllocSize, Allocator.Persistent);
 
-        p_objects = new List<Projectile>(InitialAllocSize);
-        p_ready_objects = new List<Projectile>(InitialAllocSize);
+        projectile_objects = new List<Projectile>(InitialAllocSize);
+        projectile_pool = new List<Projectile>(InitialAllocSize);
     }
-
-
 
     void Start()
     {
@@ -68,15 +58,12 @@ public unsafe class ProjectileManager : MonoBehaviour
             delta_time = delta_time,
         };
 
-        JobHandle handle = projectile_job.Schedule(p_objects.Count, ProjectileJobBatchSize);
+        JobHandle handle = projectile_job.Schedule(projectile_objects.Count, ProjectileJobBatchSize);
 
         handle.Complete();
 
         UpdateProjectiles();
     }
-
-
-
 
     [BurstCompile]
     struct ProjectileMovementJob : IJobParallelFor
@@ -98,48 +85,61 @@ public unsafe class ProjectileManager : MonoBehaviour
         ptr->HP--;
         if (ptr->HP <= 0)
         {
-            p_objects[ID].gameObject.SetActive(false);
+            int final_index = projectile_objects.Count - 1;
+
             ptr->active = false;
+            projectile_objects[ID].gameObject.SetActive(false);
+
+            projectile_pool.Add(projectile_objects[ID]);
+
+            projectile_objects[ID] = projectile_objects[final_index];
+            projectile_objects.RemoveAt(final_index);
+            projectile_objects[ID].ID = ID;
+
+            *ptr = projectiles[final_index];
+            projectiles.RemoveAt(final_index);
+            ptr->ID = ID;
         }
     }
+
     public void SpawnProjectile(TransformData src, float3 target, int HP, float Speed, float DMG)
     {
 
-        if (p_ready_objects.Count == 0)
+        if (projectile_pool.Count == 0)
         {
-            int newID = p_objects.Count;
+            int newID = projectile_objects.Count;
+
             // Objects
             Projectile p = Instantiate(projectile_ref);
             p.ID = newID;
-            p.SetPosition(float3.zero);
+            p.SetPosition(src.position);
             p.gameObject.SetActive(true);
-            p_objects.Add(p);
+            projectile_objects.Add(p);
 
             // Data
 
-
-            projectiles.Add(new ProjectileData());
-            ProjectileData* ptr = &((ProjectileData*)projectiles.GetUnsafePtr())[newID];
-
-            ptr->ID = newID;
-            ptr->HP = HP;
-            ptr->lifetime = 2f;
-            ptr->transform = src;
-            ptr->direction = math.normalizesafe(target - src.position);
-            ptr->speed = Speed;
-            ptr->dmg = DMG;
-            ptr->active = true;
-
+            projectiles.Add(new ProjectileData
+            {
+                transform = src,
+                direction = math.normalizesafe(target - src.position),
+                ID = newID,
+                HP = HP,
+                dmg = DMG,
+                speed = Speed,
+                lifetime = 2f,
+                active = true,
+            });
         }
         else
         {
-            Projectile p = p_ready_objects[0];
-            p_ready_objects.RemoveAtSwapBack(0);
-            int newID = p_objects.Count;
+            Projectile p = projectile_pool[0];
+            projectile_pool.RemoveAtSwapBack(0);
+
+            int newID = projectile_objects.Count;
             p.ID = newID;
-            float angle_rad = math.atan2(projectiles[newID].direction.y, projectiles[newID].direction.x);
-            src.rotation = quaternion.EulerXYZ(0f, 0f, math.degrees(angle_rad));
-            p_objects.Add(p);
+
+
+            projectile_objects.Add(p);
             projectiles.Add(new ProjectileData
             {
                 speed = Speed,
@@ -152,45 +152,58 @@ public unsafe class ProjectileManager : MonoBehaviour
                 ID = newID,
             });
 
-            
 
-            p_objects[newID].SetRotation(transform.rotation);
-            p_objects[newID].gameObject.SetActive(true);
+            float angle_rad = math.atan2(projectiles[newID].direction.y, projectiles[newID].direction.x);
+            quaternion q = quaternion.EulerXYZ(0f, 0f, math.degrees(angle_rad));
+
+            projectile_objects[newID].SetRotation(q);
+            projectile_objects[newID].gameObject.SetActive(true);
         }
     }
     void UpdateProjectiles()
     {
-        for (int i = p_objects.Count - 1; i >= 0; i--)
+        for (int i = projectile_objects.Count - 1; i >= 0; i--)
         {
-            ProjectileData* ptr = &((ProjectileData*)projectiles.GetUnsafePtr())[i];
+            //ProjectileData* ptr = &((ProjectileData*)projectiles.GetUnsafePtr())[i];
+            ProjectileData* ptr = GetProjectilePtr(i);
             ProjectileData p = projectiles[i];
             if (!ptr->active) continue;
 
             if (ptr->lifetime > 0f && ptr->HP > 0)
             {
-                p_objects[i].SetPosition(ptr->transform.position);
+                projectile_objects[i].SetPosition(ptr->transform.position);
                 ptr->lifetime -= delta_time;
             }
             else
             {
-                int count = p_objects.Count;
+                int count = projectile_objects.Count;
                 int final_index = count - 1;
-                p.active = false;
-                p_objects[i].gameObject.SetActive(false);
-                p_ready_objects.Add(p_objects[i]);
+                ptr->active = false;
 
-                p_objects[i] = p_objects[final_index];
-                p_objects.RemoveAt(final_index);
-                if (final_index < i) p_objects[i].ID = i;
+                projectile_objects[i].gameObject.SetActive(false);
+                projectile_pool.Add(projectile_objects[i]);
 
-                projectiles[i] = projectiles[final_index];
+                projectile_objects[i] = projectile_objects[final_index];
+                projectile_objects.RemoveAt(final_index);
+                if (final_index < i) projectile_objects[i].ID = i;
+
+                //projectiles[i] = projectiles[final_index];
+                *ptr = projectiles[final_index];
                 projectiles.RemoveAt(final_index);
-                p.ID = i;
+                ptr->ID = i;
                 if (final_index < i) projectiles[i] = p;
             }
-
         }
     }
+
+    void KillProjectile(int index, int end)
+    {
+        // TODO
+    }
+
+    // HELPERS
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public ProjectileData* GetProjectilePtr(int i) => &((ProjectileData*)projectiles.GetUnsafePtr())[i];
 }
 
 

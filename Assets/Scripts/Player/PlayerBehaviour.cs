@@ -1,5 +1,7 @@
+using System.Data.Common;
 using Unity.Mathematics;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class PlayerBehaviour : MonoBehaviour
 {
@@ -61,6 +63,7 @@ public class PlayerBehaviour : MonoBehaviour
     }
     void Start()
     {
+        InitResources.GetInputReader.OnAbility += DebugSpawn;
         InitResources.GetInputReader.OnMove += GetMoveDir;
         player_data.position = InitResources.GetPlayer.GetPosition();
         player_data.direction = InitResources.GetInputReader.GetMoveDirection();
@@ -73,7 +76,7 @@ public class PlayerBehaviour : MonoBehaviour
 
         if (InitResources.GetInputReader.is_shooting && shoot_coldown <= 0f)
         {
-            InitResources.GetProjectileManager.SpawnProjectile(ConvertTransform(InitResources.GetPlayer.GetTransform), mouse_pos, weapon.projectile_hp, weapon.speed, weapon.base_dmg);
+            InitResources.GetProjectileManager.SpawnProjectile(new TransformData(InitResources.GetPlayer.GetTransform()), mouse_pos, weapon.projectile_hp, weapon.speed, weapon.base_dmg);
             shoot_coldown = 1f / 420;
         }
 
@@ -112,5 +115,14 @@ public class PlayerBehaviour : MonoBehaviour
     void GetMoveDir()
     {
         player_data.direction = InitResources.GetInputReader.GetMoveDirection();
+    }
+
+    void DebugSpawn()
+    {
+        TransformData data;
+        data.position = float3.zero;
+        data.scale = new float3(1f, 1f, 1f);
+        data.rotation = quaternion.identity;
+        InitResources.GetEntityManagerBehaviour.SpawnEntity(data, 5f, 2.5f, 3f);
     }
 }

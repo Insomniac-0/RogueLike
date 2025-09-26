@@ -5,11 +5,11 @@ using UnityEngine;
 public class CameraFollowBehaviour : MonoBehaviour
 {
     Player player;
-
+    Transform cache_transform;
 
     void Awake()
     {
-        InitResources.GetNullableObjects.AssignCamera(GetComponent<Camera>());
+        cache_transform = transform;
     }
     void Start()
     {

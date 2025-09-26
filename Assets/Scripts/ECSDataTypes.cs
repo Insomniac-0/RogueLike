@@ -1,14 +1,22 @@
 using Unity.Mathematics;
+using UnityEngine;
+
 
 public struct TransformData
 {
     public quaternion rotation;
     public float3 position;
     public float3 scale;
-    public TransformData(Transform t) => 
+
+    public TransformData(in Transform t)
+    {
+        rotation = t.rotation;
+        position = t.position;
+        scale = t.localScale;
+    }
 }
 
-struct ProjectileData
+public struct ProjectileData
 {
     public TransformData transform;
 
@@ -24,23 +32,19 @@ struct ProjectileData
     public bool active;
 }
 
-// TransFormData ConvertTransform(Transform t)
-// {
-//     TransFormData data = new TransformData
-//     {
-//         position = t.position;
-//         rotation = t.rotation;
-//         scale = t.scale;
-//     }
-
-//     return data;
-
-TransFormData ConvertTransform(Transform t)
+public struct EntityData
 {
-    return new TransformData
-    {
-        position = t.position;
-        rotation = t.rotation;
-        scale = t.scale;
-    }
+    public TransformData transform;
+
+    public float3 direction;
+    public float3 velocity;
+
+    public int ID;
+
+    public float dmg;
+    public float speed;
+    public float hp;
+
+    public bool active;
+
 }

@@ -41,11 +41,12 @@ public class InputReader : MonoBehaviour
 
     void Awake()
     {
-
+        inputs = new Inputs();
+        inputs.Enable();
     }
     void Start()
     {
-        inputs = new Inputs();
+
         inputs.PlayerActions.MousePosition.performed += (e) =>
         {
             if (!InitResources.GetCamera) return;
@@ -84,7 +85,7 @@ public class InputReader : MonoBehaviour
         inputs.PlayerActions.Shoot.canceled += _ => is_shooting = false;
         inputs.PlayerActions.AltShoot.performed += _ => OnAltShoot?.Invoke();
         inputs.PlayerActions.Ability.performed += _ => OnAbility?.Invoke();
-        inputs.Enable();
+
     }
 
 

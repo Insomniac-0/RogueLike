@@ -35,8 +35,10 @@ public sealed class Projectile : MonoBehaviour
         if (collision.TryGetComponent<Enemy>(out Enemy collider_ref) && _prevID != collider_ref.GetID())
         {
             _prevID = collider_ref.GetID();
-            collider_ref.GetComponent<EntityManagerBehaviour>().TakeDmg(_prevID, 5);
-            gameObject.GetComponent<ProjectileManager>().TakeDMG(this.ID);
+            InitResources.GetEntityManagerBehaviour.TakeDmg(_prevID, 5);
+            InitResources.GetProjectileManager.TakeDMG(ID);
+            // collider_ref.GetComponent<EntityManagerBehaviour>().TakeDmg(_prevID, 5);
+            // gameObject.GetComponent<ProjectileManager>().TakeDMG(this.ID);
         }
     }
 }

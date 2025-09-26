@@ -2,8 +2,8 @@ using UnityEngine;
 
 public class NullableObjects : MonoBehaviour
 {
-    public Camera cam;
-    public Player player;
+    [HideInInspector] public Camera cam { private set; get; }
+    [HideInInspector] public Player player { private set; get; }
 
 
     public void AssignPlayer(Player p) => player = p;
