@@ -1,7 +1,5 @@
 using System;
 using System.IO;
-using Unity.Mathematics;
-using UnityEditor.Build.Pipeline;
 using UnityEngine;
 
 [Serializable]

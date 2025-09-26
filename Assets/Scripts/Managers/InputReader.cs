@@ -1,12 +1,6 @@
 using System;
-using System.Diagnostics;
 using Unity.Mathematics;
-using Unity.VisualScripting;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
-using UnityEngine.InputSystem;
-using UnityEngine.iOS;
-using UnityEngine.Pool;
 
 public class InputReader : MonoBehaviour
 {

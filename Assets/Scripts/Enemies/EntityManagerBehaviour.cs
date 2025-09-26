@@ -1,23 +1,12 @@
-using System;
 using System.Runtime.CompilerServices;
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Collections.LowLevel.Unsafe;
 using Unity.Entities;
-using Unity.Entities.UniversalDelegates;
 using Unity.Jobs;
 using Unity.Mathematics;
 using Unity.Physics;
-using Unity.VisualScripting;
-using UnityEditor;
-using UnityEditor.Build.Pipeline.Utilities;
-using UnityEditor.Experimental.GraphView;
-using UnityEditor.ShaderGraph;
 using UnityEngine;
-using UnityEngine.Analytics;
-using UnityEngine.InputSystem;
-using UnityEngine.Rendering;
-using UnityEngine.Splines;
 
 [BurstCompile]
 public unsafe class EntityManagerBehaviour : MonoBehaviour

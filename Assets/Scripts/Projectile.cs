@@ -1,24 +1,33 @@
+using System.Runtime.CompilerServices;
 using Unity.Mathematics;
-using UnityEditor;
-using UnityEditor.Search;
 using UnityEngine;
 
-public class Projectile : MonoBehaviour
+public sealed class Projectile : MonoBehaviour
 {
     public int ID;
+    Transform trans_cache;
 
     private SpriteRenderer sprite_renderer;
     private int _prevID;
 
-    public float3 GetPosition() => transform.position;
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public float3 GetPosition() => trans_cache.position;
 
-    public void SetPosition(float3 pos) => transform.position = pos;
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public void SetPosition(in float3 pos) => trans_cache.position = pos;
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public void SetRotation(in Quaternion rot) => trans_cache.rotation = rot;
+
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void SetColor(float3 color) => sprite_renderer.color = new Color(color.x, color.y, color.z);
 
     void Awake()
     {
         _prevID = -1;
         sprite_renderer = GetComponent<SpriteRenderer>();
+        trans_cache = transform;
     }
 
     void OnTriggerEnter2D(Collider2D collision)

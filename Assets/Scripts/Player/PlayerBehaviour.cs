@@ -1,7 +1,4 @@
-using System;
 using Unity.Mathematics;
-using Unity.VisualScripting.FullSerializer;
-using UnityEditorInternal;
 using UnityEngine;
 
 public class PlayerBehaviour : MonoBehaviour
@@ -76,8 +73,8 @@ public class PlayerBehaviour : MonoBehaviour
 
         if (InitResources.GetInputReader.is_shooting && shoot_coldown <= 0f)
         {
-            InitResources.GetProjectileManager.SpawnProjectile(InitResources.GetPlayer.GetPosition(), mouse_pos, weapon.projectile_hp, weapon.speed, weapon.base_dmg);
-            shoot_coldown = 1f / 42;
+            InitResources.GetProjectileManager.SpawnProjectile(ConvertTransform(InitResources.GetPlayer.GetTransform), mouse_pos, weapon.projectile_hp, weapon.speed, weapon.base_dmg);
+            shoot_coldown = 1f / 420;
         }
 
         player_data.direction = math.normalizesafe(InitResources.GetInputReader.GetMoveDirection());
