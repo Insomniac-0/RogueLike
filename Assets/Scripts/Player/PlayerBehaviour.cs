@@ -63,28 +63,35 @@ public class PlayerBehaviour : MonoBehaviour
     }
     void Start()
     {
-        InitResources.GetInputReader.OnAbility += DebugSpawn;
-        InitResources.GetInputReader.OnMove += GetMoveDir;
         player_data.position = InitResources.GetPlayer.GetPosition();
-        player_data.direction = InitResources.GetInputReader.GetMoveDirection();
     }
     void Update()
     {
-        mouse_pos.xy = InitResources.GetInputReader.GetMousePositionWS().xy;
-        mouse_pos.z = 0;
+
         shoot_coldown -= Time.deltaTime;
+
+        player_data.position = InitResources.GetPlayer.GetPosition();
+        player_data.direction = math.normalizesafe(InitResources.GetInputReader.GetMoveDirection());
 
         if (InitResources.GetInputReader.is_shooting && shoot_coldown <= 0f)
         {
-            InitResources.GetProjectileManager.SpawnProjectile(new TransformData(InitResources.GetPlayer.GetTransform()), mouse_pos, weapon.projectile_hp, weapon.speed, weapon.base_dmg);
-            shoot_coldown = 1f / 420;
+            TransformData data;
+            data.position = player_data.position;
+            mouse_pos = InitResources.GetInputReader.GetMousePositionWS();
+            float2 direction = math.normalizesafe(mouse_pos.xy - data.position.xy);
+            float angle_rad = math.atan2(direction.y, direction.x);
+            float angle = math.degrees(angle_rad);
+            if (angle < 0) angle += 360;
+            data.rotation = quaternion.EulerXYZ(0f, 0f, angle);
+            data.scale = new(1f, 1f, 1f);
+
+            InitResources.GetProjectileManager.SpawnProjectile(data, new(direction.xy, 0f), weapon.projectile_hp, weapon.speed, weapon.base_dmg);
+            shoot_coldown = 1f / weapon.fire_rate;
         }
 
-        player_data.direction = math.normalizesafe(InitResources.GetInputReader.GetMoveDirection());
+
 
         //Debug.Log($"Moving in direction: {player_data.direction}");
-
-
 
         player_data.velocity = player_data.speed * player_data.direction;
         InitResources.GetPlayer.SetVelocity(player_data.velocity);
@@ -112,17 +119,5 @@ public class PlayerBehaviour : MonoBehaviour
         weapon.base_dmg = _weapon_template.BaseDMG;
     }
 
-    void GetMoveDir()
-    {
-        player_data.direction = InitResources.GetInputReader.GetMoveDirection();
-    }
 
-    void DebugSpawn()
-    {
-        TransformData data;
-        data.position = float3.zero;
-        data.scale = new float3(1f, 1f, 1f);
-        data.rotation = quaternion.identity;
-        InitResources.GetEntityManagerBehaviour.SpawnEntity(data, 5f, 2.5f, 3f);
-    }
 }

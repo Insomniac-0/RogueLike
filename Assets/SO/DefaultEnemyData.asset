@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: DefaultEnemyData
   m_EditorClassIdentifier: Assembly-CSharp::EnemyData
   MaxHealth: 10
-  BaseMovementSpeed: 2.5
+  BaseMovementSpeed: 1.5
   BaseDMG: 1

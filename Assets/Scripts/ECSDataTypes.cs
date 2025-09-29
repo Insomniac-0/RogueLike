@@ -10,9 +10,15 @@ public struct TransformData
 
     public TransformData(in Transform t)
     {
-        rotation = t.rotation;
         position = t.position;
+        rotation = t.rotation;
         scale = t.localScale;
+    }
+    public TransformData(in float3 position)
+    {
+        this.position = position;
+        rotation = quaternion.EulerXYZ(0f, 0f, 0f);
+        scale = new(1f, 1f, 1f);
     }
 }
 

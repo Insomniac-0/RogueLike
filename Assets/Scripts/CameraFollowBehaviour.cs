@@ -17,7 +17,8 @@ public class CameraFollowBehaviour : MonoBehaviour
     }
     void Update()
     {
-        transform.position = new float3(player.GetPosition().xy, -10f);
+        if (!InitResources.GetPlayer) return;
+        cache_transform.position = new float3(player.GetPosition().xy, -10f);
     }
 }
 

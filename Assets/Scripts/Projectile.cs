@@ -5,10 +5,11 @@ using UnityEngine;
 public sealed class Projectile : MonoBehaviour
 {
     public int ID;
+    public int _prevID;
     Transform trans_cache;
 
     private SpriteRenderer sprite_renderer;
-    private int _prevID;
+
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public float3 GetPosition() => trans_cache.position;
@@ -22,6 +23,7 @@ public sealed class Projectile : MonoBehaviour
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void SetColor(float3 color) => sprite_renderer.color = new Color(color.x, color.y, color.z);
+
 
     void Awake()
     {

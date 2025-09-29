@@ -40,12 +40,6 @@ public unsafe class EntityManagerBehaviour : MonoBehaviour
     List<Enemy> enemy_objects;
     List<Enemy> enemy_pool;
 
-
-
-
-
-
-
     float3 mouse_pos;
     float3 player_position;
 
@@ -74,6 +68,7 @@ public unsafe class EntityManagerBehaviour : MonoBehaviour
         delta_time = Time.deltaTime;
         player_position = InitResources.GetPlayer.GetPosition();
 
+
         EntityMovementJob entity_job = new EntityMovementJob
         {
             enemies = enemies.AsDeferredJobArray(),
@@ -86,7 +81,7 @@ public unsafe class EntityManagerBehaviour : MonoBehaviour
 
         handle.Complete();
 
-        UpdateEntities();
+        UpdateSetEntities();
     }
 
 
@@ -104,7 +99,7 @@ public unsafe class EntityManagerBehaviour : MonoBehaviour
             EntityData* ptr = &((EntityData*)enemies.GetUnsafePtr())[index];
 
             if (!ptr->active) return;
-            ptr->direction = player_position - ptr->transform.position;
+            ptr->direction = math.normalizesafe(player_position - ptr->transform.position);
             ptr->velocity = ptr->direction * ptr->speed;
 
         }
@@ -117,31 +112,15 @@ public unsafe class EntityManagerBehaviour : MonoBehaviour
         //Entity* ptr = GetEntity(index);
         EntityData* ptr = &((EntityData*)enemies.GetUnsafePtr())[ID];
         ptr->hp -= dmg;
-        if (ptr->hp <= 0)
-        {
-            int final_index = enemy_objects.Count - 1;
-
-            ptr->active = false;
-            enemy_objects[ID].gameObject.SetActive(false);
-
-            enemy_pool.Add(enemy_objects[ID]);
-
-            enemy_objects[ID] = enemy_objects[final_index];
-            enemy_objects.RemoveAt(final_index);
-            enemy_objects[ID].ID = ID;
-
-            *ptr = enemies[final_index];
-            enemies.RemoveAt(final_index);
-            ptr->ID = ID;
-        }
-
     }
 
     public void SpawnEntity(TransformData src, float HP, float Speed, float DMG)
     {
+        int newID = enemy_objects.Count;
+
         if (enemy_pool.Count == 0)
         {
-            int newID = enemy_objects.Count;
+
 
             // Object
             Enemy e = Instantiate(enemy_ref);
@@ -167,9 +146,10 @@ public unsafe class EntityManagerBehaviour : MonoBehaviour
             Enemy e = enemy_pool[0];
             enemy_pool.RemoveAtSwapBack(0);
 
-            int newID = enemy_objects.Count;
 
             e.ID = newID;
+            e.SetPosition(src.position);
+            e.gameObject.SetActive(true);
             enemy_objects.Add(e);
 
             enemies.Add(new EntityData
@@ -183,21 +163,52 @@ public unsafe class EntityManagerBehaviour : MonoBehaviour
                 active = true,
             });
 
-            enemy_objects[newID].gameObject.SetActive(true);
         }
     }
 
-
-    public void UpdateEntities()
+    public void UpdateGetEntities()
     {
-
-        for (int i = enemy_objects.Count - 1; i >= 0; i--)
+        for (int i = 0; i < enemy_objects.Count; i++)
         {
             EntityData* ptr = &((EntityData*)enemies.GetUnsafePtr())[i];
             //EntityData* ptr = GetEntityPtr(i);
             if (!ptr->active) continue;
+            ptr->transform.position = enemy_objects[i].GetPosition();
+        }
+    }
+    public void UpdateSetEntities()
+    {
 
-            enemy_objects[i].SetVelocity(ptr->velocity);
+        for (int i = 0; i < enemy_objects.Count; i++)
+        {
+            EntityData* ptr = &((EntityData*)enemies.GetUnsafePtr())[i];
+            EntityData e = enemies[i];
+            //EntityData* ptr = GetEntityPtr(i);
+            if (!ptr->active) continue;
+            if (ptr->hp > 0)
+            {
+                enemy_objects[i].SetVelocity(ptr->velocity);
+                ptr->transform.position = enemy_objects[i].GetPosition();
+            }
+            else
+            {
+                int last_index = enemy_objects.Count - 1;
+                ptr->active = false;
+
+                enemy_objects[i].gameObject.SetActive(false);
+                enemy_pool.Add(enemy_objects[i]);
+
+                enemy_objects[i] = enemy_objects[last_index];
+                enemy_objects[last_index].gameObject.SetActive(false);
+                enemy_objects.RemoveAt(last_index);
+                iff(last_index < i) enemy_objects[i].ID = i;
+
+                *ptr = enemies[last_index];
+                enemies.RemoveAt(last_index);
+                ptr->ID = i;
+                //if (last_index < i) enemies[i] = e;
+
+            }
         }
     }
 

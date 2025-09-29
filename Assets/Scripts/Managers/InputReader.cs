@@ -58,7 +58,7 @@ public class InputReader : MonoBehaviour
             float angle_rad = math.atan2(direction.y, direction.x);
             angle = math.degrees(angle_rad);
             if (angle < 0) angle += 360;
-            dir = ((int)(angle / 45.0f)) % 8;
+            dir = ((int)((angle + 25) / 45.0f)) % 8;
             current_direction = (PlayerMoveDirection)dir;
         };
 

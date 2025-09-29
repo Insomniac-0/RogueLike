@@ -83,36 +83,24 @@ public unsafe class ProjectileManager : MonoBehaviour
     {
         ProjectileData* ptr = &((ProjectileData*)projectiles.GetUnsafePtr())[ID];
         ptr->HP--;
-        if (ptr->HP <= 0)
-        {
-            int final_index = projectile_objects.Count - 1;
-
-            ptr->active = false;
-            projectile_objects[ID].gameObject.SetActive(false);
-
-            projectile_pool.Add(projectile_objects[ID]);
-
-            projectile_objects[ID] = projectile_objects[final_index];
-            projectile_objects.RemoveAt(final_index);
-            projectile_objects[ID].ID = ID;
-
-            *ptr = projectiles[final_index];
-            projectiles.RemoveAt(final_index);
-            ptr->ID = ID;
-        }
     }
 
-    public void SpawnProjectile(TransformData src, float3 target, int HP, float Speed, float DMG)
+    public void SpawnProjectile(TransformData src, float3 direction, int HP, float Speed, float DMG)
     {
+
+        int newID = projectile_objects.Count;
 
         if (projectile_pool.Count == 0)
         {
-            int newID = projectile_objects.Count;
+
 
             // Objects
             Projectile p = Instantiate(projectile_ref);
+
             p.ID = newID;
             p.SetPosition(src.position);
+            p.SetRotation(src.rotation);
+            p._prevID = -1;
             p.gameObject.SetActive(true);
             projectile_objects.Add(p);
 
@@ -120,9 +108,9 @@ public unsafe class ProjectileManager : MonoBehaviour
 
             projectiles.Add(new ProjectileData
             {
-                transform = src,
-                direction = math.normalizesafe(target - src.position),
                 ID = newID,
+                transform = src,
+                direction = direction,
                 HP = HP,
                 dmg = DMG,
                 speed = Speed,
@@ -132,44 +120,50 @@ public unsafe class ProjectileManager : MonoBehaviour
         }
         else
         {
+
+
+            // Object
+
             Projectile p = projectile_pool[0];
             projectile_pool.RemoveAtSwapBack(0);
 
-            int newID = projectile_objects.Count;
+
             p.ID = newID;
-
-
+            p.SetPosition(src.position);
+            p.SetRotation(src.rotation);
+            p._prevID = -1;
+            p.gameObject.SetActive(true);
             projectile_objects.Add(p);
+
+            // Data
             projectiles.Add(new ProjectileData
             {
-                speed = Speed,
+                ID = newID,
+                transform = src,
+                direction = direction,
                 HP = HP,
                 dmg = DMG,
+                speed = Speed,
                 lifetime = 2f,
-                transform = src,
-                direction = math.normalizesafe(target - src.position),
                 active = true,
-                ID = newID,
+
             });
 
 
-            float angle_rad = math.atan2(projectiles[newID].direction.y, projectiles[newID].direction.x);
-            quaternion q = quaternion.EulerXYZ(0f, 0f, math.degrees(angle_rad));
 
-            projectile_objects[newID].SetRotation(q);
-            projectile_objects[newID].gameObject.SetActive(true);
         }
     }
+
     void UpdateProjectiles()
     {
         for (int i = projectile_objects.Count - 1; i >= 0; i--)
         {
-            //ProjectileData* ptr = &((ProjectileData*)projectiles.GetUnsafePtr())[i];
-            ProjectileData* ptr = GetProjectilePtr(i);
+            ProjectileData* ptr = &((ProjectileData*)projectiles.GetUnsafePtr())[i];
+            //ProjectileData* ptr = GetProjectilePtr(i);
             ProjectileData p = projectiles[i];
             if (!ptr->active) continue;
 
-            if (ptr->lifetime > 0f && ptr->HP > 0)
+            if (ptr->lifetime > 0f && ptr->HP > 0f)
             {
                 projectile_objects[i].SetPosition(ptr->transform.position);
                 ptr->lifetime -= delta_time;
@@ -177,21 +171,23 @@ public unsafe class ProjectileManager : MonoBehaviour
             else
             {
                 int count = projectile_objects.Count;
-                int final_index = count - 1;
+                int last_index = count - 1;
                 ptr->active = false;
+
 
                 projectile_objects[i].gameObject.SetActive(false);
                 projectile_pool.Add(projectile_objects[i]);
 
-                projectile_objects[i] = projectile_objects[final_index];
-                projectile_objects.RemoveAt(final_index);
-                if (final_index < i) projectile_objects[i].ID = i;
+                projectile_objects[i] = projectile_objects[last_index];
+                projectile_objects.RemoveAt(last_index);
+                if (last_index < i) projectile_objects[i].ID = i;
 
-                //projectiles[i] = projectiles[final_index];
-                *ptr = projectiles[final_index];
-                projectiles.RemoveAt(final_index);
+
+                //*ptr = projectiles[final_index];
+                *ptr = projectiles[last_index];
+                projectiles.RemoveAt(last_index);
                 ptr->ID = i;
-                if (final_index < i) projectiles[i] = p;
+                if (last_index < i) projectiles[i] = p;
             }
         }
     }
