@@ -82,8 +82,8 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 7383415193224769214, guid: fed720ebdf0954e7098c139a437a3978, type: 3}
-  m_Color: {r: 0, g: 0, b: 0, a: 1}
+  m_Sprite: {fileID: 21300000, guid: 5eb2c39da00a4cff68cea4b9f2f4e6e1, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -106,6 +106,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Projectile
   ID: 0
+  _prevID: 0
 --- !u!58 &2675777420018395318
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -140,8 +141,8 @@ CircleCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0.15, y: 0}
-  m_Radius: 0.25
+  m_Offset: {x: 0, y: 0}
+  m_Radius: 0.05
 --- !u!50 &5303701524228787614
 Rigidbody2D:
   serializedVersion: 5

@@ -15,6 +15,6 @@ MonoBehaviour:
   ProjectileCount: 1
   BaseProjectileHP: 1
   BaseProjectileSpeed: 10
-  FireRate: 2
+  FireRate: 10
   BaseDMG: 5
   DMG_Multiply: 1
