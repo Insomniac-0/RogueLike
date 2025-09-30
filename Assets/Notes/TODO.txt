@@ -47,16 +47,18 @@ FEATURES G
 
 
 
-[ ] - Collision system
+[/] - Collision system
     [ ] -
     [ ] -
 
-[/] - Projectile system
+[X] - Projectile system
     [X] - Movement
     [X] - Collision Detection
-    [ ] - Collision Resolution
-    [ ] - 
+    [X] - Collision Resolution
     
 
 
 [X] - Sprite Direction - 
+
+
+Fix Player Enemy Collision;

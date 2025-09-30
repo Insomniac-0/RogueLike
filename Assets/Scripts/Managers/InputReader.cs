@@ -42,7 +42,9 @@ public class InputReader : MonoBehaviour
     void Awake()
     {
         inputs = new Inputs();
-        inputs.Enable();
+        inputs.PlayerActions.Enable();
+
+        //int menu = inputs.MenuActions.Select.ReadValue<int>();
     }
     void Start()
     {

@@ -1,3 +1,4 @@
+using System;
 using System.Data.Common;
 using Unity.Mathematics;
 using UnityEngine;
@@ -7,19 +8,23 @@ public class PlayerBehaviour : MonoBehaviour
 {
     [SerializeField] private PlayerData _player_template;
     [SerializeField] private WeaponData _weapon_template;
+
     private ProjectileManager _projectile_manager => InitResources.GetProjectileManager;
 
+    public event Action OnHealthChange;
 
 
-    float shoot_coldown;
+    float shoot_cooldown;
+    float iframe_cooldown;
 
     float3 mouse_pos;
 
     // TYPES
 
-    struct PlayerStats
+    public struct PlayerStats
     {
         public float max_health;
+        public float current_hp;
         public float base_move_speed;
         public float attack_speed;
         public float ms_multiply;
@@ -46,7 +51,7 @@ public class PlayerBehaviour : MonoBehaviour
 
 
 
-    PlayerStats player_stats;
+    public PlayerStats player_stats;
     PlayerMoveData player_data;
     Weapon weapon;
 
@@ -64,16 +69,21 @@ public class PlayerBehaviour : MonoBehaviour
     void Start()
     {
         player_data.position = InitResources.GetPlayer.GetPosition();
+        shoot_cooldown = 0;
+        iframe_cooldown = 0;
     }
     void Update()
     {
 
-        shoot_coldown -= Time.deltaTime;
+        if (shoot_cooldown > 0) shoot_cooldown -= Time.deltaTime * weapon.fire_rate;
+        if (iframe_cooldown > 0) iframe_cooldown -= Time.deltaTime;
+        if (player_stats.current_hp <= 0) Debug.Log($"HP : {player_stats.current_hp} - DEATH");
+
 
         player_data.position = InitResources.GetPlayer.GetPosition();
         player_data.direction = math.normalizesafe(InitResources.GetInputReader.GetMoveDirection());
 
-        if (InitResources.GetInputReader.is_shooting && shoot_coldown <= 0f)
+        if (InitResources.GetInputReader.is_shooting && shoot_cooldown <= 0f)
         {
             TransformData data;
             data.position = player_data.position;
@@ -86,7 +96,7 @@ public class PlayerBehaviour : MonoBehaviour
             data.scale = new(1f, 1f, 1f);
 
             InitResources.GetProjectileManager.SpawnProjectile(data, new(direction.xy, 0f), weapon.projectile_hp, weapon.speed, weapon.base_dmg);
-            shoot_coldown = 1f / weapon.fire_rate;
+            shoot_cooldown = 1f;
         }
 
 
@@ -97,12 +107,12 @@ public class PlayerBehaviour : MonoBehaviour
         InitResources.GetPlayer.SetVelocity(player_data.velocity);
     }
 
-
     void InitializeStats()
     {
         player_stats.base_move_speed = _player_template.BaseMovementSpeed;
 
         player_stats.max_health = _player_template.MaxHealth;
+        player_stats.current_hp = _player_template.MaxHealth;
         player_stats.attack_speed = _player_template.AttackSpeed;
         player_stats.ms_multiply = _player_template.MS_Multiply;
         player_stats.xp_multiply = _player_template.XP_Multiply;
@@ -120,4 +130,11 @@ public class PlayerBehaviour : MonoBehaviour
     }
 
 
+    public void TakeDMG(float DMG)
+    {
+        player_stats.current_hp -= DMG;
+        iframe_cooldown = 0.5f;
+        Debug.Log($"{DMG} Taken : {player_stats.current_hp} HP left");
+        OnHealthChange?.Invoke();
+    }
 }

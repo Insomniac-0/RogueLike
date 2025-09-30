@@ -35,7 +35,7 @@ public unsafe class EntityManagerBehaviour : MonoBehaviour
     }
 
     // ARRAYS
-    NativeList<EntityData> enemies;
+    public NativeList<EntityData> enemies;
 
     List<Enemy> enemy_objects;
     List<Enemy> enemy_pool;
@@ -201,7 +201,7 @@ public unsafe class EntityManagerBehaviour : MonoBehaviour
                 enemy_objects[i] = enemy_objects[last_index];
                 enemy_objects[last_index].gameObject.SetActive(false);
                 enemy_objects.RemoveAt(last_index);
-                iff(last_index < i) enemy_objects[i].ID = i;
+                if (last_index < i) enemy_objects[i].ID = i;
 
                 *ptr = enemies[last_index];
                 enemies.RemoveAt(last_index);
@@ -230,4 +230,7 @@ public unsafe class EntityManagerBehaviour : MonoBehaviour
     {
         // TODO
     }
+
+    public float GetDamage(int ID) => enemies[ID].dmg;
+
 }

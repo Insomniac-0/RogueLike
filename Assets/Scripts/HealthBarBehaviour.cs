@@ -4,10 +4,20 @@ using UnityEngine.UI;
 
 public class HealthBarBehaviour : MonoBehaviour
 {
-    [SerializeField] Player player;
+    Player player;
+    Image image;
 
+    void Start()
+    {
+        player = InitResources.GetPlayer;
+        image = GetComponent<Image>();
+    }
     void Update()
     {
-        GetComponent<Image>().fillAmount = math.clamp(player.Health / 100f, 0f, 1f);
+        if (player != null)
+        {
+            image.fillAmount = math.clamp(player.GetHP() / player.GetMaxHP(), 0f, 1f);
+        }
+
     }
 }

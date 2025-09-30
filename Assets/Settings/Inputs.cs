@@ -239,6 +239,89 @@ public partial class @Inputs: IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": false
                 }
             ]
+        },
+        {
+            ""name"": ""MenuActions"",
+            ""id"": ""fa8b473a-a3be-4527-86a3-45dd9c2d7165"",
+            ""actions"": [
+                {
+                    ""name"": ""Select"",
+                    ""type"": ""Value"",
+                    ""id"": ""01f9267c-76c5-4965-9a17-764f54d3ac2e"",
+                    ""expectedControlType"": ""Axis"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": ""1D Axis"",
+                    ""id"": ""99b701c4-b92c-4b2b-9e64-06e81059b502"",
+                    ""path"": ""1DAxis"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Select"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""Positive"",
+                    ""id"": ""a01d37d3-7ca5-4f93-9b60-e7e0a150f897"",
+                    ""path"": ""<Keyboard>/w"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Select"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""Negative"",
+                    ""id"": ""94d90a79-a37e-4532-91ee-87b24ce65466"",
+                    ""path"": ""<Keyboard>/s"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Select"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""1D Axis"",
+                    ""id"": ""309b66eb-29b4-47e5-905e-3cb82a019167"",
+                    ""path"": ""1DAxis"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Select"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""Positive"",
+                    ""id"": ""57cbf9b6-94c1-45ee-95e3-dcd0261fd36c"",
+                    ""path"": ""<Keyboard>/upArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Select"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""Negative"",
+                    ""id"": ""ec68630c-e4bc-467b-aa01-baf721899575"",
+                    ""path"": ""<Keyboard>/downArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Select"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                }
+            ]
         }
     ],
     ""controlSchemes"": []
@@ -250,11 +333,15 @@ public partial class @Inputs: IInputActionCollection2, IDisposable
         m_PlayerActions_Shoot = m_PlayerActions.FindAction("Shoot", throwIfNotFound: true);
         m_PlayerActions_AltShoot = m_PlayerActions.FindAction("AltShoot", throwIfNotFound: true);
         m_PlayerActions_Ability = m_PlayerActions.FindAction("Ability", throwIfNotFound: true);
+        // MenuActions
+        m_MenuActions = asset.FindActionMap("MenuActions", throwIfNotFound: true);
+        m_MenuActions_Select = m_MenuActions.FindAction("Select", throwIfNotFound: true);
     }
 
     ~@Inputs()
     {
         UnityEngine.Debug.Assert(!m_PlayerActions.enabled, "This will cause a leak and performance issues, Inputs.PlayerActions.Disable() has not been called.");
+        UnityEngine.Debug.Assert(!m_MenuActions.enabled, "This will cause a leak and performance issues, Inputs.MenuActions.Disable() has not been called.");
     }
 
     /// <summary>
@@ -466,6 +553,102 @@ public partial class @Inputs: IInputActionCollection2, IDisposable
     /// Provides a new <see cref="PlayerActionsActions" /> instance referencing this action map.
     /// </summary>
     public PlayerActionsActions @PlayerActions => new PlayerActionsActions(this);
+
+    // MenuActions
+    private readonly InputActionMap m_MenuActions;
+    private List<IMenuActionsActions> m_MenuActionsActionsCallbackInterfaces = new List<IMenuActionsActions>();
+    private readonly InputAction m_MenuActions_Select;
+    /// <summary>
+    /// Provides access to input actions defined in input action map "MenuActions".
+    /// </summary>
+    public struct MenuActionsActions
+    {
+        private @Inputs m_Wrapper;
+
+        /// <summary>
+        /// Construct a new instance of the input action map wrapper class.
+        /// </summary>
+        public MenuActionsActions(@Inputs wrapper) { m_Wrapper = wrapper; }
+        /// <summary>
+        /// Provides access to the underlying input action "MenuActions/Select".
+        /// </summary>
+        public InputAction @Select => m_Wrapper.m_MenuActions_Select;
+        /// <summary>
+        /// Provides access to the underlying input action map instance.
+        /// </summary>
+        public InputActionMap Get() { return m_Wrapper.m_MenuActions; }
+        /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.Enable()" />
+        public void Enable() { Get().Enable(); }
+        /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.Disable()" />
+        public void Disable() { Get().Disable(); }
+        /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.enabled" />
+        public bool enabled => Get().enabled;
+        /// <summary>
+        /// Implicitly converts an <see ref="MenuActionsActions" /> to an <see ref="InputActionMap" /> instance.
+        /// </summary>
+        public static implicit operator InputActionMap(MenuActionsActions set) { return set.Get(); }
+        /// <summary>
+        /// Adds <see cref="InputAction.started"/>, <see cref="InputAction.performed"/> and <see cref="InputAction.canceled"/> callbacks provided via <param cref="instance" /> on all input actions contained in this map.
+        /// </summary>
+        /// <param name="instance">Callback instance.</param>
+        /// <remarks>
+        /// If <paramref name="instance" /> is <c>null</c> or <paramref name="instance"/> have already been added this method does nothing.
+        /// </remarks>
+        /// <seealso cref="MenuActionsActions" />
+        public void AddCallbacks(IMenuActionsActions instance)
+        {
+            if (instance == null || m_Wrapper.m_MenuActionsActionsCallbackInterfaces.Contains(instance)) return;
+            m_Wrapper.m_MenuActionsActionsCallbackInterfaces.Add(instance);
+            @Select.started += instance.OnSelect;
+            @Select.performed += instance.OnSelect;
+            @Select.canceled += instance.OnSelect;
+        }
+
+        /// <summary>
+        /// Removes <see cref="InputAction.started"/>, <see cref="InputAction.performed"/> and <see cref="InputAction.canceled"/> callbacks provided via <param cref="instance" /> on all input actions contained in this map.
+        /// </summary>
+        /// <remarks>
+        /// Calling this method when <paramref name="instance" /> have not previously been registered has no side-effects.
+        /// </remarks>
+        /// <seealso cref="MenuActionsActions" />
+        private void UnregisterCallbacks(IMenuActionsActions instance)
+        {
+            @Select.started -= instance.OnSelect;
+            @Select.performed -= instance.OnSelect;
+            @Select.canceled -= instance.OnSelect;
+        }
+
+        /// <summary>
+        /// Unregisters <param cref="instance" /> and unregisters all input action callbacks via <see cref="MenuActionsActions.UnregisterCallbacks(IMenuActionsActions)" />.
+        /// </summary>
+        /// <seealso cref="MenuActionsActions.UnregisterCallbacks(IMenuActionsActions)" />
+        public void RemoveCallbacks(IMenuActionsActions instance)
+        {
+            if (m_Wrapper.m_MenuActionsActionsCallbackInterfaces.Remove(instance))
+                UnregisterCallbacks(instance);
+        }
+
+        /// <summary>
+        /// Replaces all existing callback instances and previously registered input action callbacks associated with them with callbacks provided via <param cref="instance" />.
+        /// </summary>
+        /// <remarks>
+        /// If <paramref name="instance" /> is <c>null</c>, calling this method will only unregister all existing callbacks but not register any new callbacks.
+        /// </remarks>
+        /// <seealso cref="MenuActionsActions.AddCallbacks(IMenuActionsActions)" />
+        /// <seealso cref="MenuActionsActions.RemoveCallbacks(IMenuActionsActions)" />
+        /// <seealso cref="MenuActionsActions.UnregisterCallbacks(IMenuActionsActions)" />
+        public void SetCallbacks(IMenuActionsActions instance)
+        {
+            foreach (var item in m_Wrapper.m_MenuActionsActionsCallbackInterfaces)
+                UnregisterCallbacks(item);
+            m_Wrapper.m_MenuActionsActionsCallbackInterfaces.Clear();
+            AddCallbacks(instance);
+        }
+    }
+    /// <summary>
+    /// Provides a new <see cref="MenuActionsActions" /> instance referencing this action map.
+    /// </summary>
+    public MenuActionsActions @MenuActions => new MenuActionsActions(this);
     /// <summary>
     /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "PlayerActions" which allows adding and removing callbacks.
     /// </summary>
@@ -508,5 +691,20 @@ public partial class @Inputs: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnAbility(InputAction.CallbackContext context);
+    }
+    /// <summary>
+    /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "MenuActions" which allows adding and removing callbacks.
+    /// </summary>
+    /// <seealso cref="MenuActionsActions.AddCallbacks(IMenuActionsActions)" />
+    /// <seealso cref="MenuActionsActions.RemoveCallbacks(IMenuActionsActions)" />
+    public interface IMenuActionsActions
+    {
+        /// <summary>
+        /// Method invoked when associated input action "Select" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnSelect(InputAction.CallbackContext context);
     }
 }

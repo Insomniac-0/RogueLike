@@ -54,3 +54,10 @@ public struct EntityData
     public bool active;
 
 }
+
+public enum ColliderType
+{
+    ENTITY,
+    PROJECTILE,
+    ATTACK,
+}

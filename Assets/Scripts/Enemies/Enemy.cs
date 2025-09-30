@@ -9,9 +9,10 @@ public class Enemy : MonoBehaviour
 {
 
     public int ID;
-
     private Rigidbody2D rb;
     private SpriteRenderer sprite_renderer;
+
+
 
     Transform cache_transform;
 
@@ -24,14 +25,21 @@ public class Enemy : MonoBehaviour
 
     void Start()
     {
-
     }
 
     public float3 GetPosition() => cache_transform.position;
+    private float GetDMG() => InitResources.GetEntityManagerBehaviour.GetDamage(this.ID);
 
     public int GetID() => ID;
 
     public void SetColor(float3 color) => sprite_renderer.color = new Color(color.x, color.y, color.z);
     public void SetPosition(float3 position) => cache_transform.position = position;
     public void SetVelocity(float3 velocity) => rb.linearVelocity = velocity.xy;
+
+
+    void OnCollisionEnter2D(Collision2D collision)
+    {
+        Debug.Log("Collision From Enemy");
+        collision.gameObject.GetComponent<Player>().TakeDamage(5f);
+    }
 }
