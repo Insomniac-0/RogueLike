@@ -12,7 +12,7 @@ public enum SoundFX
 }
 
 [Serializable]
-public struct SoundInstance
+public struct Audio
 {
     public SoundFX sfx;
     [SerializeField] AudioSource source;
@@ -25,17 +25,14 @@ public struct SoundInstance
 
 public class SoundManager : MonoBehaviour
 {
-    [SerializeField] List<SoundInstance> sound_instance;
+    AudioSource source;
 
-    public void PlaySoundEffect(SoundFX fx)
+    void Awake()
     {
-        for (int i = 0; i < sound_instance.Count; i++)
-        {
-            if (sound_instance[i].sfx == fx)
-            {
-                sound_instance[i].PlaySound();
-                return;
-            }
-        }
+        source = GetComponent<AudioSource>();
     }
+
+    public void PlayMusic() => source.Play();
 }
+
+
