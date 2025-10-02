@@ -17,6 +17,8 @@ public class InitResources : MonoBehaviour
     private CursorBehaviour cursor;
     private SoundManager sound_manager;
     private VfxManager vfx_manager;
+    private CollisionMasks collision_masks;
+    private UpgradeSystem upgrade_system;
 
 
 
@@ -30,6 +32,8 @@ public class InitResources : MonoBehaviour
         nullable_objects = GetComponent<NullableObjects>();
         sound_manager = GetComponent<SoundManager>();
         vfx_manager = GetComponent<VfxManager>();
+        collision_masks = GetComponent<CollisionMasks>();
+        upgrade_system = GetComponent<UpgradeSystem>();
 
         cursor = Instantiate(cursor_ref);
 
@@ -50,8 +54,13 @@ public class InitResources : MonoBehaviour
     public static NullableObjects GetNullableObjects => Instance.nullable_objects;
     public static SoundManager GetSoundManager => Instance.sound_manager;
     public static VfxManager GetVfxManager => Instance.vfx_manager;
-
-    public static Camera GetCamera => Instance.nullable_objects.cam;
-    public static Player GetPlayer => Instance.nullable_objects.player;
+    public static CollisionMasks GetCollisionMasks => Instance.collision_masks;
     public static CursorBehaviour GetCursor => Instance.cursor;
+    public static UpgradeSystem GetUpgradeSystem => Instance.upgrade_system;
+
+
+    public static Camera GetCamera => GetNullableObjects.cam;
+    public static Player GetPlayer => GetNullableObjects.player;
+    public static Int32 GetPlayerMask => GetCollisionMasks.GetPlayerMask;
+
 }

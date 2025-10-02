@@ -43,7 +43,7 @@ public class PlayerBehaviour : MonoBehaviour
         public float fire_rate;
         public float base_dmg;
     }
-    struct PlayerMoveData
+    public struct PlayerMoveData
     {
         public float3 position;
         public float3 direction;
@@ -54,7 +54,7 @@ public class PlayerBehaviour : MonoBehaviour
 
 
     public PlayerStats player_stats;
-    PlayerMoveData player_data;
+    public PlayerMoveData player_data;
     Weapon weapon;
 
     void Awake()
@@ -87,17 +87,14 @@ public class PlayerBehaviour : MonoBehaviour
 
         if (InitResources.GetInputReader.is_shooting && shoot_cooldown <= 0f)
         {
+            mouse_pos = InitResources.GetInputReader.GetMousePositionWS();
             TransformData data;
             data.position = player_data.position;
-            mouse_pos = InitResources.GetInputReader.GetMousePositionWS();
             float2 direction = math.normalizesafe(mouse_pos.xy - data.position.xy);
-            float angle_rad = math.atan2(direction.y, direction.x);
-            float angle = math.degrees(angle_rad);
-            if (angle < 0) angle += 360;
-            data.rotation = quaternion.EulerXYZ(0f, 0f, angle);
+            data.rotation = quaternion.EulerXYZ(0f, 0f, 0f);
             data.scale = new(1f, 1f, 1f);
 
-            InitResources.GetProjectileManager.SpawnProjectile(data, new(direction.xy, 0f), weapon.projectile_hp, weapon.speed, weapon.base_dmg);
+            InitResources.GetProjectileManager.SpawnProjectile(data, new(direction.xy, 0f), weapon.projectile_hp, weapon.speed, weapon.base_dmg * player_stats.dmg_multiply);
             shoot_cooldown = 1f;
         }
 

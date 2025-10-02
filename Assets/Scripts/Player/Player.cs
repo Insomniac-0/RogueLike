@@ -10,25 +10,35 @@ public class Player : MonoBehaviour
     public float Health;
     Transform cache_transform;
     PlayerBehaviour player_behaviour;
+    UpgradeSystem upgrade_system;
 
     private Rigidbody2D rb;
 
     void Awake()
     {
-        rb = GetComponent<Rigidbody2D>();
         player_behaviour = GetComponent<PlayerBehaviour>();
+        upgrade_system = GetComponent<UpgradeSystem>();
+
+        rb = GetComponent<Rigidbody2D>();
         InitResources.GetNullableObjects.AssignPlayer(this);
         cache_transform = transform;
+
+
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public float3 GetPosition() => cache_transform.position;
 
-    public float GetHP() => player_behaviour.player_stats.current_hp;
-    public float GetMaxHP() => player_behaviour.player_stats.max_health;
+    public float GetHP => player_behaviour.player_stats.current_hp;
+
+    public float GetMaxHP => player_behaviour.player_stats.max_health;
+
+    public float GetHealthPercentage => GetHP / GetMaxHP;
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public Transform GetTransform() => cache_transform;
+
+    public void AddXP(float xp) => InitResources.GetUpgradeSystem.AddExperience(xp);
 
     //public void SetColor(float3 color) => _sprite_renderer.color = new Color(color.x, color.y, color.z);
     public void SetPosition(float3 pos) => cache_transform.position = pos;
@@ -40,15 +50,10 @@ public class Player : MonoBehaviour
     }
 
 
-    void OnCollisionEnter2D(Collision2D collision)
+    public void RaycastHit()
     {
-        Debug.Log("Collision from Player");
-        // if (collision.gameObject.TryGetComponent<Enemy>(out Enemy collider_ref))
-        // {
-        //     prevID = collider_ref.GetID();
-        //     float dmg = InitResources.GetEntityManagerBehaviour.enemies[prevID].dmg;
-        //     player_behaviour.TakeDMG(dmg, collider_ref.collider_type);
-
-        // }
+        Debug.Log("HIT");
     }
+
+
 }

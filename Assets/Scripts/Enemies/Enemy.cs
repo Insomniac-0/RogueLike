@@ -31,6 +31,7 @@ public class Enemy : MonoBehaviour
         default_material = sprite_renderer.material;
     }
 
+
     public float3 GetPosition() => cache_transform.position;
     private float GetDMG() => InitResources.GetEntityManagerBehaviour.GetDamage(this.ID);
 

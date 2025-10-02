@@ -174,7 +174,6 @@ public unsafe class ProjectileManager : MonoBehaviour
                 int last_index = count - 1;
                 ptr->active = false;
 
-
                 projectile_objects[i].gameObject.SetActive(false);
                 projectile_pool.Add(projectile_objects[i]);
 

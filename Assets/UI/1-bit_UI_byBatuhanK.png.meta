@@ -140,10 +140,10 @@ TextureImporter:
       name: 1-bit_UI_byBatuhanK_0
       rect:
         serializedVersion: 2
-        x: 7
-        y: 147
-        width: 73
-        height: 105
+        x: 8
+        y: 148
+        width: 71
+        height: 103
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -162,10 +162,10 @@ TextureImporter:
       name: 1-bit_UI_byBatuhanK_1
       rect:
         serializedVersion: 2
-        x: 85
-        y: 154
-        width: 118
-        height: 101
+        x: 86
+        y: 155
+        width: 116
+        height: 99
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -184,10 +184,10 @@ TextureImporter:
       name: 1-bit_UI_byBatuhanK_2
       rect:
         serializedVersion: 2
-        x: 209
-        y: 152
-        width: 255
-        height: 102
+        x: 210
+        y: 153
+        width: 253
+        height: 100
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -206,10 +206,10 @@ TextureImporter:
       name: 1-bit_UI_byBatuhanK_3
       rect:
         serializedVersion: 2
-        x: 7
-        y: 34
-        width: 73
-        height: 111
+        x: 8
+        y: 35
+        width: 71
+        height: 109
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -228,10 +228,10 @@ TextureImporter:
       name: 1-bit_UI_byBatuhanK_4
       rect:
         serializedVersion: 2
-        x: 85
-        y: 107
-        width: 118
-        height: 45
+        x: 86
+        y: 108
+        width: 116
+        height: 43
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -250,10 +250,10 @@ TextureImporter:
       name: 1-bit_UI_byBatuhanK_5
       rect:
         serializedVersion: 2
-        x: 209
-        y: 107
-        width: 37
-        height: 45
+        x: 210
+        y: 108
+        width: 35
+        height: 43
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -272,10 +272,10 @@ TextureImporter:
       name: 1-bit_UI_byBatuhanK_6
       rect:
         serializedVersion: 2
-        x: 249
-        y: 45
-        width: 215
-        height: 107
+        x: 250
+        y: 46
+        width: 213
+        height: 105
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -291,45 +291,45 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: HP_0
+      name: 1-bit_UI_byBatuhanK_7
       rect:
         serializedVersion: 2
-        x: 90
-        y: 92
-        width: 106
-        height: 8
+        x: 86
+        y: 35
+        width: 116
+        height: 69
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: 0baeb6f8de48550a0800000000000000
-      internalID: -6893457498772346192
+      spriteID: 8ee0b1798fb7de5419d68577890075a6
+      internalID: 64351605
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: HP_1
+      name: 1-bit_UI_byBatuhanK_8
       rect:
         serializedVersion: 2
-        x: 90
-        y: 80
-        width: 106
-        height: 8
+        x: 86
+        y: 8
+        width: 116
+        height: 22
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: 5ae1b651edbfadd00800000000000000
-      internalID: 998387198676639397
+      spriteID: b80b19f464c1a8149baf3a65257dcda2
+      internalID: 1087347150
       vertices: []
       indices: 
       edges: []
@@ -346,7 +346,11 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     spriteCustomMetadata:
-      entries: []
+      entries:
+      - key: SpriteEditor.SliceOnImport
+        value: False
+      - key: SpriteEditor.SliceSettings
+        value: '{"sliceOnImport":false,"gridCellCount":{"x":1.0,"y":1.0},"gridSpriteSize":{"x":64.0,"y":64.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.5},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"pivotUnitMode":0,"slicingType":0,"keepEmptyRects":false,"isAlternate":false}'
     nameFileIdTable:
       1-bit_UI_byBatuhanK_0: -7566001254248236219
       1-bit_UI_byBatuhanK_1: 6900779525515493339
@@ -355,8 +359,8 @@ TextureImporter:
       1-bit_UI_byBatuhanK_4: 539889525855581842
       1-bit_UI_byBatuhanK_5: -87505471827237910
       1-bit_UI_byBatuhanK_6: 3004623737311694110
-      HP_0: -6893457498772346192
-      HP_1: 998387198676639397
+      1-bit_UI_byBatuhanK_7: 64351605
+      1-bit_UI_byBatuhanK_8: 1087347150
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

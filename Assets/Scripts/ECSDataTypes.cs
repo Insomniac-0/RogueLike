@@ -2,6 +2,37 @@ using Unity.Mathematics;
 using UnityEngine;
 
 
+public enum ScalingType
+{
+    ADDITIVE,
+    MULTIPLICATIVE,
+}
+
+public struct Upgrade
+{
+    ScalingType scaling;
+}
+
+public struct PlayerGameData
+{
+}
+
+public struct Stats
+{
+    public float max_health;
+    public float current_hp;
+    public int lvl;
+}
+
+public struct MoveData
+{
+    public float3 position;
+    public float3 direction;
+    public float3 velocity;
+
+    public float movement_speed;
+}
+
 public struct TransformData
 {
     public quaternion rotation;

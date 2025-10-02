@@ -9,14 +9,13 @@ public class HealthBarBehaviour : MonoBehaviour
 
     void Start()
     {
-        player = InitResources.GetPlayer;
         image = GetComponent<Image>();
     }
     void Update()
     {
         if (player != null)
         {
-            image.fillAmount = math.clamp(player.GetHP() / player.GetMaxHP(), 0f, 1f);
+            image.fillAmount = math.clamp(InitResources.GetPlayer.GetHealthPercentage, 0f, 1f);
         }
 
     }

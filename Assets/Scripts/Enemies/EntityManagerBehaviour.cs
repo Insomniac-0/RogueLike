@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -22,6 +23,9 @@ public unsafe class EntityManagerBehaviour : MonoBehaviour
     [SerializeField] Enemy enemy_ref;
     [SerializeField] EnemyData[] EnemyDataTemplates;
 
+
+
+
     float delta_time;
 
     const int InitialAllocSize = 100;
@@ -36,9 +40,12 @@ public unsafe class EntityManagerBehaviour : MonoBehaviour
 
     // ARRAYS
     public NativeList<EntityData> enemies;
+    NativeArray<float3> line_positions;
 
     List<Enemy> enemy_objects;
     List<Enemy> enemy_pool;
+
+
 
     float3 mouse_pos;
     float3 player_position;
@@ -46,9 +53,10 @@ public unsafe class EntityManagerBehaviour : MonoBehaviour
     private void Awake()
     {
         enemies = new NativeList<EntityData>(InitialAllocSize, Allocator.Persistent);
-
         enemy_objects = new List<Enemy>(InitialAllocSize);
         enemy_pool = new List<Enemy>(InitialAllocSize);
+        //line_positions = new NativeArray<float3> Allocator.Persistent);
+
     }
 
     private void OnDestroy()
@@ -64,6 +72,14 @@ public unsafe class EntityManagerBehaviour : MonoBehaviour
 
     void FixedUpdate()
     {
+        RaycastHit2D result;
+        result = Physics2D.Raycast(Vector2.zero, Vector2.up, 1f, layerMask: InitResources.GetPlayerMask);
+        if (result.transform && result.transform.TryGetComponent<Player>(out Player player_ref))
+        {
+            player_ref.RaycastHit();
+        }
+
+
         if (!InitResources.GetPlayer) return;
         delta_time = Time.deltaTime;
         player_position = InitResources.GetPlayer.GetPosition();
@@ -101,7 +117,6 @@ public unsafe class EntityManagerBehaviour : MonoBehaviour
             if (!ptr->active) return;
             ptr->direction = math.normalizesafe(player_position - ptr->transform.position);
             ptr->velocity = ptr->direction * ptr->speed;
-
         }
     }
 
@@ -207,6 +222,8 @@ public unsafe class EntityManagerBehaviour : MonoBehaviour
                 *ptr = enemies[last_index];
                 enemies.RemoveAt(last_index);
                 ptr->ID = i;
+                InitResources.GetPlayer.AddXP(5f);
+
                 //if (last_index < i) enemies[i] = e;
 
             }
