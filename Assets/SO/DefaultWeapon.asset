@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::WeaponData
   ProjectileCount: 1
   BaseProjectileHP: 1
-  BaseProjectileSpeed: 10
+  BaseProjectileSpeed: 15
   FireRate: 2
-  BaseDMG: 5
+  BaseDMG: 1
   DMG_Multiply: 1

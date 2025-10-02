@@ -235,10 +235,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 504046910}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0400a195bab14ae4087caf381e9c62e2, type: 3}
+  m_Script: {fileID: 11500000, guid: 02f284fe4f2a25d04ae0c783b2c09cb3, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::SoundManager
-  source: {fileID: 0}
+  m_EditorClassIdentifier: '::'
+  animator_ref: {fileID: -5965579097763471018, guid: f95301c35bf4afaf793167ab37abe8a5, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

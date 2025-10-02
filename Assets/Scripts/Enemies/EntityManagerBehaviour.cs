@@ -148,6 +148,7 @@ public unsafe class EntityManagerBehaviour : MonoBehaviour
 
 
             e.ID = newID;
+            e.ResetMaterial();
             e.SetPosition(src.position);
             e.gameObject.SetActive(true);
             enemy_objects.Add(e);

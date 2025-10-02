@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using JetBrains.Annotations;
 using UnityEngine;
+using UnityEngine.Audio;
 
 public enum SoundFX
 {
@@ -25,14 +26,21 @@ public struct Audio
 
 public class SoundManager : MonoBehaviour
 {
-    AudioSource source;
+    [SerializeField] AudioResource[] audio_resources;
+    AudioSource audio_source;
 
     void Awake()
     {
-        source = GetComponent<AudioSource>();
+        audio_source = GetComponent<AudioSource>();
     }
 
-    public void PlayMusic() => source.Play();
+    void Start()
+    {
+        audio_source.resource = audio_resources[1];
+        audio_source.loop = true;
+        audio_source.Play();
+    }
+
 }
 
 

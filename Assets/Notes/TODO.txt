@@ -8,8 +8,8 @@ X = DONE
 FEATURES G
 
 [X] - Player:
-    [/] - Combat
-        - [ ] Take Dmg
+    [X] - Combat
+        - [X] Take Dmg
         - [X] Deal Dmg
     [ ] - Upgrades
     [X] - Movement
@@ -19,17 +19,17 @@ FEATURES G
 ====================
 
 [/] - Enemies
-    [/] - Spawning
-    [/] - Movement
+    [X] - Spawning
+    [X] - Movement
     [ ] - Enemy Types (min 2)
 
 ====================
 
 [ ] - Achitecture
-    [ ] - States
+    [/] - States
         [ ] - Game Over
         [ ] - Pause
-        [ ] - Main Menu
+        [X] - Main Menu
         [ ] - Settings
     [ ] - Progression
         [ ] - 
@@ -40,9 +40,6 @@ FEATURES G
 
 
 
-[/] - Achitecture
-    [ ] - Data
-    [ ] -
 
 
 
@@ -61,4 +58,15 @@ FEATURES G
 [X] - Sprite Direction - 
 
 
-Fix Player Enemy Collision;
+
+
+
+[ ] - Enemy Type
+    [ ] - Basic Ranged
+    [X] - Basic Melee
+
+
+[/] - Sauce
+    [ ] - Bullet Explode
+    [X] - Enemy Flash On Damage
+

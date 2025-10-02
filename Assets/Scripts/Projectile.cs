@@ -4,21 +4,23 @@ using UnityEngine;
 
 public sealed class Projectile : MonoBehaviour
 {
+    [SerializeField] Sprite[] collision_vfx;
     public int ID;
     public int _prevID;
-    Transform trans_cache;
+    Transform cache_transform;
+
 
     private SpriteRenderer sprite_renderer;
 
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public float3 GetPosition() => trans_cache.position;
+    public float3 GetPosition() => cache_transform.position;
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public void SetPosition(in float3 pos) => trans_cache.position = pos;
+    public void SetPosition(in float3 pos) => cache_transform.position = pos;
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public void SetRotation(in Quaternion rot) => trans_cache.rotation = rot;
+    public void SetRotation(in Quaternion rot) => cache_transform.rotation = rot;
 
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -29,7 +31,7 @@ public sealed class Projectile : MonoBehaviour
     {
         _prevID = -1;
         sprite_renderer = GetComponent<SpriteRenderer>();
-        trans_cache = transform;
+        cache_transform = transform;
     }
 
     void OnTriggerEnter2D(Collider2D collision)
@@ -37,8 +39,10 @@ public sealed class Projectile : MonoBehaviour
         if (collision.TryGetComponent<Enemy>(out Enemy collider_ref) && _prevID != collider_ref.GetID())
         {
             _prevID = collider_ref.GetID();
+            collider_ref.GetComponent<SpriteFlash>().Flash();
             InitResources.GetEntityManagerBehaviour.TakeDmg(_prevID, 5);
             InitResources.GetProjectileManager.TakeDMG(ID);
+            InitResources.GetVfxManager.SpawnAnimation(cache_transform.position, collision_vfx, 6f);
             // collider_ref.GetComponent<EntityManagerBehaviour>().TakeDmg(_prevID, 5);
             // gameObject.GetComponent<ProjectileManager>().TakeDMG(this.ID);
         }

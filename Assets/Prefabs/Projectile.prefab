@@ -105,6 +105,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 41b180edc1f17517da9b7e26f833eb31, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Projectile
+  collision_vfx:
+  - {fileID: -6282694898021445734, guid: 160cc4002fa7f189782ad13d7ea16294, type: 3}
+  - {fileID: -1475418782, guid: 160cc4002fa7f189782ad13d7ea16294, type: 3}
+  - {fileID: 1820112333, guid: 160cc4002fa7f189782ad13d7ea16294, type: 3}
   ID: 0
   _prevID: 0
 --- !u!58 &2675777420018395318

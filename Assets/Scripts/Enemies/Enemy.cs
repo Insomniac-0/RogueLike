@@ -1,3 +1,4 @@
+using System.Collections;
 using Unity.Mathematics;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -12,6 +13,8 @@ public class Enemy : MonoBehaviour
     private Rigidbody2D rb;
     private SpriteRenderer sprite_renderer;
 
+    private Material default_material;
+
 
 
     Transform cache_transform;
@@ -25,6 +28,7 @@ public class Enemy : MonoBehaviour
 
     void Start()
     {
+        default_material = sprite_renderer.material;
     }
 
     public float3 GetPosition() => cache_transform.position;
@@ -35,11 +39,17 @@ public class Enemy : MonoBehaviour
     public void SetColor(float3 color) => sprite_renderer.color = new Color(color.x, color.y, color.z);
     public void SetPosition(float3 position) => cache_transform.position = position;
     public void SetVelocity(float3 velocity) => rb.linearVelocity = velocity.xy;
+    public void ResetMaterial() => sprite_renderer.material = default_material;
 
 
     void OnCollisionEnter2D(Collision2D collision)
     {
         Debug.Log("Collision From Enemy");
-        collision.gameObject.GetComponent<Player>().TakeDamage(5f);
+        if (collision.gameObject.TryGetComponent<PlayerBehaviour>(out PlayerBehaviour collider_ref))
+        {
+            collider_ref.TakeDMG(5f);
+            collider_ref.GetComponent<SpriteFlash>().Flash();
+        }
     }
+
 }

@@ -1,7 +1,9 @@
 using System;
 using System.Data.Common;
 using Unity.Mathematics;
+using UnityEditor.SearchService;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UIElements;
 
 public class PlayerBehaviour : MonoBehaviour
