@@ -14,8 +14,7 @@ GameObject:
   - component: {fileID: -406098426517920294}
   - component: {fileID: 1004116855236301835}
   - component: {fileID: -7557196118872952937}
-  - component: {fileID: 2044412279427903819}
-  - component: {fileID: 4531496396028705744}
+  - component: {fileID: -2528401441315967246}
   m_Layer: 7
   m_Name: Enemy
   m_TagString: Untagged
@@ -63,7 +62,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
+  - {fileID: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -109,6 +108,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: '::'
   ID: 0
+  blink_strength: 0
+  blink_speed: 0
 --- !u!50 &-406098426517920294
 Rigidbody2D:
   serializedVersion: 5
@@ -185,22 +186,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyAnimation
   _slime_atlas: {fileID: 100100200, guid: 3ba82459b1b9a534da4d7e58afe7d5e4, type: 3}
---- !u!114 &2044412279427903819
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8969744399276885971}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e62f334d4256f1bc088308c2a93a7aa3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::SpriteFlash
-  flash_material: {fileID: 2100000, guid: b41493541cb6270e7b1010c843e8af99, type: 2}
-  flash_color: {r: 1, g: 1, b: 1, a: 0}
-  flash_duration: 0.125
---- !u!120 &4531496396028705744
+--- !u!120 &-2528401441315967246
 LineRenderer:
   serializedVersion: 2
   m_ObjectHideFlags: 0
@@ -250,16 +236,16 @@ LineRenderer:
   m_SortingOrder: 0
   m_Positions:
   - {x: 0, y: 0, z: 0}
-  - {x: 6, y: 0, z: 0}
+  - {x: 0, y: 0, z: 0}
   m_Parameters:
     serializedVersion: 3
-    widthMultiplier: 1
+    widthMultiplier: 0.06784435
     widthCurve:
       serializedVersion: 2
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: 0.043014526
+        value: 0.1742568
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -271,9 +257,9 @@ LineRenderer:
       m_RotationOrder: 4
     colorGradient:
       serializedVersion: 2
-      key0: {r: 1, g: 1, b: 1, a: 1}
-      key1: {r: 1, g: 1, b: 1, a: 1}
-      key2: {r: 0, g: 0, b: 0, a: 0}
+      key0: {r: 1, g: 0, b: 0.009803772, a: 1}
+      key1: {r: 1, g: 0, b: 0, a: 1}
+      key2: {r: 0, g: 0, b: 0, a: 1}
       key3: {r: 0, g: 0, b: 0, a: 0}
       key4: {r: 0, g: 0, b: 0, a: 0}
       key5: {r: 0, g: 0, b: 0, a: 0}
@@ -287,26 +273,26 @@ LineRenderer:
       ctime5: 0
       ctime6: 0
       ctime7: 0
-      atime0: 0
+      atime0: 193
       atime1: 65535
-      atime2: 0
+      atime2: 65535
       atime3: 0
       atime4: 0
       atime5: 0
       atime6: 0
       atime7: 0
-      m_Mode: 0
-      m_ColorSpace: -1
+      m_Mode: 1
+      m_ColorSpace: 0
       m_NumColorKeys: 2
       m_NumAlphaKeys: 2
     numCornerVertices: 0
     numCapVertices: 0
     alignment: 0
-    textureMode: 4
+    textureMode: 0
     textureScale: {x: 1, y: 1}
     shadowBias: 0.5
     generateLightingData: 0
   m_MaskInteraction: 0
   m_UseWorldSpace: 1
   m_Loop: 0
-  m_ApplyActiveColorSpace: 0
+  m_ApplyActiveColorSpace: 1

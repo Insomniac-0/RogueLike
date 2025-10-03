@@ -16,6 +16,8 @@ public class PlayerBehaviour : MonoBehaviour
     public event Action OnHealthChange;
 
 
+
+
     float shoot_cooldown;
     float iframe_cooldown;
 
@@ -70,7 +72,7 @@ public class PlayerBehaviour : MonoBehaviour
     }
     void Start()
     {
-        player_data.position = InitResources.GetPlayer.GetPosition();
+        player_data.position = InitResources.GetPlayer.GetPosition;
         shoot_cooldown = 0;
         iframe_cooldown = 0;
     }
@@ -82,7 +84,7 @@ public class PlayerBehaviour : MonoBehaviour
         if (player_stats.current_hp <= 0) Debug.Log($"HP : {player_stats.current_hp} - DEATH");
 
 
-        player_data.position = InitResources.GetPlayer.GetPosition();
+        player_data.position = InitResources.GetPlayer.GetPosition;
         player_data.direction = math.normalizesafe(InitResources.GetInputReader.GetMoveDirection());
 
         if (InitResources.GetInputReader.is_shooting && shoot_cooldown <= 0f)

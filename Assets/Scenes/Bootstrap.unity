@@ -136,6 +136,8 @@ GameObject:
   - component: {fileID: 504046917}
   - component: {fileID: 504046918}
   - component: {fileID: 504046919}
+  - component: {fileID: 504046920}
+  - component: {fileID: 504046921}
   m_Layer: 0
   m_Name: Initibootstrap
   m_TagString: Untagged
@@ -185,6 +187,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EntityManagerBehaviour
   enemy_ref: {fileID: 20494445584451619, guid: d3dffe71d1c01c1f0bc8dc5ea29f9275, type: 3}
   EnemyDataTemplates:
+  - {fileID: 11400000, guid: 0f373118bdb11bb499ab7f48f3a2c1f5, type: 2}
+  - {fileID: 11400000, guid: 0f373118bdb11bb499ab7f48f3a2c1f5, type: 2}
+  - {fileID: 11400000, guid: 0f373118bdb11bb499ab7f48f3a2c1f5, type: 2}
+  - {fileID: 11400000, guid: 0f373118bdb11bb499ab7f48f3a2c1f5, type: 2}
   - {fileID: 11400000, guid: 0f373118bdb11bb499ab7f48f3a2c1f5, type: 2}
 --- !u!114 &504046914
 MonoBehaviour:
@@ -265,6 +271,73 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d9dc5caccebe9a041abfd8b8b6343c1d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
+--- !u!114 &504046920
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 504046910}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be2fb606e8d76a8499fc379aa70dca85, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: '::'
+--- !u!114 &504046921
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 504046910}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1f23bf3cb464d3042820a07388c0e444, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: '::'
+  blinker_mat: {fileID: 2100000, guid: 82884be238d37ec458cd4ed7df9384c4, type: 2}
+  blinker_fluid_animation:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 0.10922152
+      value: 0.7683952
+      inSlope: -6.436543
+      outSlope: -6.436543
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 1
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.62496656
+      value: 0.7223294
+      inSlope: -2.3252969
+      outSlope: -2.3252969
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.052907676
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

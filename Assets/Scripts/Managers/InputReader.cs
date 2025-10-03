@@ -56,7 +56,7 @@ public class InputReader : MonoBehaviour
             mouse_position = e.ReadValue<Vector2>();
 
             float3 mouse_ws = InitResources.GetCamera.ScreenToWorldPoint(new float3(mouse_position.xy, 0));
-            float2 direction = math.normalizesafe(mouse_ws.xy - InitResources.GetNullableObjects.player.GetPosition().xy);
+            float2 direction = math.normalizesafe(mouse_ws.xy - InitResources.GetNullableObjects.player.GetPosition.xy);
             float angle_rad = math.atan2(direction.y, direction.x);
             angle = math.degrees(angle_rad);
             if (angle < 0) angle += 360;

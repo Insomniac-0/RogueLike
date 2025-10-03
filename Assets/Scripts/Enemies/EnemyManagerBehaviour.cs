@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using NUnit.Framework;
 using Unity.Burst;
 using Unity.Cinemachine;
 using Unity.Collections;
@@ -12,10 +13,11 @@ using Unity.Jobs;
 using Unity.Mathematics;
 using Unity.Physics;
 using Unity.VisualScripting;
+using UnityEditor;
 using UnityEngine;
 
 [BurstCompile]
-public unsafe class EntityManagerBehaviour : MonoBehaviour
+public unsafe class EnemyManagerBehaviour : MonoBehaviour
 {
     //[SerializeField] InputReader input;
 
@@ -28,15 +30,13 @@ public unsafe class EntityManagerBehaviour : MonoBehaviour
 
     float delta_time;
 
+    Int32 player_mask;
+
     const int InitialAllocSize = 100;
     const int EntityJobBatchSize = 16;
     // TYPES
 
-    public enum EnemyType
-    {
-        DEFAULT,
-        RANGED,
-    }
+
 
     // ARRAYS
     public NativeList<EntityData> enemies;
@@ -67,22 +67,23 @@ public unsafe class EntityManagerBehaviour : MonoBehaviour
 
     private void Start()
     {
+        player_mask = InitResources.GetPlayerMask;
     }
 
 
     void FixedUpdate()
     {
-        RaycastHit2D result;
-        result = Physics2D.Raycast(Vector2.zero, Vector2.up, 1f, layerMask: InitResources.GetPlayerMask);
-        if (result.transform && result.transform.TryGetComponent<Player>(out Player player_ref))
-        {
-            player_ref.RaycastHit();
-        }
+        // RaycastHit2D result;
+        // result = Physics2D.Raycast(Vector2.zero, Vector2.up, 1f, layerMask: InitResources.GetPlayerMask);
+        // if (result.transform && result.transform.TryGetComponent<Player>(out Player player_ref))
+        // {
+        //     player_ref.RaycastHit();
+        // }
 
 
         if (!InitResources.GetPlayer) return;
         delta_time = Time.deltaTime;
-        player_position = InitResources.GetPlayer.GetPosition();
+        player_position = InitResources.GetPlayer.GetPosition;
 
 
         EntityMovementJob entity_job = new EntityMovementJob
@@ -97,7 +98,21 @@ public unsafe class EntityManagerBehaviour : MonoBehaviour
 
         handle.Complete();
 
-        UpdateSetEntities();
+        UpdateEntities();
+        for (int i = 0; i < enemy_objects.Count; i++)
+        {
+            EntityData* ptr = GetEntityPtr(i);
+            if (!ptr->active) continue;
+
+
+
+
+            ptr->rayhit = Physics2D.Raycast(ptr->transform.position.xy, ptr->direction.xy, ptr->raycast_range, player_mask);
+            enemy_objects[i].DrawRaycastLine(player_position);
+            if (ptr->rayhit.transform && ptr->rayhit.transform.TryGetComponent<Player>(out Player p))
+            {
+            }
+        }
     }
 
 
@@ -108,15 +123,59 @@ public unsafe class EntityManagerBehaviour : MonoBehaviour
     {
         public float delta_time;
         public float3 player_position;
+
         public NativeArray<EntityData> enemies;
+
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        float GetDistanceToPlayer(EntityData* ptr) => math.distance(ptr->transform.position, player_position);
+
+        void SetEntityVelocity(EntityData* ptr, float speed)
+        {
+            ptr->velocity = ptr->direction * speed;
+        }
+
+        void SetEntityDirection(EntityData* ptr, float angle_offset)
+        {
+            float2 target_direction = math.normalizesafe(player_position.xy - ptr->transform.position.xy);
+            float angle_direction = math.atan2(target_direction.y, target_direction.x) + math.radians(angle_offset);
+
+            float2 kiting_direction = new float2(math.cos(angle_direction), math.sin(angle_direction));
+
+            float correction_amount = 0f;
+            if (GetDistanceToPlayer(ptr) < ptr->range)
+            {
+                correction_amount = (ptr->range / GetDistanceToPlayer(ptr)) - 1f;
+            }
+
+            float2 correction_direction = -target_direction * correction_amount;
+
+            float2 accum = kiting_direction + correction_direction;
+            ptr->direction.xy = accum;
+            ptr->direction.z = 0f;
+        }
 
         public void Execute(int index)
         {
             EntityData* ptr = &((EntityData*)enemies.GetUnsafePtr())[index];
 
             if (!ptr->active) return;
-            ptr->direction = math.normalizesafe(player_position - ptr->transform.position);
-            ptr->velocity = ptr->direction * ptr->speed;
+
+
+            ptr->state = GetDistanceToPlayer(ptr) < ptr->range ? EnemyState.ATTACKING : EnemyState.CHASING;
+
+            switch (ptr->state)
+            {
+                case EnemyState.CHASING:
+                    SetEntityDirection(ptr, 0f);
+                    SetEntityVelocity(ptr, ptr->speed);
+                    break;
+                case EnemyState.ATTACKING:
+                    SetEntityDirection(ptr, 90f);
+                    SetEntityVelocity(ptr, ptr->crawl_speed);
+                    break;
+            }
+
         }
     }
 
@@ -132,7 +191,7 @@ public unsafe class EntityManagerBehaviour : MonoBehaviour
     public void SpawnEntity(TransformData src, float HP, float Speed, float DMG)
     {
         int newID = enemy_objects.Count;
-
+        Debug.Log(enemy_pool.Count);
         if (enemy_pool.Count == 0)
         {
 
@@ -148,11 +207,14 @@ public unsafe class EntityManagerBehaviour : MonoBehaviour
             enemies.Add(new EntityData
             {
                 transform = src,
-                direction = GetMoveDirection(InitResources.GetPlayer.GetPosition(), src.position),
+                direction = GetMoveDirection(InitResources.GetPlayer.GetPosition, src.position),
                 ID = newID,
                 hp = HP,
                 dmg = DMG,
                 speed = Speed,
+                crawl_speed = Speed * 2f,
+                range = 1f,
+                raycast_range = 6f,
                 active = true,
             });
         }
@@ -163,7 +225,6 @@ public unsafe class EntityManagerBehaviour : MonoBehaviour
 
 
             e.ID = newID;
-            e.ResetMaterial();
             e.SetPosition(src.position);
             e.gameObject.SetActive(true);
             enemy_objects.Add(e);
@@ -171,28 +232,21 @@ public unsafe class EntityManagerBehaviour : MonoBehaviour
             enemies.Add(new EntityData
             {
                 transform = src,
-                direction = GetMoveDirection(InitResources.GetPlayer.GetPosition(), src.position),
+                direction = GetMoveDirection(InitResources.GetPlayer.GetPosition, src.position),
                 ID = newID,
                 hp = HP,
                 dmg = DMG,
                 speed = Speed,
+                crawl_speed = Speed / 2f,
+                range = 3f,
+                raycast_range = 6f,
                 active = true,
             });
 
         }
     }
 
-    public void UpdateGetEntities()
-    {
-        for (int i = 0; i < enemy_objects.Count; i++)
-        {
-            EntityData* ptr = &((EntityData*)enemies.GetUnsafePtr())[i];
-            //EntityData* ptr = GetEntityPtr(i);
-            if (!ptr->active) continue;
-            ptr->transform.position = enemy_objects[i].GetPosition();
-        }
-    }
-    public void UpdateSetEntities()
+    public void UpdateEntities()
     {
 
         for (int i = 0; i < enemy_objects.Count; i++)
@@ -205,6 +259,7 @@ public unsafe class EntityManagerBehaviour : MonoBehaviour
             {
                 enemy_objects[i].SetVelocity(ptr->velocity);
                 ptr->transform.position = enemy_objects[i].GetPosition();
+
             }
             else
             {

@@ -10,10 +10,16 @@ public class Enemy : MonoBehaviour
 {
 
     public int ID;
+    public float blink_strength;
+    public float blink_speed;
     private Rigidbody2D rb;
     private SpriteRenderer sprite_renderer;
+    private LineRenderer line_renderer;
 
-    private Material default_material;
+    MaterialPropertyBlock propblock;
+
+    float3 line_offset;
+
 
 
 
@@ -23,24 +29,39 @@ public class Enemy : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
         sprite_renderer = GetComponent<SpriteRenderer>();
+        line_renderer = GetComponent<LineRenderer>();
         cache_transform = transform;
     }
 
     void Start()
     {
-        default_material = sprite_renderer.material;
+        line_offset = new float3(0f, 0.08f, 0f);
+        blink_speed = 4f;
+        sprite_renderer.sharedMaterial = GraphicsResources.GetBlinkerFluid;
+
+        propblock = new MaterialPropertyBlock();
     }
 
-
+    void Update()
+    {
+        if (blink_strength > 0)
+        {
+            blink_strength -= Time.deltaTime * blink_speed;
+        }
+        float lerp = GraphicsResources.GetBlinkerFluidAnimation.Evaluate(Mathf.Clamp01(blink_strength));
+        propblock.SetFloat("_BlinkStrength", lerp);
+        sprite_renderer.SetPropertyBlock(propblock);
+        line_renderer.SetPosition(0, cache_transform.position + (Vector3)line_offset);
+    }
     public float3 GetPosition() => cache_transform.position;
-    private float GetDMG() => InitResources.GetEntityManagerBehaviour.GetDamage(this.ID);
+    private float GetDMG() => InitResources.GetEnemyManagerBehaviour.GetDamage(this.ID);
 
     public int GetID() => ID;
 
     public void SetColor(float3 color) => sprite_renderer.color = new Color(color.x, color.y, color.z);
     public void SetPosition(float3 position) => cache_transform.position = position;
     public void SetVelocity(float3 velocity) => rb.linearVelocity = velocity.xy;
-    public void ResetMaterial() => sprite_renderer.material = default_material;
+    public void DrawRaycastLine(float3 target) => line_renderer.SetPosition(1, target);
 
 
     void OnCollisionEnter2D(Collision2D collision)
@@ -49,7 +70,6 @@ public class Enemy : MonoBehaviour
         if (collision.gameObject.TryGetComponent<PlayerBehaviour>(out PlayerBehaviour collider_ref))
         {
             collider_ref.TakeDMG(5f);
-            collider_ref.GetComponent<SpriteFlash>().Flash();
         }
     }
 

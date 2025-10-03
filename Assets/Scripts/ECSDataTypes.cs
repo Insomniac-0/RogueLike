@@ -1,3 +1,4 @@
+using NUnit.Framework.Constraints;
 using Unity.Mathematics;
 using UnityEngine;
 
@@ -69,20 +70,46 @@ public struct ProjectileData
     public bool active;
 }
 
+public enum EnemyType
+{
+    MELEE,
+    RANGED,
+    DEFAULT,
+}
+
+public enum EnemyState
+{
+    ATTACKING,
+    CHASING,
+}
+
 public struct EntityData
 {
     public TransformData transform;
 
+    public RaycastHit2D rayhit;
+    public EnemyType type;
+    public EnemyState state;
+
     public float3 direction;
     public float3 velocity;
 
+
     public int ID;
 
+
+    public float track_time;
+    public float shoot_startuptime;
     public float dmg;
     public float speed;
+    public float crawl_speed;
     public float hp;
+    public float range;
+    public float raycast_range;
+
 
     public bool active;
+
 
 }
 

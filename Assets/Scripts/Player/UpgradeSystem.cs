@@ -13,10 +13,10 @@ public class UpgradeSystem : MonoBehaviour
         public float current_xp;
     }
 
-    public struct Upgrade 
+    public struct Upgrade
     {
         public ScalingType scaling_type;
-        float 
+        float value;
     }
 
     void Awake()
@@ -34,7 +34,7 @@ public class UpgradeSystem : MonoBehaviour
     public void AddExperience(float xp)
     {
         player_lvl.current_xp += xp;
-        if(player_lvl.current_xp >= player_lvl.max_xp)
+        if (player_lvl.current_xp >= player_lvl.max_xp)
         {
             player_lvl.current_xp -= player_lvl.max_xp;
             player_lvl.max_xp *= 1.2f;
@@ -45,7 +45,7 @@ public class UpgradeSystem : MonoBehaviour
     public void UpgradeMovementSpeed()
     {
         player_behaviour.player_stats.ms_multiply *= 1.2f;
-        player_behaviour.player_data.speed = 
+        player_behaviour.player_data.speed =
             player_behaviour.player_stats.base_move_speed * player_behaviour.player_stats.ms_multiply;
 
     }
@@ -61,5 +61,5 @@ public class UpgradeSystem : MonoBehaviour
         player_behaviour.player_stats.dmg_multiply += 0.2f;
     }
 
-    public float GetHealthPercentage() => player_lvl.current_xp / player_lvl.max_xp;
+    public float GetXpPercentage => player_lvl.current_xp / player_lvl.max_xp;
 }
