@@ -2,7 +2,6 @@ using System;
 using System.Threading;
 using GameUtilities.Sprites;
 using Unity.Mathematics;
-using Unity.VisualScripting.Antlr3.Runtime;
 using UnityEngine;
 using UnityEngine.U2D;
 
@@ -19,11 +18,9 @@ public class PlayerAnimation : MonoBehaviour
     float animation_FPS;
     float animation_timer;
     int current_index;
-    int frame_count;
 
     void Awake()
     {
-        frame_count = 4;
         _sprite_renderer = GetComponent<SpriteRenderer>();
 
         animation_FPS = 6;

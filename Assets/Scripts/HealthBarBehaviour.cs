@@ -4,7 +4,6 @@ using UnityEngine.UI;
 
 public class HealthBarBehaviour : MonoBehaviour
 {
-    Player player;
     Image image;
 
     void Start()
@@ -13,9 +12,9 @@ public class HealthBarBehaviour : MonoBehaviour
     }
     void Update()
     {
-        if (player != null)
+        if (InitResources.GetPlayer != null)
         {
-            image.fillAmount = math.clamp(InitResources.GetPlayer.GetHealthPercentage, 0f, 1f);
+            image.fillAmount = math.clamp(InitResources.GetPlayer.GetHpPercentage, 0f, 1f);
         }
 
     }

@@ -11,9 +11,9 @@ FEATURES G
     [X] - Combat
         - [X] Take Dmg
         - [X] Deal Dmg
-    [ ] - Upgrades
+    [/] - Upgrades
     [X] - Movement
-    [ ] - UI
+    [X] - UI
     [X] - Camera
 
 ====================
@@ -21,11 +21,11 @@ FEATURES G
 [/] - Enemies
     [X] - Spawning
     [X] - Movement
-    [ ] - Enemy Types (min 2)
+    [/] - Enemy Types (min 2)
 
 ====================
 
-[ ] - Achitecture
+[ ] - Architecture
     [/] - States
         [ ] - Game Over
         [ ] - Pause
@@ -44,9 +44,9 @@ FEATURES G
 
 
 
-[/] - Collision system
-    [ ] -
-    [ ] -
+[X] - Collision system
+    [X] -
+    [X] -
 
 [X] - Projectile system
     [X] - Movement
@@ -66,7 +66,8 @@ FEATURES G
     [X] - Basic Melee
 
 
-[/] - Sauce
-    [ ] - Bullet Explode
+[X] - Sauce
+    [X] - Bullet Explode
     [X] - Enemy Flash On Damage
+    [X] - Enemy Particle on Death
 

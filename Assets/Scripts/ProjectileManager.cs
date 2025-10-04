@@ -13,6 +13,9 @@ public unsafe class ProjectileManager : MonoBehaviour
 {
 
     [SerializeField] Projectile projectile_ref;
+    [SerializeField] private List<ProjectileDataSO> _projectile_templates;
+
+
     Player player;
 
     float delta_time;
@@ -85,7 +88,7 @@ public unsafe class ProjectileManager : MonoBehaviour
         ptr->HP--;
     }
 
-    public void SpawnProjectile(TransformData src, float3 direction, int HP, float Speed, float DMG)
+    public void SpawnProjectile(ProjectileDataSO data, TransformData src, float3 direction)
     {
 
         int newID = projectile_objects.Count;
@@ -106,17 +109,18 @@ public unsafe class ProjectileManager : MonoBehaviour
 
             // Data
 
-            projectiles.Add(new ProjectileData
-            {
-                ID = newID,
-                transform = src,
-                direction = direction,
-                HP = HP,
-                dmg = DMG,
-                speed = Speed,
-                lifetime = 2f,
-                active = true,
-            });
+            // projectiles.Add(new ProjectileData
+            // {
+            //     ID = newID,
+            //     transform = src,
+            //     direction = direction,
+            //     HP = HP,
+            //     dmg = DMG,
+            //     speed = Speed,
+            //     lifetime = 2f,
+            //     active = true,
+            // });
+            projectiles.Add(new ProjectileData(data, src, direction, newID));
         }
         else
         {
@@ -136,21 +140,19 @@ public unsafe class ProjectileManager : MonoBehaviour
             projectile_objects.Add(p);
 
             // Data
-            projectiles.Add(new ProjectileData
-            {
-                ID = newID,
-                transform = src,
-                direction = direction,
-                HP = HP,
-                dmg = DMG,
-                speed = Speed,
-                lifetime = 2f,
-                active = true,
+            // projectiles.Add(new ProjectileData
+            // {
+            //     ID = newID,
+            //     transform = src,
+            //     direction = direction,
+            //     HP = HP,
+            //     dmg = DMG,
+            //     speed = Speed,
+            //     lifetime = 2f,
+            //     active = true,
 
-            });
-
-
-
+            // });
+            projectiles.Add(new ProjectileData(data, src, direction, newID));
         }
     }
 

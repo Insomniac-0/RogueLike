@@ -4,7 +4,6 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using NUnit.Framework;
 using Unity.Burst;
-using Unity.Cinemachine;
 using Unity.Collections;
 using Unity.Collections.LowLevel.Unsafe;
 using Unity.Entities;
@@ -14,6 +13,7 @@ using Unity.Mathematics;
 using Unity.Physics;
 using Unity.VisualScripting;
 using UnityEditor;
+using UnityEditor.SearchService;
 using UnityEngine;
 
 [BurstCompile]
@@ -23,7 +23,7 @@ public unsafe class EnemyManagerBehaviour : MonoBehaviour
 
     // REFS
     [SerializeField] Enemy enemy_ref;
-    [SerializeField] EnemyData[] EnemyDataTemplates;
+    [SerializeField] EnemyDataSO[] EnemyDataTemplates;
 
 
 
@@ -212,7 +212,7 @@ public unsafe class EnemyManagerBehaviour : MonoBehaviour
                 hp = HP,
                 dmg = DMG,
                 speed = Speed,
-                crawl_speed = Speed * 2f,
+                crawl_speed = Speed / 2f,
                 range = 1f,
                 raycast_range = 6f,
                 active = true,
@@ -266,6 +266,10 @@ public unsafe class EnemyManagerBehaviour : MonoBehaviour
                 int last_index = enemy_objects.Count - 1;
                 ptr->active = false;
 
+                GameObject particle = Instantiate(GraphicsResources.GetDeathParticles);
+                particle.transform.position = enemy_objects[i].GetPosition();
+                particle.SetActive(true);
+
                 enemy_objects[i].gameObject.SetActive(false);
                 enemy_pool.Add(enemy_objects[i]);
 
@@ -277,7 +281,7 @@ public unsafe class EnemyManagerBehaviour : MonoBehaviour
                 *ptr = enemies[last_index];
                 enemies.RemoveAt(last_index);
                 ptr->ID = i;
-                InitResources.GetPlayer.AddXP(5f);
+                InitResources.GetUpgradeSystem.AddExperience(5f);
 
                 //if (last_index < i) enemies[i] = e;
 

@@ -205,6 +205,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ProjectileManager
   projectile_ref: {fileID: -8366603719214645405, guid: 55bddd82c76b966fb99bfeccb0302516, type: 3}
+  _projectile_templates: []
 --- !u!114 &504046915
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -338,6 +339,7 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  death_particles: {fileID: 183714177795929331, guid: 987bde4868dcc41b7be985d26228d852, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

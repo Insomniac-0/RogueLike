@@ -62,12 +62,23 @@ public struct ProjectileData
 
     public int ID;
     public int HP;
-
-    public float dmg;
     public float speed;
     public float lifetime;
+    public float dmg;
 
     public bool active;
+
+    public ProjectileData(ProjectileDataSO data, TransformData t, float3 dir, int id, bool active = true)
+    {
+        transform = t;
+        direction = dir;
+        ID = id;
+        HP = data.BaseHP;
+        lifetime = data.Lifetime;
+        speed = data.BaseSpeed;
+        dmg = data.BaseDMG;
+        this.active = active;
+    }
 }
 
 public enum EnemyType

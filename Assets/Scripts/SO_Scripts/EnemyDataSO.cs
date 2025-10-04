@@ -3,7 +3,7 @@ using Unity;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "NewEnemyData", menuName = "Data/Enemy Data")]
-public class EnemyData : ScriptableObject
+public class EnemyDataSO : ScriptableObject
 {
     public float MaxHealth;
     public float BaseMovementSpeed;

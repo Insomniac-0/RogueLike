@@ -19,17 +19,15 @@ public class UpgradeSystem : MonoBehaviour
         float value;
     }
 
+    PlayerLvl player_lvl;
+
     void Awake()
     {
         player_behaviour = GetComponent<PlayerBehaviour>();
+        player_lvl.lvl = 1;
         player_lvl.max_xp = 100f;
         player_lvl.current_xp = 0f;
     }
-
-
-    PlayerLvl player_lvl;
-
-
 
     public void AddExperience(float xp)
     {

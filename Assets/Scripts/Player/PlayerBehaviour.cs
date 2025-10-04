@@ -2,14 +2,16 @@ using System;
 using System.Data.Common;
 using Unity.Mathematics;
 using UnityEditor.SearchService;
+using UnityEditor.ShaderGraph.Internal;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UIElements;
 
 public class PlayerBehaviour : MonoBehaviour
 {
-    [SerializeField] private PlayerData _player_template;
-    [SerializeField] private WeaponData _weapon_template;
+    [SerializeField] private PlayerDataSO _player_template;
+    [SerializeField] private ProjectileDataSO _projectile_template;
+    [SerializeField] float FireRate;
 
     private ProjectileManager _projectile_manager => InitResources.GetProjectileManager;
 
@@ -21,7 +23,10 @@ public class PlayerBehaviour : MonoBehaviour
     float shoot_cooldown;
     float iframe_cooldown;
 
+
     float3 mouse_pos;
+    float3 direction;
+
 
     // TYPES
 
@@ -37,14 +42,6 @@ public class PlayerBehaviour : MonoBehaviour
         public float dmg_multiply;
     }
 
-    struct Weapon
-    {
-        public int count;
-        public int projectile_hp;
-        public float speed;
-        public float fire_rate;
-        public float base_dmg;
-    }
     public struct PlayerMoveData
     {
         public float3 position;
@@ -57,13 +54,11 @@ public class PlayerBehaviour : MonoBehaviour
 
     public PlayerStats player_stats;
     public PlayerMoveData player_data;
-    Weapon weapon;
 
     void Awake()
     {
 
         InitializeStats();
-        InitializeWeapon();
 
 
 
@@ -75,11 +70,12 @@ public class PlayerBehaviour : MonoBehaviour
         player_data.position = InitResources.GetPlayer.GetPosition;
         shoot_cooldown = 0;
         iframe_cooldown = 0;
+        direction = float3.zero;
     }
     void Update()
     {
 
-        if (shoot_cooldown > 0) shoot_cooldown -= Time.deltaTime * weapon.fire_rate;
+        if (shoot_cooldown > 0) shoot_cooldown -= Time.deltaTime * FireRate;
         if (iframe_cooldown > 0) iframe_cooldown -= Time.deltaTime;
         if (player_stats.current_hp <= 0) Debug.Log($"HP : {player_stats.current_hp} - DEATH");
 
@@ -92,12 +88,14 @@ public class PlayerBehaviour : MonoBehaviour
             mouse_pos = InitResources.GetInputReader.GetMousePositionWS();
             TransformData data;
             data.position = player_data.position;
-            float2 direction = math.normalizesafe(mouse_pos.xy - data.position.xy);
+            direction.xy = math.normalizesafe(mouse_pos.xy - data.position.xy);
+            direction.z = 0f;
             data.rotation = quaternion.EulerXYZ(0f, 0f, 0f);
             data.scale = new(1f, 1f, 1f);
-
-            InitResources.GetProjectileManager.SpawnProjectile(data, new(direction.xy, 0f), weapon.projectile_hp, weapon.speed, weapon.base_dmg * player_stats.dmg_multiply);
+            InitResources.GetProjectileManager.SpawnProjectile(_projectile_template, data, direction);
             shoot_cooldown = 1f;
+
+            //InitResources.GetProjectileManager.SpawnProjectile()
         }
 
 
@@ -121,15 +119,6 @@ public class PlayerBehaviour : MonoBehaviour
 
     }
 
-    void InitializeWeapon()
-    {
-        weapon.count = _weapon_template.ProjectileCount;
-        weapon.projectile_hp = _weapon_template.BaseProjectileHP;
-        weapon.speed = _weapon_template.BaseProjectileSpeed;
-        weapon.fire_rate = _weapon_template.FireRate;
-        weapon.base_dmg = _weapon_template.BaseDMG;
-    }
-
 
     public void TakeDMG(float DMG)
     {
@@ -138,4 +127,7 @@ public class PlayerBehaviour : MonoBehaviour
         Debug.Log($"{DMG} Taken : {player_stats.current_hp} HP left");
         OnHealthChange?.Invoke();
     }
+
+    public float GetHealthPercentage => player_stats.current_hp / player_stats.max_health;
+
 }
