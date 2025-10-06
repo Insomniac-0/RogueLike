@@ -56,7 +56,6 @@ public class Enemy : MonoBehaviour
         line_renderer.SetPosition(0, cache_transform.position + (Vector3)line_offset);
     }
     public float3 GetPosition() => cache_transform.position;
-    private float GetDMG() => InitResources.GetEnemyManagerBehaviour.GetDamage(this.ID);
 
     public int GetID() => ID;
 

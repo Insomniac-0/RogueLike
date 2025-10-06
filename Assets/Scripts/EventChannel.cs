@@ -7,11 +7,13 @@ public class EventChannel : MonoBehaviour
     public event Action OnHealthChange;
     public event Action OnXpChange;
     public event Action OnLvlUp;
+    public event Action OnScoreChange;
 
 
 
     public void TriggerHealthChange() => OnHealthChange?.Invoke();
     public void TriggerXpChange() => OnXpChange?.Invoke();
     public void TriggerLvlUp() => OnLvlUp?.Invoke();
+    public void TriggerScoreChange() => OnScoreChange?.Invoke();
 }
 

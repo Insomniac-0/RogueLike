@@ -52,16 +52,7 @@ public class Player : MonoBehaviour
 
     public float3 GetDirection => direction;
 
-    public void TakeDamage(float dmg)
-    {
-        Debug.Log($"{dmg} taken");
-    }
-
-
-    public void RaycastHit()
-    {
-        Debug.Log("HIT");
-    }
+    public void RaycastHit() => Debug.Log("HIT");
 
 
 }

@@ -123,7 +123,6 @@ public class PlayerBehaviour : MonoBehaviour
     {
         player_stats.current_hp -= DMG;
         iframe_cooldown = 0.5f;
-        Debug.Log($"{DMG} Taken : {player_stats.current_hp} HP left");
         InitResources.GetEventChannel.TriggerHealthChange();
     }
 

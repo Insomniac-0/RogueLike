@@ -173,8 +173,8 @@ public unsafe class EnemyManagerBehaviour : MonoBehaviour
 
     public void TakeDmg(int ID, float dmg)
     {
-        //Entity* ptr = GetEntity(index);
-        EntityData* ptr = &((EntityData*)enemies.GetUnsafePtr())[ID];
+        EntityData* ptr = GetEntityPtr(ID);
+        //EntityData* ptr = &((EntityData*)enemies.GetUnsafePtr())[ID];
         ptr->HP -= dmg;
     }
 
@@ -183,8 +183,6 @@ public unsafe class EnemyManagerBehaviour : MonoBehaviour
         int newID = enemy_objects.Count;
         if (enemy_pool.Count == 0)
         {
-
-
             // Object
             Enemy e = Instantiate(enemy_ref);
             e.ID = newID;
@@ -193,20 +191,6 @@ public unsafe class EnemyManagerBehaviour : MonoBehaviour
             enemy_objects.Add(e);
 
             // Data
-            // enemies.Add(new EntityData
-            // {
-            //     transform = src,
-            //     direction = GetMoveDirection(InitResources.GetPlayer.GetPosition, src.position),
-            //     ID = newID,
-            //     hp = HP,
-            //     dmg = DMG,
-            //     speed = Speed,
-            //     crawl_speed = Speed / 2f,
-            //     range = 3f,
-            //     raycast_range = 6f,
-            //     active = true,
-            // });
-
             enemies.Add(new EntityData(data, src, newID));
         }
         else
@@ -214,29 +198,14 @@ public unsafe class EnemyManagerBehaviour : MonoBehaviour
             Enemy e = enemy_pool[0];
             enemy_pool.RemoveAtSwapBack(0);
 
-
+            // Object
             e.ID = newID;
             e.SetPosition(src.position);
             e.gameObject.SetActive(true);
             enemy_objects.Add(e);
 
-            // enemies.Add(new EntityData
-            // {
-            //     transform = src,
-            //     direction = GetMoveDirection(InitResources.GetPlayer.GetPosition, src.position),
-            //     ID = newID,
-            //     hp = HP,
-            //     dmg = DMG,
-            //     speed = Speed,
-            //     crawl_speed = Speed / 2f,
-            //     range = 3f,
-            //     raycast_range = 6f,
-            //     active = true,
-            // });
-
+            // Data
             enemies.Add(new EntityData(data, src, newID));
-
-
         }
     }
 
@@ -245,9 +214,9 @@ public unsafe class EnemyManagerBehaviour : MonoBehaviour
 
         for (int i = 0; i < enemy_objects.Count; i++)
         {
-            EntityData* ptr = &((EntityData*)enemies.GetUnsafePtr())[i];
+            //EntityData* ptr = &((EntityData*)enemies.GetUnsafePtr())[i];
+            EntityData* ptr = GetEntityPtr(i);
             EntityData e = enemies[i];
-            //EntityData* ptr = GetEntityPtr(i);
             if (!ptr->active) continue;
             if (ptr->HP > 0)
             {
@@ -276,6 +245,8 @@ public unsafe class EnemyManagerBehaviour : MonoBehaviour
                 enemies.RemoveAt(last_index);
                 ptr->ID = i;
                 InitResources.GetUpgradeSystem.AddExperience(5f);
+                InitResources.GetUpgradeSystem.AddScore(1);
+                InitResources.GetEventChannel.TriggerScoreChange();
 
                 //if (last_index < i) enemies[i] = e;
 
