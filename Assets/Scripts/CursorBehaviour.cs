@@ -17,6 +17,7 @@ public class CursorBehaviour : MonoBehaviour
     void Start()
     {
         spriteRenderer.sprite = cursor_sprites[1];
+        DontDestroyOnLoad(this.gameObject);
     }
     void Update()
     {

@@ -10,6 +10,7 @@ public class EnemyDataSO : ScriptableObject
     public float CrawlSpeed;
     public float Range;
     public float AttackRange;
+    public float AttackDelay;
     public float BaseDMG;
 }
 

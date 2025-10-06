@@ -104,6 +104,7 @@ public struct EntityData
     public float speed;
     public float crawl_speed;
     public float HP;
+    public float attack_delay;
     public float range;
     public float attack_range;
 
@@ -122,6 +123,7 @@ public struct EntityData
         speed = data.BaseMovementSpeed;
         crawl_speed = data.CrawlSpeed;
         dmg = data.BaseDMG;
+        attack_delay = data.AttackDelay;
         range = data.Range;
         attack_range = data.AttackRange;
 

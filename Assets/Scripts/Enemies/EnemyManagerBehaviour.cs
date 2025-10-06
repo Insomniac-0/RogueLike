@@ -113,23 +113,21 @@ public unsafe class EnemyManagerBehaviour : MonoBehaviour
     {
         public float delta_time;
         public float3 player_position;
-
         public NativeArray<EntityData> enemies;
 
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         float GetDistanceToPlayer(EntityData* ptr) => math.distance(ptr->transform.position, player_position);
 
-        void SetEntityVelocity(EntityData* ptr, float speed)
-        {
-            ptr->velocity = ptr->direction * speed;
-        }
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        void SetEntityVelocity(EntityData* ptr, float speed) => ptr->velocity = ptr->direction * speed;
+
+
 
         void SetEntityDirection(EntityData* ptr, float angle_offset)
         {
             float2 target_direction = math.normalizesafe(player_position.xy - ptr->transform.position.xy);
             float angle_direction = math.atan2(target_direction.y, target_direction.x) + math.radians(angle_offset);
-
             float2 kiting_direction = new float2(math.cos(angle_direction), math.sin(angle_direction));
 
             float correction_amount = 0f;
@@ -187,6 +185,7 @@ public unsafe class EnemyManagerBehaviour : MonoBehaviour
             Enemy e = Instantiate(enemy_ref);
             e.ID = newID;
             e.SetPosition(src.position);
+            e.DMG = data.BaseDMG;
             e.gameObject.SetActive(true);
             enemy_objects.Add(e);
 
@@ -201,6 +200,7 @@ public unsafe class EnemyManagerBehaviour : MonoBehaviour
             // Object
             e.ID = newID;
             e.SetPosition(src.position);
+            e.DMG = data.BaseDMG;
             e.gameObject.SetActive(true);
             enemy_objects.Add(e);
 
@@ -268,10 +268,6 @@ public unsafe class EnemyManagerBehaviour : MonoBehaviour
         output = math.normalizesafe(target - src);
     }
 
-    public void AddNewEntity(int ID)
-    {
-        // TODO
-    }
 
     public float GetDamage(int ID) => enemies[ID].dmg;
 

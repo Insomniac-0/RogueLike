@@ -58,7 +58,7 @@ public class InitResources : MonoBehaviour
     void Start()
     {
         DontDestroyOnLoad(this.gameObject);
-        DontDestroyOnLoad(cursor.gameObject);
+
         SceneManager.LoadSceneAsync(1);
     }
 

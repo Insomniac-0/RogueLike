@@ -43,7 +43,6 @@ public class InputReader : MonoBehaviour
     {
         inputs = new Inputs();
         inputs.PlayerActions.Enable();
-
         //int menu = inputs.MenuActions.Select.ReadValue<int>();
     }
     void Start()
@@ -53,9 +52,11 @@ public class InputReader : MonoBehaviour
         {
             if (!InitResources.GetCamera) return;
             if (!InitResources.GetPlayer) return;
-            mouse_position = e.ReadValue<Vector2>();
 
+            mouse_position = e.ReadValue<Vector2>();
             float3 mouse_ws = InitResources.GetCamera.ScreenToWorldPoint(new float3(mouse_position.xy, 0));
+
+
             float2 direction = math.normalizesafe(mouse_ws.xy - InitResources.GetNullableObjects.player.GetPosition.xy);
             float angle_rad = math.atan2(direction.y, direction.x);
             angle = math.degrees(angle_rad);
