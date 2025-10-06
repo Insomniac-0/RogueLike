@@ -1,11 +1,5 @@
-using System;
-using System.Data.Common;
 using Unity.Mathematics;
-using UnityEditor.SearchService;
-using UnityEditor.ShaderGraph.Internal;
 using UnityEngine;
-using UnityEngine.SceneManagement;
-using UnityEngine.UIElements;
 
 public class PlayerBehaviour : MonoBehaviour
 {

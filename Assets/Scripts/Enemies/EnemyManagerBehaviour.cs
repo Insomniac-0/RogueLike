@@ -1,19 +1,13 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.CompilerServices;
-using NUnit.Framework;
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Collections.LowLevel.Unsafe;
 using Unity.Entities;
-using Unity.Entities.UniversalDelegates;
 using Unity.Jobs;
 using Unity.Mathematics;
 using Unity.Physics;
-using Unity.VisualScripting;
-using UnityEditor;
-using UnityEditor.SearchService;
 using UnityEngine;
 
 [BurstCompile]
@@ -114,6 +108,8 @@ public unsafe class EnemyManagerBehaviour : MonoBehaviour
         public float delta_time;
         public float3 player_position;
         public NativeArray<EntityData> enemies;
+
+
 
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -222,6 +218,7 @@ public unsafe class EnemyManagerBehaviour : MonoBehaviour
             {
                 enemy_objects[i].SetVelocity(ptr->velocity);
                 ptr->transform.position = enemy_objects[i].GetPosition();
+
 
             }
             else

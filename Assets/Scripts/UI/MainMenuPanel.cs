@@ -13,12 +13,10 @@ public class MainMenuPanel : MonoBehaviour
         OPTIONS,
     }
 
-    Menu current;
 
     void Awake()
     {
         menus = new GameObject[size];
-        current = Menu.DEFAULT;
     }
 
     void Start()
