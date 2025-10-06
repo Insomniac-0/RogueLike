@@ -17,6 +17,6 @@ public class PlayerLvlText : MonoBehaviour
 
     void UpdateLvlText()
     {
-        lvl_text.text = $"LVL {InitResources.GetUpgradeSystem.GetPlayerLvl}";
+        lvl_text.text = $"{InitResources.GetUpgradeSystem.GetPlayerLvl}";
     }
 }
