@@ -16,4 +16,4 @@ MonoBehaviour:
   BaseHP: 1
   Lifetime: 2
   BaseSpeed: 10
-  BaseDMG: 5
+  BaseDMG: 10

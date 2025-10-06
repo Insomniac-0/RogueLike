@@ -11,30 +11,21 @@ public class GameManager : MonoBehaviour
         DEATH,
     }
 
-    #region Singleton
-    public static GameManager Instance;
-
-
-    private void Awake()
-    {
-        if (Instance != null && Instance != this)
-        {
-            throw new System.Exception("Singletons of type [GameManager] exist");
-        }
-        Instance = this;
-    }
-    #endregion
-
-
     private GameState _current_state;
+
+    void Start()
+    {
+    }
 
     private void Update()
     {
         switch (_current_state)
         {
             case GameState.PLAY:
+                PlayUpdateLoop();
                 break;
             case GameState.PAUSE:
+                PauseUpdateLoop();
                 break;
             case GameState.UPGRADE:
                 break;
@@ -48,10 +39,10 @@ public class GameManager : MonoBehaviour
         switch (_current_state)
         {
             case GameState.PLAY:
-                PlayUpdateLoop();
                 PlayFixedUpdateLoop();
                 break;
             case GameState.PAUSE:
+
                 break;
             case GameState.UPGRADE:
                 break;
@@ -67,14 +58,11 @@ public class GameManager : MonoBehaviour
 
     private void PlayUpdateLoop()
     {
-        
     }
     private void PlayFixedUpdateLoop()
     {
-
     }
     private void PauseUpdateLoop()
     {
-
     }
 }

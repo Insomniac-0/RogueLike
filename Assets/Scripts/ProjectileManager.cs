@@ -104,6 +104,7 @@ public unsafe class ProjectileManager : MonoBehaviour
             p.SetPosition(src.position);
             p.SetRotation(src.rotation);
             p._prevID = -1;
+            p.DMG = data.BaseDMG;
             p.gameObject.SetActive(true);
             projectile_objects.Add(p);
 
@@ -136,6 +137,7 @@ public unsafe class ProjectileManager : MonoBehaviour
             p.SetPosition(src.position);
             p.SetRotation(src.rotation);
             p._prevID = -1;
+            p.DMG = data.BaseDMG;
             p.gameObject.SetActive(true);
             projectile_objects.Add(p);
 

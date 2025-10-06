@@ -15,7 +15,6 @@ public class PlayerBehaviour : MonoBehaviour
 
     private ProjectileManager _projectile_manager => InitResources.GetProjectileManager;
 
-    public event Action OnHealthChange;
 
 
 
@@ -125,7 +124,7 @@ public class PlayerBehaviour : MonoBehaviour
         player_stats.current_hp -= DMG;
         iframe_cooldown = 0.5f;
         Debug.Log($"{DMG} Taken : {player_stats.current_hp} HP left");
-        OnHealthChange?.Invoke();
+        InitResources.GetEventChannel.TriggerHealthChange();
     }
 
     public float GetHealthPercentage => player_stats.current_hp / player_stats.max_health;

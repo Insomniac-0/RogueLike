@@ -9,6 +9,12 @@ public enum ScalingType
     MULTIPLICATIVE,
 }
 
+public enum EnemyState
+{
+    ATTACKING,
+    CHASING,
+}
+
 public struct Upgrade
 {
     ScalingType scaling;
@@ -81,52 +87,52 @@ public struct ProjectileData
     }
 }
 
-public enum EnemyType
-{
-    MELEE,
-    RANGED,
-    DEFAULT,
-}
-
-public enum EnemyState
-{
-    ATTACKING,
-    CHASING,
-}
-
 public struct EntityData
 {
     public TransformData transform;
 
     public RaycastHit2D rayhit;
-    public EnemyType type;
     public EnemyState state;
 
     public float3 direction;
     public float3 velocity;
 
-
     public int ID;
 
 
-    public float track_time;
-    public float shoot_startuptime;
     public float dmg;
     public float speed;
     public float crawl_speed;
-    public float hp;
+    public float HP;
     public float range;
-    public float raycast_range;
-
+    public float attack_range;
 
     public bool active;
 
+    public EntityData(EnemyDataSO data, TransformData t, int id, bool active = true)
+    {
+        rayhit = new RaycastHit2D();
+        state = EnemyState.CHASING;
+        direction = float3.zero;
+        velocity = float3.zero;
 
-}
+        transform = t;
+        ID = id;
+        HP = data.MaxHealth;
+        speed = data.BaseMovementSpeed;
+        crawl_speed = data.CrawlSpeed;
+        dmg = data.BaseDMG;
+        range = data.Range;
+        attack_range = data.AttackRange;
 
-public enum ColliderType
-{
-    ENTITY,
-    PROJECTILE,
-    ATTACK,
+        this.active = active;
+
+    }
+
+    public enum ColliderType
+    {
+        ENTITY,
+        PROJECTILE,
+        ATTACK,
+    }
 }

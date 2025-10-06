@@ -1,11 +1,33 @@
+using System;
+using System.Collections.Generic;
 using Unity.Mathematics;
 using UnityEditor.Rendering;
 using UnityEngine;
 
+[Serializable]
+public struct WaveEnemy
+{
+    public EnemyDataSO data;
+    public int count;
+}
+
+
+[Serializable]
+public struct Wave
+{
+    public WaveEnemy[] enemies;
+    public float spawn_rate;
+}
+
 public class Spawner : MonoBehaviour
 {
+
     Transform cache_transform;
     [SerializeField] Spawn[] spawn_points;
+    [SerializeField] EnemyDataSO[] enemy_data;
+    [SerializeField] List<Wave> waves;
+
+
     Player player;
     int index;
     float spawn_rate;
@@ -34,14 +56,14 @@ public class Spawner : MonoBehaviour
             {
 
                 point.x = UnityEngine.Random.Range(-15f, 15f);
-                point.y = spawn_points[index].GetPosition().y;
-                InitResources.GetEnemyManagerBehaviour.SpawnEntity(new(point), 10, 2, 5);
+                point.y = spawn_points[index].GetPosition.y;
+                InitResources.GetEnemyManagerBehaviour.SpawnEntity(enemy_data[0], new TransformData(point));
             }
             else
             {
                 point.y = UnityEngine.Random.Range(-10f, 10f);
-                point.x = spawn_points[index].GetPosition().x;
-                InitResources.GetEnemyManagerBehaviour.SpawnEntity(new(point), 10, 2, 5);
+                point.x = spawn_points[index].GetPosition.x;
+                InitResources.GetEnemyManagerBehaviour.SpawnEntity(enemy_data[0], new TransformData(point));
 
             }
             count = 0;

@@ -15952,6 +15952,13 @@ MonoBehaviour:
   - {fileID: 1057063637}
   - {fileID: 1293398597}
   - {fileID: 743275031}
+  enemy_data:
+  - {fileID: 11400000, guid: 0f373118bdb11bb499ab7f48f3a2c1f5, type: 2}
+  waves:
+  - enemies:
+    - data: {fileID: 0}
+      count: 0
+    spawn_rate: 0
 --- !u!4 &869113562
 Transform:
   m_ObjectHideFlags: 0
@@ -16445,7 +16452,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5149356100626073004, guid: 2fcff2ec1c38665feafed02877266373, type: 3}
       propertyPath: m_Volume
-      value: 0.145
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5149356100626073004, guid: 2fcff2ec1c38665feafed02877266373, type: 3}
       propertyPath: m_Resource

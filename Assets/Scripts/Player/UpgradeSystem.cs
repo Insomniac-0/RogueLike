@@ -3,7 +3,6 @@ using UnityEngine;
 
 public class UpgradeSystem : MonoBehaviour
 {
-    public event Action OnLevelUp;
     PlayerBehaviour player_behaviour;
 
     public struct PlayerLvl
@@ -32,12 +31,15 @@ public class UpgradeSystem : MonoBehaviour
     public void AddExperience(float xp)
     {
         player_lvl.current_xp += xp;
+
         if (player_lvl.current_xp >= player_lvl.max_xp)
         {
             player_lvl.current_xp -= player_lvl.max_xp;
             player_lvl.max_xp *= 1.2f;
-            OnLevelUp?.Invoke();
+            InitResources.GetEventChannel.TriggerLvlUp();
         }
+
+        InitResources.GetEventChannel.TriggerXpChange();
     }
 
     public void UpgradeMovementSpeed()

@@ -7,6 +7,9 @@ public class EnemyDataSO : ScriptableObject
 {
     public float MaxHealth;
     public float BaseMovementSpeed;
+    public float CrawlSpeed;
+    public float Range;
+    public float AttackRange;
     public float BaseDMG;
 }
 

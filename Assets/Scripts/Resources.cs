@@ -1,4 +1,5 @@
 using System;
+using JetBrains.Annotations;
 using Unity.Transforms;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -22,11 +23,19 @@ public class InitResources : MonoBehaviour
     private EventChannel event_channel;
     private GraphicsResources graphics_resources;
 
+    struct GameSettings
+    {
+        public int vsync;
+        public float volume;
+    }
+
+
 
 
     void Awake()
     {
         InitResources.Instance = this;
+
 
         projectile_manager = GetComponent<ProjectileManager>();
         enemyy_manager = GetComponent<EnemyManagerBehaviour>();

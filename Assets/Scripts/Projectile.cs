@@ -7,11 +7,14 @@ public sealed class Projectile : MonoBehaviour
     [SerializeField] Sprite[] collision_vfx;
     public int ID;
     public int _prevID;
+
+    public float DMG;
     Transform cache_transform;
 
 
     private SpriteRenderer sprite_renderer;
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
+
     public float3 GetPosition() => cache_transform.position;
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -38,7 +41,7 @@ public sealed class Projectile : MonoBehaviour
         {
             _prevID = collider_ref.GetID();
             collider_ref.blink_strength = 1f;
-            InitResources.GetEnemyManagerBehaviour.TakeDmg(_prevID, 5);
+            InitResources.GetEnemyManagerBehaviour.TakeDmg(_prevID, DMG);
             InitResources.GetProjectileManager.TakeDMG(ID);
             InitResources.GetVfxManager.SpawnAnimation(cache_transform.position, collision_vfx, 6f);
             // collider_ref.GetComponent<EnemyManagerBehaviour>().TakeDmg(_prevID, 5);

@@ -10,5 +10,4 @@ public class PlayerDataSO : ScriptableObject
     public float MS_Multiply;
     public float XP_Multiply;
     public float PickUpRange;
-
 }

@@ -73,14 +73,6 @@ public unsafe class EnemyManagerBehaviour : MonoBehaviour
 
     void FixedUpdate()
     {
-        // RaycastHit2D result;
-        // result = Physics2D.Raycast(Vector2.zero, Vector2.up, 1f, layerMask: InitResources.GetPlayerMask);
-        // if (result.transform && result.transform.TryGetComponent<Player>(out Player player_ref))
-        // {
-        //     player_ref.RaycastHit();
-        // }
-
-
         if (!InitResources.GetPlayer) return;
         delta_time = Time.deltaTime;
         player_position = InitResources.GetPlayer.GetPosition;
@@ -104,10 +96,7 @@ public unsafe class EnemyManagerBehaviour : MonoBehaviour
             EntityData* ptr = GetEntityPtr(i);
             if (!ptr->active) continue;
 
-
-
-
-            ptr->rayhit = Physics2D.Raycast(ptr->transform.position.xy, ptr->direction.xy, ptr->raycast_range, player_mask);
+            ptr->rayhit = Physics2D.Raycast(ptr->transform.position.xy, ptr->direction.xy, ptr->attack_range, player_mask);
             enemy_objects[i].DrawRaycastLine(player_position);
             if (ptr->rayhit.transform && ptr->rayhit.transform.TryGetComponent<Player>(out Player p))
             {
@@ -115,8 +104,9 @@ public unsafe class EnemyManagerBehaviour : MonoBehaviour
         }
     }
 
-
-
+    public void EnemyFixedUpdate()
+    {
+    }
 
     [BurstCompile]
     struct EntityMovementJob : IJobParallelFor
@@ -185,13 +175,12 @@ public unsafe class EnemyManagerBehaviour : MonoBehaviour
     {
         //Entity* ptr = GetEntity(index);
         EntityData* ptr = &((EntityData*)enemies.GetUnsafePtr())[ID];
-        ptr->hp -= dmg;
+        ptr->HP -= dmg;
     }
 
-    public void SpawnEntity(TransformData src, float HP, float Speed, float DMG)
+    public void SpawnEntity(EnemyDataSO data, TransformData src)
     {
         int newID = enemy_objects.Count;
-        Debug.Log(enemy_pool.Count);
         if (enemy_pool.Count == 0)
         {
 
@@ -204,19 +193,21 @@ public unsafe class EnemyManagerBehaviour : MonoBehaviour
             enemy_objects.Add(e);
 
             // Data
-            enemies.Add(new EntityData
-            {
-                transform = src,
-                direction = GetMoveDirection(InitResources.GetPlayer.GetPosition, src.position),
-                ID = newID,
-                hp = HP,
-                dmg = DMG,
-                speed = Speed,
-                crawl_speed = Speed / 2f,
-                range = 1f,
-                raycast_range = 6f,
-                active = true,
-            });
+            // enemies.Add(new EntityData
+            // {
+            //     transform = src,
+            //     direction = GetMoveDirection(InitResources.GetPlayer.GetPosition, src.position),
+            //     ID = newID,
+            //     hp = HP,
+            //     dmg = DMG,
+            //     speed = Speed,
+            //     crawl_speed = Speed / 2f,
+            //     range = 3f,
+            //     raycast_range = 6f,
+            //     active = true,
+            // });
+
+            enemies.Add(new EntityData(data, src, newID));
         }
         else
         {
@@ -229,19 +220,22 @@ public unsafe class EnemyManagerBehaviour : MonoBehaviour
             e.gameObject.SetActive(true);
             enemy_objects.Add(e);
 
-            enemies.Add(new EntityData
-            {
-                transform = src,
-                direction = GetMoveDirection(InitResources.GetPlayer.GetPosition, src.position),
-                ID = newID,
-                hp = HP,
-                dmg = DMG,
-                speed = Speed,
-                crawl_speed = Speed / 2f,
-                range = 3f,
-                raycast_range = 6f,
-                active = true,
-            });
+            // enemies.Add(new EntityData
+            // {
+            //     transform = src,
+            //     direction = GetMoveDirection(InitResources.GetPlayer.GetPosition, src.position),
+            //     ID = newID,
+            //     hp = HP,
+            //     dmg = DMG,
+            //     speed = Speed,
+            //     crawl_speed = Speed / 2f,
+            //     range = 3f,
+            //     raycast_range = 6f,
+            //     active = true,
+            // });
+
+            enemies.Add(new EntityData(data, src, newID));
+
 
         }
     }
@@ -255,7 +249,7 @@ public unsafe class EnemyManagerBehaviour : MonoBehaviour
             EntityData e = enemies[i];
             //EntityData* ptr = GetEntityPtr(i);
             if (!ptr->active) continue;
-            if (ptr->hp > 0)
+            if (ptr->HP > 0)
             {
                 enemy_objects[i].SetVelocity(ptr->velocity);
                 ptr->transform.position = enemy_objects[i].GetPosition();

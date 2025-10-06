@@ -9,13 +9,11 @@ public class HealthBarBehaviour : MonoBehaviour
     void Start()
     {
         image = GetComponent<Image>();
+        InitResources.GetEventChannel.OnHealthChange += UpdateHealthBar;
     }
-    void Update()
-    {
-        if (InitResources.GetPlayer != null)
-        {
-            image.fillAmount = math.clamp(InitResources.GetPlayer.GetHpPercentage, 0f, 1f);
-        }
 
+    void UpdateHealthBar()
+    {
+        image.fillAmount = math.clamp(InitResources.GetPlayer.GetHpPercentage, 0f, 1f);
     }
 }

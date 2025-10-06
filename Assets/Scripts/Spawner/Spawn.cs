@@ -10,5 +10,5 @@ public class Spawn : MonoBehaviour
         cache_transform = transform;
     }
 
-    public float3 GetPosition() => cache_transform.position;
+    public float3 GetPosition => cache_transform.position;
 }

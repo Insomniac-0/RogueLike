@@ -39,6 +39,7 @@ public class Enemy : MonoBehaviour
         blink_speed = 4f;
         sprite_renderer.sharedMaterial = GraphicsResources.GetBlinkerFluid;
 
+        line_renderer.enabled = false;
         propblock = new MaterialPropertyBlock();
     }
 
@@ -49,6 +50,7 @@ public class Enemy : MonoBehaviour
             blink_strength -= Time.deltaTime * blink_speed;
         }
         float lerp = GraphicsResources.GetBlinkerFluidAnimation.Evaluate(Mathf.Clamp01(blink_strength));
+
         propblock.SetFloat("_BlinkStrength", lerp);
         sprite_renderer.SetPropertyBlock(propblock);
         line_renderer.SetPosition(0, cache_transform.position + (Vector3)line_offset);
@@ -63,10 +65,11 @@ public class Enemy : MonoBehaviour
     public void SetVelocity(float3 velocity) => rb.linearVelocity = velocity.xy;
     public void DrawRaycastLine(float3 target) => line_renderer.SetPosition(1, target);
 
+    public void ShowLineRenderer(bool b) => line_renderer.enabled = b;
+
 
     void OnCollisionEnter2D(Collision2D collision)
     {
-        Debug.Log("Collision From Enemy");
         if (collision.gameObject.TryGetComponent<PlayerBehaviour>(out PlayerBehaviour collider_ref))
         {
             collider_ref.TakeDMG(5f);
