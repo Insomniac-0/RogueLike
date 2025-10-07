@@ -25,8 +25,6 @@ public class Player : MonoBehaviour
         sprite_renderer = GetComponent<SpriteRenderer>();
         InitResources.GetNullableObjects.AssignPlayer(this);
         cache_transform = transform;
-
-
     }
 
     void Start()
@@ -36,11 +34,16 @@ public class Player : MonoBehaviour
 
     public float3 GetPosition => cache_transform.position;
 
+    public PlayerBehaviour GetPlayerBehaviour => player_behaviour;
+
 
     public float GetHpPercentage => player_behaviour.GetHealthPercentage;
 
+
+
     public Transform GetTransform => cache_transform;
 
+    public void PlayerUpdate() => player_behaviour.UpdatePlayer();
 
     //public void SetColor(float3 color) => _sprite_renderer.color = new Color(color.x, color.y, color.z);
     public void SetPosition(float3 pos) => cache_transform.position = pos;

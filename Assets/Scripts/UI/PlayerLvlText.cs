@@ -15,6 +15,11 @@ public class PlayerLvlText : MonoBehaviour
         InitResources.GetEventChannel.OnLvlUp += UpdateLvlText;
     }
 
+    void OnDestroy()
+    {
+        InitResources.GetEventChannel.OnLvlUp -= UpdateLvlText;
+    }
+
     void UpdateLvlText()
     {
         lvl_text.text = $"{InitResources.GetUpgradeSystem.GetPlayerLvl}";

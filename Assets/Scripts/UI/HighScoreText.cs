@@ -15,6 +15,10 @@ public class HighScoreText : MonoBehaviour
         InitResources.GetEventChannel.OnScoreChange += UpdateHighScore;
     }
 
+    void OnDestroy()
+    {
+        InitResources.GetEventChannel.OnScoreChange -= UpdateHighScore;
+    }
     void UpdateHighScore()
     {
         highscore_text.text = $"{InitResources.GetUpgradeSystem.GetScore}";

@@ -322,6 +322,34 @@ public partial class @Inputs: IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": true
                 }
             ]
+        },
+        {
+            ""name"": ""GeneralActions"",
+            ""id"": ""592ca257-7be2-4c92-a681-3af9c19dfee7"",
+            ""actions"": [
+                {
+                    ""name"": ""Pause"",
+                    ""type"": ""Button"",
+                    ""id"": ""920d0e58-f5ac-43cd-8f60-79d917e92f66"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""71253c88-3e4d-4c12-9cd3-3b9fdcca8c1b"",
+                    ""path"": ""<Keyboard>/escape"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Pause"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
         }
     ],
     ""controlSchemes"": []
@@ -336,12 +364,16 @@ public partial class @Inputs: IInputActionCollection2, IDisposable
         // MenuActions
         m_MenuActions = asset.FindActionMap("MenuActions", throwIfNotFound: true);
         m_MenuActions_Select = m_MenuActions.FindAction("Select", throwIfNotFound: true);
+        // GeneralActions
+        m_GeneralActions = asset.FindActionMap("GeneralActions", throwIfNotFound: true);
+        m_GeneralActions_Pause = m_GeneralActions.FindAction("Pause", throwIfNotFound: true);
     }
 
     ~@Inputs()
     {
         UnityEngine.Debug.Assert(!m_PlayerActions.enabled, "This will cause a leak and performance issues, Inputs.PlayerActions.Disable() has not been called.");
         UnityEngine.Debug.Assert(!m_MenuActions.enabled, "This will cause a leak and performance issues, Inputs.MenuActions.Disable() has not been called.");
+        UnityEngine.Debug.Assert(!m_GeneralActions.enabled, "This will cause a leak and performance issues, Inputs.GeneralActions.Disable() has not been called.");
     }
 
     /// <summary>
@@ -649,6 +681,102 @@ public partial class @Inputs: IInputActionCollection2, IDisposable
     /// Provides a new <see cref="MenuActionsActions" /> instance referencing this action map.
     /// </summary>
     public MenuActionsActions @MenuActions => new MenuActionsActions(this);
+
+    // GeneralActions
+    private readonly InputActionMap m_GeneralActions;
+    private List<IGeneralActionsActions> m_GeneralActionsActionsCallbackInterfaces = new List<IGeneralActionsActions>();
+    private readonly InputAction m_GeneralActions_Pause;
+    /// <summary>
+    /// Provides access to input actions defined in input action map "GeneralActions".
+    /// </summary>
+    public struct GeneralActionsActions
+    {
+        private @Inputs m_Wrapper;
+
+        /// <summary>
+        /// Construct a new instance of the input action map wrapper class.
+        /// </summary>
+        public GeneralActionsActions(@Inputs wrapper) { m_Wrapper = wrapper; }
+        /// <summary>
+        /// Provides access to the underlying input action "GeneralActions/Pause".
+        /// </summary>
+        public InputAction @Pause => m_Wrapper.m_GeneralActions_Pause;
+        /// <summary>
+        /// Provides access to the underlying input action map instance.
+        /// </summary>
+        public InputActionMap Get() { return m_Wrapper.m_GeneralActions; }
+        /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.Enable()" />
+        public void Enable() { Get().Enable(); }
+        /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.Disable()" />
+        public void Disable() { Get().Disable(); }
+        /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.enabled" />
+        public bool enabled => Get().enabled;
+        /// <summary>
+        /// Implicitly converts an <see ref="GeneralActionsActions" /> to an <see ref="InputActionMap" /> instance.
+        /// </summary>
+        public static implicit operator InputActionMap(GeneralActionsActions set) { return set.Get(); }
+        /// <summary>
+        /// Adds <see cref="InputAction.started"/>, <see cref="InputAction.performed"/> and <see cref="InputAction.canceled"/> callbacks provided via <param cref="instance" /> on all input actions contained in this map.
+        /// </summary>
+        /// <param name="instance">Callback instance.</param>
+        /// <remarks>
+        /// If <paramref name="instance" /> is <c>null</c> or <paramref name="instance"/> have already been added this method does nothing.
+        /// </remarks>
+        /// <seealso cref="GeneralActionsActions" />
+        public void AddCallbacks(IGeneralActionsActions instance)
+        {
+            if (instance == null || m_Wrapper.m_GeneralActionsActionsCallbackInterfaces.Contains(instance)) return;
+            m_Wrapper.m_GeneralActionsActionsCallbackInterfaces.Add(instance);
+            @Pause.started += instance.OnPause;
+            @Pause.performed += instance.OnPause;
+            @Pause.canceled += instance.OnPause;
+        }
+
+        /// <summary>
+        /// Removes <see cref="InputAction.started"/>, <see cref="InputAction.performed"/> and <see cref="InputAction.canceled"/> callbacks provided via <param cref="instance" /> on all input actions contained in this map.
+        /// </summary>
+        /// <remarks>
+        /// Calling this method when <paramref name="instance" /> have not previously been registered has no side-effects.
+        /// </remarks>
+        /// <seealso cref="GeneralActionsActions" />
+        private void UnregisterCallbacks(IGeneralActionsActions instance)
+        {
+            @Pause.started -= instance.OnPause;
+            @Pause.performed -= instance.OnPause;
+            @Pause.canceled -= instance.OnPause;
+        }
+
+        /// <summary>
+        /// Unregisters <param cref="instance" /> and unregisters all input action callbacks via <see cref="GeneralActionsActions.UnregisterCallbacks(IGeneralActionsActions)" />.
+        /// </summary>
+        /// <seealso cref="GeneralActionsActions.UnregisterCallbacks(IGeneralActionsActions)" />
+        public void RemoveCallbacks(IGeneralActionsActions instance)
+        {
+            if (m_Wrapper.m_GeneralActionsActionsCallbackInterfaces.Remove(instance))
+                UnregisterCallbacks(instance);
+        }
+
+        /// <summary>
+        /// Replaces all existing callback instances and previously registered input action callbacks associated with them with callbacks provided via <param cref="instance" />.
+        /// </summary>
+        /// <remarks>
+        /// If <paramref name="instance" /> is <c>null</c>, calling this method will only unregister all existing callbacks but not register any new callbacks.
+        /// </remarks>
+        /// <seealso cref="GeneralActionsActions.AddCallbacks(IGeneralActionsActions)" />
+        /// <seealso cref="GeneralActionsActions.RemoveCallbacks(IGeneralActionsActions)" />
+        /// <seealso cref="GeneralActionsActions.UnregisterCallbacks(IGeneralActionsActions)" />
+        public void SetCallbacks(IGeneralActionsActions instance)
+        {
+            foreach (var item in m_Wrapper.m_GeneralActionsActionsCallbackInterfaces)
+                UnregisterCallbacks(item);
+            m_Wrapper.m_GeneralActionsActionsCallbackInterfaces.Clear();
+            AddCallbacks(instance);
+        }
+    }
+    /// <summary>
+    /// Provides a new <see cref="GeneralActionsActions" /> instance referencing this action map.
+    /// </summary>
+    public GeneralActionsActions @GeneralActions => new GeneralActionsActions(this);
     /// <summary>
     /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "PlayerActions" which allows adding and removing callbacks.
     /// </summary>
@@ -706,5 +834,20 @@ public partial class @Inputs: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnSelect(InputAction.CallbackContext context);
+    }
+    /// <summary>
+    /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "GeneralActions" which allows adding and removing callbacks.
+    /// </summary>
+    /// <seealso cref="GeneralActionsActions.AddCallbacks(IGeneralActionsActions)" />
+    /// <seealso cref="GeneralActionsActions.RemoveCallbacks(IGeneralActionsActions)" />
+    public interface IGeneralActionsActions
+    {
+        /// <summary>
+        /// Method invoked when associated input action "Pause" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnPause(InputAction.CallbackContext context);
     }
 }

@@ -1,8 +1,17 @@
 using System;
+using System.Diagnostics;
+using System.Security.Cryptography;
+using Unity.Mathematics;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Rendering;
 
-public class GameManager : MonoBehaviour
+public unsafe class GameManager : MonoBehaviour
 {
+    [SerializeField] PlayerDataSO _base_stats_template;
+
+
+    public bool PlayMode;
     public enum GameState
     {
         PLAY,
@@ -12,13 +21,26 @@ public class GameManager : MonoBehaviour
     }
 
     private GameState _current_state;
+    private GameState _prev_state;
+    private PlayerBaseStats base_stats;
+
+    void Awake()
+    {
+        InitializeBaseStats();
+    }
 
     void Start()
     {
+        InitResources.GetInputReader.inputs.GeneralActions.Pause.performed += _ => PauseSwitch();
+        InitResources.GetEventChannel.OnLvlUp += UpgradeState;
+        PlayMode = false;
     }
 
     private void Update()
     {
+        if (!PlayMode) return;
+
+
         switch (_current_state)
         {
             case GameState.PLAY:
@@ -28,6 +50,7 @@ public class GameManager : MonoBehaviour
                 PauseUpdateLoop();
                 break;
             case GameState.UPGRADE:
+                UpgradeLoop();
                 break;
             case GameState.DEATH:
                 break;
@@ -36,13 +59,13 @@ public class GameManager : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if (!PlayMode) return;
         switch (_current_state)
         {
             case GameState.PLAY:
                 PlayFixedUpdateLoop();
                 break;
             case GameState.PAUSE:
-
                 break;
             case GameState.UPGRADE:
                 break;
@@ -51,18 +74,118 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    public void StateInit(GameState state)
+    {
+        switch (state)
+        {
+            case GameState.PLAY:
+                PlayStateInit();
+                break;
+            case GameState.PAUSE:
+                PauseStateInit();
+                break;
+            case GameState.UPGRADE:
+                UpgradeStateInit();
+                break;
+            case GameState.DEATH:
+                DeathStateInit();
+                break;
+        }
+    }
+
+
+
+    public void InitializePlayerStats(ref PlayerStats p)
+    {
+        p.max_hp = base_stats.max_health;
+        p.current_hp = base_stats.max_health;
+        p.move_speed = base_stats.move_speed;
+        p.attack_speed = base_stats.attack_speed;
+    }
     public void SwitchState(GameState state)
     {
-        _current_state = state;
+        if (_current_state != state)
+        {
+            _current_state = state;
+            StateInit(state);
+        }
     }
+
+    public void UpgradeState() => SwitchState(GameState.UPGRADE);
+    public void SetState(GameState state) => _current_state = state;
 
     private void PlayUpdateLoop()
     {
+        InitResources.GetPlayer.PlayerUpdate();
+        NullableObjects.GetSpawner.UpdateSpawner();
     }
     private void PlayFixedUpdateLoop()
     {
+        InitResources.GetProjectileManager.FixedProjectileUpdate();
+        InitResources.GetEnemyManagerBehaviour.FixedEnemyUpdate();
+
     }
     private void PauseUpdateLoop()
     {
+        InitResources.GetEnemyManagerBehaviour.PauseEnemies();
+        NullableObjects.GetPlayer.SetVelocity(float3.zero);
+    }
+
+    private void UpgradeLoop()
+    {
+        InitResources.GetEnemyManagerBehaviour.PauseEnemies();
+        NullableObjects.GetPlayer.SetVelocity(float3.zero);
+    }
+
+    void PauseSwitch()
+    {
+        if (_current_state != GameState.PAUSE)
+        {
+            _prev_state = _current_state;
+            _current_state = GameState.PAUSE;
+            StateInit(GameState.PAUSE);
+        }
+        else
+        {
+            _current_state = _prev_state;
+            StateInit(_current_state);
+        }
+
+
+    }
+
+    private void PlayStateInit()
+    {
+        NullableObjects.GetUpgradeUI.gameObject.SetActive(false);
+        NullableObjects.GetPauseUI.gameObject.SetActive(false);
+    }
+
+    private void PauseStateInit()
+    {
+
+        NullableObjects.GetPauseUI.gameObject.SetActive(true);
+        InitResources.GetEnemyManagerBehaviour.PauseEnemies();
+        NullableObjects.GetPlayer.SetVelocity(float3.zero);
+    }
+
+    private void UpgradeStateInit()
+    {
+
+        NullableObjects.GetUpgradeUI.gameObject.SetActive(true);
+        NullableObjects.GetPauseUI.gameObject.SetActive(false);
+        InitResources.GetEnemyManagerBehaviour.PauseEnemies();
+    }
+
+    private void DeathStateInit()
+    {
+
+    }
+
+    private void InitializeBaseStats()
+    {
+        base_stats.max_health = _base_stats_template.MaxHealth;
+        base_stats.move_speed = _base_stats_template.MovementSpeed;
+        base_stats.attack_speed = _base_stats_template.AttackSpeed;
+        base_stats.pickup_range = _base_stats_template.PickUpRange;
     }
 }

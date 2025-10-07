@@ -12,10 +12,18 @@ public class VfxManager : MonoBehaviour
 
     List<VfxAnimation> animator_pool;
 
-    void Awake()
+
+
+    public void Init()
     {
         animator_pool = new List<VfxAnimation>(InitialAllocSize);
     }
+
+    public void CleanUp()
+    {
+        animator_pool.Clear();
+    }
+
 
     public void SpawnAnimation(float3 position, Sprite[] frames, float frame_rate)
     {

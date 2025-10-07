@@ -8,6 +8,7 @@ using Unity.Entities;
 using Unity.Jobs;
 using Unity.Mathematics;
 using Unity.Physics;
+using Unity.VisualScripting;
 using UnityEngine;
 
 [BurstCompile]
@@ -44,20 +45,24 @@ public unsafe class EnemyManagerBehaviour : MonoBehaviour
     float3 mouse_pos;
     float3 player_position;
 
-    private void Awake()
-    {
-        enemies = new NativeList<EntityData>(InitialAllocSize, Allocator.Persistent);
-        enemy_objects = new List<Enemy>(InitialAllocSize);
-        enemy_pool = new List<Enemy>(InitialAllocSize);
-        //line_positions = new NativeArray<float3> Allocator.Persistent);
-
-    }
-
     private void OnDestroy()
     {
         enemies.Dispose();
     }
 
+    public void Init()
+    {
+        enemies = new NativeList<EntityData>(InitialAllocSize, Allocator.Persistent);
+        enemy_objects = new List<Enemy>(InitialAllocSize);
+        enemy_pool = new List<Enemy>(InitialAllocSize);
+    }
+
+    public void CleanUp()
+    {
+        enemies.Dispose();
+        enemy_objects.Clear();
+        enemy_pool.Clear();
+    }
 
     private void Start()
     {
@@ -65,7 +70,40 @@ public unsafe class EnemyManagerBehaviour : MonoBehaviour
     }
 
 
-    void FixedUpdate()
+    // void FixedUpdate()
+    // {
+    //     if (!InitResources.GetPlayer) return;
+    //     delta_time = Time.deltaTime;
+    //     player_position = InitResources.GetPlayer.GetPosition;
+
+
+    //     EntityMovementJob entity_job = new EntityMovementJob
+    //     {
+    //         enemies = enemies.AsDeferredJobArray(),
+    //         delta_time = delta_time,
+    //         player_position = player_position,
+
+    //     };
+
+    //     JobHandle handle = entity_job.Schedule(enemy_objects.Count, EntityJobBatchSize);
+
+    //     handle.Complete();
+
+    //     UpdateEntities();
+    //     for (int i = 0; i < enemy_objects.Count; i++)
+    //     {
+    //         EntityData* ptr = GetEntityPtr(i);
+    //         if (!ptr->active) continue;
+
+    //         ptr->rayhit = Physics2D.Raycast(ptr->transform.position.xy, ptr->direction.xy, ptr->attack_range, player_mask);
+    //         enemy_objects[i].DrawRaycastLine(player_position);
+    //         // if (ptr->rayhit.transform && ptr->rayhit.transform.TryGetComponent<Player>(out Player p))
+    //         // {
+    //         // }
+    //     }
+    // }
+
+    public void FixedEnemyUpdate()
     {
         if (!InitResources.GetPlayer) return;
         delta_time = Time.deltaTime;
@@ -85,21 +123,17 @@ public unsafe class EnemyManagerBehaviour : MonoBehaviour
         handle.Complete();
 
         UpdateEntities();
-        for (int i = 0; i < enemy_objects.Count; i++)
-        {
-            EntityData* ptr = GetEntityPtr(i);
-            if (!ptr->active) continue;
+        // for (int i = 0; i < enemy_objects.Count; i++)
+        // {
+        //     EntityData* ptr = GetEntityPtr(i);
+        //     if (!ptr->active) continue;
 
-            ptr->rayhit = Physics2D.Raycast(ptr->transform.position.xy, ptr->direction.xy, ptr->attack_range, player_mask);
-            enemy_objects[i].DrawRaycastLine(player_position);
-            if (ptr->rayhit.transform && ptr->rayhit.transform.TryGetComponent<Player>(out Player p))
-            {
-            }
-        }
-    }
-
-    public void EnemyFixedUpdate()
-    {
+        //     ptr->rayhit = Physics2D.Raycast(ptr->transform.position.xy, ptr->direction.xy, ptr->attack_range, player_mask);
+        //     enemy_objects[i].DrawRaycastLine(player_position);
+        //     // if (ptr->rayhit.transform && ptr->rayhit.transform.TryGetComponent<Player>(out Player p))
+        //     // {
+        //     // }
+        // }
     }
 
     [BurstCompile]
@@ -206,6 +240,14 @@ public unsafe class EnemyManagerBehaviour : MonoBehaviour
         }
     }
 
+    public void PauseEnemies()
+    {
+        if (enemy_objects.Count <= 0) return;
+        for (int i = 0; i < enemy_objects.Count; i++)
+        {
+            enemy_objects[i].SetVelocity(float3.zero);
+        }
+    }
     public void UpdateEntities()
     {
 
@@ -219,8 +261,7 @@ public unsafe class EnemyManagerBehaviour : MonoBehaviour
             {
                 enemy_objects[i].SetVelocity(ptr->velocity);
                 ptr->transform.position = enemy_objects[i].GetPosition();
-
-
+                enemy_objects[i].UpdateEnemy();
             }
             else
             {
@@ -230,16 +271,14 @@ public unsafe class EnemyManagerBehaviour : MonoBehaviour
                 GameObject particle = Instantiate(GraphicsResources.GetDeathParticles);
                 particle.transform.position = enemy_objects[i].GetPosition();
                 particle.SetActive(true);
-                //RemoveEnemy(i, last_index, ptr, e);
 
-                enemy_objects[i].gameObject.SetActive(false);
                 enemy_pool.Add(enemy_objects[i]);
+                enemy_objects[i].gameObject.SetActive(false);
 
-                enemy_objects[i] = enemy_objects[last_index];
-                enemy_objects[last_index].gameObject.SetActive(false);
+
+
                 enemy_objects.RemoveAt(last_index);
-                enemy_objects[i].ID = i;
-                //if (last_index < i) enemy_objects[i].ID = i;
+                if (last_index < i) enemy_objects[i].ID = i;
 
                 *ptr = enemies[last_index];
                 enemies.RemoveAt(last_index);

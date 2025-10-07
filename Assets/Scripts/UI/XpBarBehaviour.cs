@@ -12,7 +12,10 @@ public class XpBarBehaviour : MonoBehaviour
         InitResources.GetEventChannel.OnXpChange += UpdateXpBar;
         UpdateXpBar();
     }
-
+    void OnDestroy()
+    {
+        InitResources.GetEventChannel.OnXpChange -= UpdateXpBar;
+    }
     void UpdateXpBar()
     {
         image.fillAmount = math.clamp(InitResources.GetUpgradeSystem.GetXpPercentage, 0f, 1f);

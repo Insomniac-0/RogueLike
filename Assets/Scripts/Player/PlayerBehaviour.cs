@@ -9,10 +9,6 @@ public class PlayerBehaviour : MonoBehaviour
 
     private ProjectileManager _projectile_manager => InitResources.GetProjectileManager;
 
-
-
-
-
     float shoot_cooldown;
     float iframe_cooldown;
 
@@ -23,17 +19,6 @@ public class PlayerBehaviour : MonoBehaviour
 
     // TYPES
 
-    public struct PlayerStats
-    {
-        public float max_health;
-        public float current_hp;
-        public float base_move_speed;
-        public float attack_speed;
-        public float ms_multiply;
-        public float xp_multiply;
-        public float pickup_range;
-        public float dmg_multiply;
-    }
 
     public struct PlayerMoveData
     {
@@ -43,31 +28,27 @@ public class PlayerBehaviour : MonoBehaviour
         public float speed;
     }
 
-
-
-    public PlayerStats player_stats;
+    PlayerMultipliers multipliers;
     public PlayerMoveData player_data;
+    public PlayerStats player_stats;
 
     void Awake()
     {
-
-        InitializeStats();
-
-
-
-        player_data.speed = player_stats.base_move_speed * player_stats.ms_multiply;
+        InitResources.GetGameManager.InitializePlayerStats(ref player_stats);
 
     }
     void Start()
     {
         player_data.position = InitResources.GetPlayer.GetPosition;
+        player_data.speed = player_stats.move_speed;
         shoot_cooldown = 0;
         iframe_cooldown = 0;
         direction = float3.zero;
+        multipliers = new PlayerMultipliers(1f, 1f, 1f, 1f);
     }
-    void Update()
-    {
 
+    public void UpdatePlayer()
+    {
         if (shoot_cooldown > 0) shoot_cooldown -= Time.deltaTime * FireRate;
         if (iframe_cooldown > 0) iframe_cooldown -= Time.deltaTime;
         if (player_stats.current_hp <= 0) Debug.Log($"HP : {player_stats.current_hp} - DEATH");
@@ -85,7 +66,7 @@ public class PlayerBehaviour : MonoBehaviour
             direction.z = 0f;
             data.rotation = quaternion.EulerXYZ(0f, 0f, 0f);
             data.scale = new(1f, 1f, 1f);
-            InitResources.GetProjectileManager.SpawnProjectile(_projectile_template, data, direction);
+            InitResources.GetProjectileManager.SpawnProjectile(_projectile_template, data, direction, multipliers.dmg_multiply);
             shoot_cooldown = 1f;
 
             //InitResources.GetProjectileManager.SpawnProjectile()
@@ -99,18 +80,13 @@ public class PlayerBehaviour : MonoBehaviour
         InitResources.GetPlayer.SetVelocity(player_data.velocity);
     }
 
-    void InitializeStats()
-    {
-        player_stats.base_move_speed = _player_template.BaseMovementSpeed;
+    public PlayerMultipliers GetMultipliers => multipliers;
 
-        player_stats.max_health = _player_template.MaxHealth;
-        player_stats.current_hp = _player_template.MaxHealth;
-        player_stats.attack_speed = _player_template.AttackSpeed;
-        player_stats.ms_multiply = _player_template.MS_Multiply;
-        player_stats.xp_multiply = _player_template.XP_Multiply;
-        player_stats.pickup_range = _player_template.PickUpRange;
-
-    }
+    public void SetMultipliers(PlayerMultipliers m) => multipliers = m;
+    public void UpdateMoveSpeed() => player_data.speed = player_stats.move_speed * multipliers.ms_multiply;
+    public void IncreaseMaxHP(float hp) => player_stats.max_hp += hp;
+    public void IncreaseCurrentHP(float hp) => player_stats.current_hp += hp;
+    public void SetDamage(float dmg) => multipliers.dmg_multiply += dmg;
 
 
     public void TakeDMG(float DMG)
@@ -120,6 +96,6 @@ public class PlayerBehaviour : MonoBehaviour
         InitResources.GetEventChannel.TriggerHealthChange();
     }
 
-    public float GetHealthPercentage => player_stats.current_hp / player_stats.max_health;
+    public float GetHealthPercentage => player_stats.current_hp / player_stats.max_hp;
 
 }

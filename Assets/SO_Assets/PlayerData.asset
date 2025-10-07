@@ -13,8 +13,6 @@ MonoBehaviour:
   m_Name: PlayerData
   m_EditorClassIdentifier: Assembly-CSharp::PlayerData
   MaxHealth: 100
-  BaseMovementSpeed: 2.5
+  MovementSpeed: 4
   AttackSpeed: 1
-  MS_Multiply: 1
-  XP_Multiply: 1
   PickUpRange: 1

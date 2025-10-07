@@ -11,7 +11,7 @@ public class InputReader : MonoBehaviour
     private float2 mouse_position;
     private float2 move_direction;
 
-    private Inputs inputs;
+    public Inputs inputs;
 
     public event Action OnAltShoot;
     public event Action OnAbility;
@@ -43,6 +43,7 @@ public class InputReader : MonoBehaviour
     {
         inputs = new Inputs();
         inputs.PlayerActions.Enable();
+        inputs.GeneralActions.Enable();
         //int menu = inputs.MenuActions.Select.ReadValue<int>();
     }
     void Start()
@@ -73,7 +74,7 @@ public class InputReader : MonoBehaviour
 
         inputs.PlayerActions.Move.performed += (e) =>
         {
-            move_direction = e.ReadValue<Vector2>();
+            InitResources.GetInputReader.move_direction = e.ReadValue<Vector2>();
             OnMove?.Invoke();
         };
 
@@ -91,8 +92,11 @@ public class InputReader : MonoBehaviour
 
     }
 
-
-
+    void OnDestroy()
+    {
+        inputs.Disable();
+        inputs.Dispose();
+    }
 
     public float3 GetMoveDirection() => new(move_direction.xy, 0);
 

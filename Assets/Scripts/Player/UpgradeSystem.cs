@@ -4,7 +4,6 @@ using UnityEngine.PlayerLoop;
 
 public class UpgradeSystem : MonoBehaviour
 {
-    PlayerBehaviour player_behaviour;
 
     int HighScore;
 
@@ -21,11 +20,12 @@ public class UpgradeSystem : MonoBehaviour
         float value;
     }
 
+
     PlayerLvl player_lvl;
 
-    void Awake()
+
+    public void Init()
     {
-        player_behaviour = GetComponent<PlayerBehaviour>();
         player_lvl.lvl = 1;
         player_lvl.max_xp = 100f;
         player_lvl.current_xp = 0f;
@@ -50,22 +50,24 @@ public class UpgradeSystem : MonoBehaviour
 
     public void UpgradeMovementSpeed()
     {
-        player_behaviour.player_stats.ms_multiply *= 1.2f;
-        player_behaviour.player_data.speed =
-            player_behaviour.player_stats.base_move_speed * player_behaviour.player_stats.ms_multiply;
-
+        PlayerMultipliers m = InitResources.GetPlayer.GetPlayerBehaviour.GetMultipliers;
+        m.ms_multiply *= 1.2f;
+        InitResources.GetPlayer.GetPlayerBehaviour.SetMultipliers(m);
+        InitResources.GetPlayer.GetPlayerBehaviour.UpdateMoveSpeed();
     }
 
     public void UpgradeMaxHealth()
     {
-        player_behaviour.player_stats.max_health += 10f;
-        player_behaviour.player_stats.current_hp += 10f;
+        InitResources.GetPlayer.GetPlayerBehaviour.IncreaseMaxHP(10);
+        InitResources.GetPlayer.GetPlayerBehaviour.IncreaseCurrentHP(10);
         InitResources.GetEventChannel.TriggerHealthChange();
     }
 
     public void UpgradeDamage()
     {
-        player_behaviour.player_stats.dmg_multiply += 0.2f;
+        PlayerMultipliers m = InitResources.GetPlayer.GetPlayerBehaviour.GetMultipliers;
+        m.dmg_multiply *= 1.2f;
+        InitResources.GetPlayer.GetPlayerBehaviour.SetMultipliers(m);
     }
 
     public void AddScore(int score) => HighScore += score;

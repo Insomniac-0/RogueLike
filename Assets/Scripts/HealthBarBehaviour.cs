@@ -12,6 +12,11 @@ public class HealthBarBehaviour : MonoBehaviour
         InitResources.GetEventChannel.OnHealthChange += UpdateHealthBar;
     }
 
+    void OnDestroy()
+    {
+        InitResources.GetEventChannel.OnHealthChange -= UpdateHealthBar;
+    }
+
     void UpdateHealthBar()
     {
         image.fillAmount = math.clamp(InitResources.GetPlayer.GetHpPercentage, 0f, 1f);

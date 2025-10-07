@@ -8,6 +8,7 @@ using Unity.Entities;
 using Unity.Entities.UniversalDelegates;
 using Unity.Jobs;
 using Unity.Mathematics;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public unsafe class ProjectileManager : MonoBehaviour
@@ -15,6 +16,8 @@ public unsafe class ProjectileManager : MonoBehaviour
 
     [SerializeField] Projectile projectile_ref;
     [SerializeField] private List<ProjectileDataSO> _projectile_templates;
+
+    private bool _initialized;
 
 
     Player player;
@@ -33,15 +36,6 @@ public unsafe class ProjectileManager : MonoBehaviour
     List<Projectile> projectile_objects;
     List<Projectile> projectile_pool;
 
-
-    private void Awake()
-    {
-        projectiles = new NativeList<ProjectileData>(InitialAllocSize, Allocator.Persistent);
-
-        projectile_objects = new List<Projectile>(InitialAllocSize);
-        projectile_pool = new List<Projectile>(InitialAllocSize);
-    }
-
     void Start()
     {
         mouse_pos = InitResources.GetInputReader.GetMousePositionWS();
@@ -52,8 +46,39 @@ public unsafe class ProjectileManager : MonoBehaviour
         projectiles.Dispose();
     }
 
-    void Update()
+    public void Init()
     {
+        projectiles = new NativeList<ProjectileData>(InitialAllocSize, Allocator.Persistent);
+        projectile_objects = new List<Projectile>(InitialAllocSize);
+        projectile_pool = new List<Projectile>(InitialAllocSize);
+    }
+    public void CleanUp()
+    {
+        projectiles.Dispose();
+        projectile_objects.Clear();
+        projectile_pool.Clear();
+    }
+
+    // void FixedUpdate()
+    // {
+    //     delta_time = Time.deltaTime;
+
+    //     ProjectileMovementJob projectile_job = new ProjectileMovementJob
+    //     {
+    //         projectiles = projectiles.AsDeferredJobArray(),
+    //         delta_time = delta_time,
+    //     };
+
+    //     JobHandle handle = projectile_job.Schedule(projectile_objects.Count, ProjectileJobBatchSize);
+
+    //     handle.Complete();
+
+    //     UpdateProjectiles();
+    // }
+
+    public void FixedProjectileUpdate()
+    {
+
         delta_time = Time.deltaTime;
 
         ProjectileMovementJob projectile_job = new ProjectileMovementJob
@@ -89,7 +114,7 @@ public unsafe class ProjectileManager : MonoBehaviour
         ptr->HP--;
     }
 
-    public void SpawnProjectile(ProjectileDataSO data, TransformData src, float3 direction)
+    public void SpawnProjectile(ProjectileDataSO data, TransformData src, float3 direction, float dmg_multiply = 1.0f)
     {
 
         int newID = projectile_objects.Count;
@@ -106,23 +131,10 @@ public unsafe class ProjectileManager : MonoBehaviour
             p.SetRotation(src.rotation);
             p.collided = false;
             p._prevID = -1;
-            p.DMG = data.BaseDMG;
+            p.DMG = data.BaseDMG * dmg_multiply;
             p.gameObject.SetActive(true);
             projectile_objects.Add(p);
 
-            // Data
-
-            // projectiles.Add(new ProjectileData
-            // {
-            //     ID = newID,
-            //     transform = src,
-            //     direction = direction,
-            //     HP = HP,
-            //     dmg = DMG,
-            //     speed = Speed,
-            //     lifetime = 2f,
-            //     active = true,
-            // });
             projectiles.Add(new ProjectileData(data, src, direction, newID));
         }
         else
@@ -140,33 +152,20 @@ public unsafe class ProjectileManager : MonoBehaviour
             p.SetRotation(src.rotation);
             p.collided = false;
             p._prevID = -1;
-            p.DMG = data.BaseDMG;
+            p.DMG = data.BaseDMG * dmg_multiply;
             p.gameObject.SetActive(true);
             projectile_objects.Add(p);
 
-            // Data
-            // projectiles.Add(new ProjectileData
-            // {
-            //     ID = newID,
-            //     transform = src,
-            //     direction = direction,
-            //     HP = HP,
-            //     dmg = DMG,
-            //     speed = Speed,
-            //     lifetime = 2f,
-            //     active = true,
-
-            // });
             projectiles.Add(new ProjectileData(data, src, direction, newID));
         }
     }
 
     void UpdateProjectiles()
     {
+        if (projectile_objects.Count <= 0) return;
         for (int i = projectile_objects.Count - 1; i >= 0; i--)
         {
-            ProjectileData* ptr = &((ProjectileData*)projectiles.GetUnsafePtr())[i];
-            //ProjectileData* ptr = GetProjectilePtr(i);
+            ProjectileData* ptr = GetProjectilePtr(i);
             ProjectileData p = projectiles[i];
             if (!ptr->active) continue;
 
@@ -177,27 +176,26 @@ public unsafe class ProjectileManager : MonoBehaviour
             }
             else
             {
-                int last_index = projectile_objects.Count;
+                int last_index = projectile_objects.Count - 1;
                 ptr->active = false;
 
                 projectile_objects[i].gameObject.SetActive(false);
                 projectile_pool.Add(projectile_objects[i]);
 
                 projectile_objects[i] = projectile_objects[last_index];
-                projectile_objects[last_index].gameObject.SetActive(false);
                 projectile_objects.RemoveAt(last_index);
                 if (last_index < i) projectile_objects[i].ID = i;
 
 
-                //*ptr = projectiles[final_index];
                 *ptr = projectiles[last_index];
+                ProjectileData pr = projectiles[last_index];
+                pr.active = false;
                 projectiles.RemoveAt(last_index);
                 ptr->ID = i;
-                if (last_index < i) projectiles[i] = p;
+                //if (last_index < i) projectiles[i] = p;
             }
         }
     }
-
 
     // HELPERS
     [MethodImpl(MethodImplOptions.AggressiveInlining)]

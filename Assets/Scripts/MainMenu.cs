@@ -12,9 +12,13 @@ public class MainMenu : MonoBehaviour
     }
     public void StartGame()
     {
+        InitResources.GetProjectileManager.Init();
+        InitResources.GetEnemyManagerBehaviour.Init();
+        InitResources.GetVfxManager.Init();
+        InitResources.GetUpgradeSystem.Init();
+        InitResources.GetUpgradeSystem.Init();
         Cursor.visible = false;
         SceneManager.LoadSceneAsync(2);
-        GetComponent<Button>();
     }
 
     public void ExitGame()

@@ -22,6 +22,7 @@ public class InitResources : MonoBehaviour
     private UpgradeSystem upgrade_system;
     private EventChannel event_channel;
     private GraphicsResources graphics_resources;
+    private GameManager game_manager;
 
     struct GameSettings
     {
@@ -47,6 +48,7 @@ public class InitResources : MonoBehaviour
         upgrade_system = GetComponent<UpgradeSystem>();
         event_channel = GetComponent<EventChannel>();
         graphics_resources = GetComponent<GraphicsResources>();
+        game_manager = GetComponent<GameManager>();
 
 
         cursor = Instantiate(cursor_ref);
@@ -73,6 +75,7 @@ public class InitResources : MonoBehaviour
     public static UpgradeSystem GetUpgradeSystem => Instance.upgrade_system;
     public static EventChannel GetEventChannel => Instance.event_channel;
     public static GraphicsResources GetGraphicsResources => Instance.graphics_resources;
+    public static GameManager GetGameManager => Instance.game_manager;
 
 
     public static Camera GetCamera => GetNullableObjects.cam;

@@ -18,18 +18,41 @@ public enum EnemyState
 public struct Upgrade
 {
     ScalingType scaling;
+    float value;
 }
 
-public struct PlayerGameData
+public struct PlayerStats
 {
+    public float max_hp;
+    public float current_hp;
+    public float move_speed;
+    public float attack_speed;
 }
 
-public struct Stats
+public struct PlayerBaseStats
 {
     public float max_health;
-    public float current_hp;
-    public int lvl;
+    public float move_speed;
+    public float attack_speed;
+    public float pickup_range;
 }
+
+public struct PlayerMultipliers
+{
+    public float ms_multiply;
+    public float xp_multiply;
+    public float as_multiply;
+    public float dmg_multiply;
+
+    public PlayerMultipliers(float ms = 1.0f, float xp = 1.0f, float aspeed = 1.0f, float dmg = 1.0f)
+    {
+        ms_multiply = ms;
+        xp_multiply = xp;
+        as_multiply = aspeed;
+        dmg_multiply = dmg;
+    }
+}
+
 
 public struct MoveData
 {
