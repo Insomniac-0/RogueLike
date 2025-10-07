@@ -51,6 +51,7 @@ public class Enemy : MonoBehaviour
 
     void Update()
     {
+        //if (line_width < 0f) line_width = 1f;
         if (blink_strength > 0)
         {
             blink_strength -= Time.deltaTime * blink_speed;

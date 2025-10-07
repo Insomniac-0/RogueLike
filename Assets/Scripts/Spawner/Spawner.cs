@@ -32,12 +32,14 @@ public class Spawner : MonoBehaviour
     float spawn_rate;
     float count;
     float3 point;
+    int max_enemies;
 
     void Awake()
     {
         cache_transform = transform;
         count = 0f;
-        spawn_rate = 2f;
+        spawn_rate = 50f;
+        max_enemies = 100;
     }
     void Start()
     {
@@ -48,7 +50,7 @@ public class Spawner : MonoBehaviour
     void Update()
     {
         if (!InitResources.GetPlayer) return;
-        if (count >= 1)
+        if (count >= 1 && InitResources.GetEnemyManagerBehaviour.GetEnemyCount < max_enemies)
         {
             index = UnityEngine.Random.Range(0, 4);
             if (index % 2 == 0)
@@ -67,6 +69,7 @@ public class Spawner : MonoBehaviour
             }
             count = 0;
         }
+        Debug.Log(InitResources.GetEnemyManagerBehaviour.GetEnemyCount);
         count += spawn_rate * Time.deltaTime;
         cache_transform.position = new float3(player.GetPosition.xy, 0f);
     }

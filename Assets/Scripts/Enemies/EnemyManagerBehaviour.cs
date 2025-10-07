@@ -164,6 +164,7 @@ public unsafe class EnemyManagerBehaviour : MonoBehaviour
     }
 
 
+    public int GetEnemyCount => enemy_objects.Count;
 
     public void TakeDmg(int ID, float dmg)
     {
@@ -208,7 +209,7 @@ public unsafe class EnemyManagerBehaviour : MonoBehaviour
     public void UpdateEntities()
     {
 
-        for (int i = 0; i < enemy_objects.Count; i++)
+        for (int i = enemy_objects.Count - 1; i >= 0; i--)
         {
             //EntityData* ptr = &((EntityData*)enemies.GetUnsafePtr())[i];
             EntityData* ptr = GetEntityPtr(i);
@@ -229,6 +230,7 @@ public unsafe class EnemyManagerBehaviour : MonoBehaviour
                 GameObject particle = Instantiate(GraphicsResources.GetDeathParticles);
                 particle.transform.position = enemy_objects[i].GetPosition();
                 particle.SetActive(true);
+                //RemoveEnemy(i, last_index, ptr, e);
 
                 enemy_objects[i].gameObject.SetActive(false);
                 enemy_pool.Add(enemy_objects[i]);
@@ -236,36 +238,51 @@ public unsafe class EnemyManagerBehaviour : MonoBehaviour
                 enemy_objects[i] = enemy_objects[last_index];
                 enemy_objects[last_index].gameObject.SetActive(false);
                 enemy_objects.RemoveAt(last_index);
-                if (last_index < i) enemy_objects[i].ID = i;
+                enemy_objects[i].ID = i;
+                //if (last_index < i) enemy_objects[i].ID = i;
 
                 *ptr = enemies[last_index];
                 enemies.RemoveAt(last_index);
                 ptr->ID = i;
+
                 InitResources.GetUpgradeSystem.AddExperience(5f);
                 InitResources.GetUpgradeSystem.AddScore(1);
                 InitResources.GetEventChannel.TriggerScoreChange();
-
                 //if (last_index < i) enemies[i] = e;
-
             }
         }
     }
-
 
     //HELPERS
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public EntityData* GetEntityPtr(int i) => &((EntityData*)enemies.GetUnsafePtr())[i];
 
-    public float3 GetMoveDirection(in float3 target, in float3 src)
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public float3 GetMoveDirection(in float3 target, in float3 src) => math.normalizesafe(target - src);
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public void SetMoveDirection(ref float3 output, in float3 target, in float3 src) => output = math.normalizesafe(target - src);
+
+
+    void RemoveEnemy(int current, int last, EntityData* ptr, EntityData e)
     {
-        return math.normalizesafe(target - src);
+
+        ptr->active = false;
+        // GameObject particle = Instantiate(GraphicsResources.GetDeathParticles);
+        // particle.transform.position = enemy_objects[i].GetPosition();
+        // particle.SetActive(true);
+
+        enemy_objects[current].gameObject.SetActive(false);
+        enemy_pool.Add(enemy_objects[current]);
+
+        enemy_objects[current] = enemy_objects[last];
+        enemy_objects[last].gameObject.SetActive(false);
+        enemy_objects.RemoveAt(last);
+        if (last < current) enemy_objects[current].ID = current;
+
+        *ptr = enemies[last];
+        enemies.RemoveAt(last);
+        ptr->ID = current;
+        //if (last < current) enemies[current] = e;
     }
-    public void SetMoveDirection(ref float3 output, in float3 target, in float3 src)
-    {
-        output = math.normalizesafe(target - src);
-    }
-
-
-    public float GetDamage(int ID) => enemies[ID].dmg;
-
 }

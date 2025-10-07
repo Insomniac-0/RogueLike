@@ -8,6 +8,8 @@ public sealed class Projectile : MonoBehaviour
     public int ID;
     public int _prevID;
 
+    public bool collided;
+
     public float DMG;
     Transform cache_transform;
 
@@ -33,17 +35,22 @@ public sealed class Projectile : MonoBehaviour
         _prevID = -1;
         sprite_renderer = GetComponent<SpriteRenderer>();
         cache_transform = transform;
+        collided = false;
     }
 
     void OnTriggerEnter2D(Collider2D collision)
     {
+        if (collided) return;
         if (collision.TryGetComponent<Enemy>(out Enemy collider_ref) && _prevID != collider_ref.GetID())
         {
             _prevID = collider_ref.GetID();
+
             collider_ref.blink_strength = 1f;
             InitResources.GetEnemyManagerBehaviour.TakeDmg(_prevID, DMG);
             InitResources.GetProjectileManager.TakeDMG(ID);
             InitResources.GetVfxManager.SpawnAnimation(cache_transform.position, collision_vfx, 6f);
+
+            collided = true;
             // collider_ref.GetComponent<EnemyManagerBehaviour>().TakeDmg(_prevID, 5);
             // gameObject.GetComponent<ProjectileManager>().TakeDMG(this.ID);
         }

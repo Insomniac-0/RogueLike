@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using Unity.Burst;
 using Unity.Collections;
@@ -103,6 +104,7 @@ public unsafe class ProjectileManager : MonoBehaviour
             p.ID = newID;
             p.SetPosition(src.position);
             p.SetRotation(src.rotation);
+            p.collided = false;
             p._prevID = -1;
             p.DMG = data.BaseDMG;
             p.gameObject.SetActive(true);
@@ -136,6 +138,7 @@ public unsafe class ProjectileManager : MonoBehaviour
             p.ID = newID;
             p.SetPosition(src.position);
             p.SetRotation(src.rotation);
+            p.collided = false;
             p._prevID = -1;
             p.DMG = data.BaseDMG;
             p.gameObject.SetActive(true);
@@ -174,14 +177,14 @@ public unsafe class ProjectileManager : MonoBehaviour
             }
             else
             {
-                int count = projectile_objects.Count;
-                int last_index = count - 1;
+                int last_index = projectile_objects.Count;
                 ptr->active = false;
 
                 projectile_objects[i].gameObject.SetActive(false);
                 projectile_pool.Add(projectile_objects[i]);
 
                 projectile_objects[i] = projectile_objects[last_index];
+                projectile_objects[last_index].gameObject.SetActive(false);
                 projectile_objects.RemoveAt(last_index);
                 if (last_index < i) projectile_objects[i].ID = i;
 
@@ -195,10 +198,6 @@ public unsafe class ProjectileManager : MonoBehaviour
         }
     }
 
-    void KillProjectile(int index, int end)
-    {
-        // TODO
-    }
 
     // HELPERS
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
