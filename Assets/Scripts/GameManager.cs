@@ -33,6 +33,7 @@ public unsafe class GameManager : MonoBehaviour
     {
         InitResources.GetInputReader.inputs.GeneralActions.Pause.performed += _ => PauseSwitch();
         InitResources.GetEventChannel.OnLvlUp += UpgradeState;
+        InitResources.GetEventChannel.OnDeath += DeathState;
         PlayMode = false;
     }
 
@@ -53,6 +54,7 @@ public unsafe class GameManager : MonoBehaviour
                 UpgradeLoop();
                 break;
             case GameState.DEATH:
+                DeathLoop();
                 break;
         }
     }
@@ -102,6 +104,7 @@ public unsafe class GameManager : MonoBehaviour
         p.move_speed = base_stats.move_speed;
         p.attack_speed = base_stats.attack_speed;
     }
+
     public void SwitchState(GameState state)
     {
         if (_current_state != state)
@@ -112,6 +115,8 @@ public unsafe class GameManager : MonoBehaviour
     }
 
     public void UpgradeState() => SwitchState(GameState.UPGRADE);
+    public void DeathState() => SwitchState(GameState.DEATH);
+
     public void SetState(GameState state) => _current_state = state;
 
     private void PlayUpdateLoop()
@@ -137,6 +142,12 @@ public unsafe class GameManager : MonoBehaviour
         NullableObjects.GetPlayer.SetVelocity(float3.zero);
     }
 
+    private void DeathLoop()
+    {
+        InitResources.GetEnemyManagerBehaviour.PauseEnemies();
+        NullableObjects.GetPlayer.SetVelocity(float3.zero);
+    }
+
     void PauseSwitch()
     {
         if (_current_state != GameState.PAUSE)
@@ -156,13 +167,16 @@ public unsafe class GameManager : MonoBehaviour
 
     private void PlayStateInit()
     {
+
+        Cursor.visible = false;
         NullableObjects.GetUpgradeUI.gameObject.SetActive(false);
         NullableObjects.GetPauseUI.gameObject.SetActive(false);
+        NullableObjects.GetGameOverUI.gameObject.SetActive(false);
     }
 
     private void PauseStateInit()
     {
-
+        Cursor.visible = true;
         NullableObjects.GetPauseUI.gameObject.SetActive(true);
         InitResources.GetEnemyManagerBehaviour.PauseEnemies();
         NullableObjects.GetPlayer.SetVelocity(float3.zero);
@@ -171,6 +185,7 @@ public unsafe class GameManager : MonoBehaviour
     private void UpgradeStateInit()
     {
 
+        Cursor.visible = true;
         NullableObjects.GetUpgradeUI.gameObject.SetActive(true);
         NullableObjects.GetPauseUI.gameObject.SetActive(false);
         InitResources.GetEnemyManagerBehaviour.PauseEnemies();
@@ -178,7 +193,11 @@ public unsafe class GameManager : MonoBehaviour
 
     private void DeathStateInit()
     {
-
+        Cursor.visible = true;
+        InitResources.GetInputReader.inputs.GeneralActions.Disable();
+        NullableObjects.GetGameOverUI.gameObject.SetActive(true);
+        InitResources.GetEnemyManagerBehaviour.PauseEnemies();
+        NullableObjects.GetPlayer.SetVelocity(float3.zero);
     }
 
     private void InitializeBaseStats()

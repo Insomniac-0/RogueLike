@@ -12,7 +12,7 @@ public class InitResources : MonoBehaviour
     private CursorBehaviour cursor_ref;
 
     private ProjectileManager projectile_manager;
-    private EnemyManagerBehaviour enemyy_manager;
+    private EnemyManagerBehaviour enemy_manager;
     private InputReader input_reader;
     private NullableObjects nullable_objects;
     private CursorBehaviour cursor;
@@ -24,22 +24,19 @@ public class InitResources : MonoBehaviour
     private GraphicsResources graphics_resources;
     private GameManager game_manager;
 
-    struct GameSettings
+    public struct GameSettings
     {
-        public int vsync;
         public float volume;
+        public bool vsync;
+        public bool fullscreen;
     }
-
-
-
 
     void Awake()
     {
         InitResources.Instance = this;
 
-
         projectile_manager = GetComponent<ProjectileManager>();
-        enemyy_manager = GetComponent<EnemyManagerBehaviour>();
+        enemy_manager = GetComponent<EnemyManagerBehaviour>();
         input_reader = GetComponent<InputReader>();
         nullable_objects = GetComponent<NullableObjects>();
         sound_manager = GetComponent<SoundManager>();
@@ -50,22 +47,21 @@ public class InitResources : MonoBehaviour
         graphics_resources = GetComponent<GraphicsResources>();
         game_manager = GetComponent<GameManager>();
 
-
         cursor = Instantiate(cursor_ref);
-
 
         Application.targetFrameRate = 0;
         QualitySettings.vSyncCount = -1;
+
     }
+
     void Start()
     {
         DontDestroyOnLoad(this.gameObject);
-
         SceneManager.LoadSceneAsync(1);
     }
 
     public static ProjectileManager GetProjectileManager => Instance.projectile_manager;
-    public static EnemyManagerBehaviour GetEnemyManagerBehaviour => Instance.enemyy_manager;
+    public static EnemyManagerBehaviour GetEnemyManagerBehaviour => Instance.enemy_manager;
     public static InputReader GetInputReader => Instance.input_reader;
     public static NullableObjects GetNullableObjects => Instance.nullable_objects;
     public static SoundManager GetSoundManager => Instance.sound_manager;
@@ -77,9 +73,29 @@ public class InitResources : MonoBehaviour
     public static GraphicsResources GetGraphicsResources => Instance.graphics_resources;
     public static GameManager GetGameManager => Instance.game_manager;
 
-
     public static Camera GetCamera => GetNullableObjects.cam;
     public static Player GetPlayer => GetNullableObjects.player;
     public static Int32 GetPlayerMask => GetCollisionMasks.GetPlayerMask;
+
+    public static void Init()
+    {
+        Instance.projectile_manager.Init();
+        Instance.enemy_manager.Init();
+        Instance.vfx_manager.Init();
+        Instance.upgrade_system.Init();
+    }
+
+    public static void HardCleanUp()
+    {
+        Instance.projectile_manager.HardCleanUp();
+        Instance.enemy_manager.HardCleanUp();
+        Instance.vfx_manager.CleanUp();
+    }
+    public static void SoftCleanUp()
+    {
+        Instance.projectile_manager.SoftCleanUp();
+        Instance.enemy_manager.SoftCleanUp();
+        Instance.vfx_manager.CleanUp();
+    }
 
 }

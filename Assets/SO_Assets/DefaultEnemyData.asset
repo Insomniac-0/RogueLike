@@ -16,5 +16,6 @@ MonoBehaviour:
   BaseMovementSpeed: 2
   CrawlSpeed: 1
   Range: 3
-  AttackRange: 6
+  AttackRange: 1
+  AttackDelay: 0
   BaseDMG: 5

@@ -31,6 +31,9 @@ public class UpgradeSystem : MonoBehaviour
         player_lvl.current_xp = 0f;
 
         HighScore = 0;
+        InitResources.GetEventChannel.TriggerXpChange();
+        InitResources.GetEventChannel.TriggerLvlUp();
+        InitResources.GetEventChannel.TriggerScoreChange();
     }
 
     public void AddExperience(float xp)

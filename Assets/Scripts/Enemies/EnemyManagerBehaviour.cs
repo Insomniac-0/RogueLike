@@ -45,10 +45,6 @@ public unsafe class EnemyManagerBehaviour : MonoBehaviour
     float3 mouse_pos;
     float3 player_position;
 
-    private void OnDestroy()
-    {
-        enemies.Dispose();
-    }
 
     public void Init()
     {
@@ -57,9 +53,20 @@ public unsafe class EnemyManagerBehaviour : MonoBehaviour
         enemy_pool = new List<Enemy>(InitialAllocSize);
     }
 
-    public void CleanUp()
+    public void HardCleanUp()
     {
         enemies.Dispose();
+        enemy_objects.Clear();
+        enemy_pool.Clear();
+    }
+
+    public void SoftCleanUp()
+    {
+        for (int i = 0; i < enemy_objects.Count; i++)
+        {
+            Destroy(enemy_objects[i].gameObject);
+        }
+        enemies.Clear();
         enemy_objects.Clear();
         enemy_pool.Clear();
     }

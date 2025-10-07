@@ -47,6 +47,17 @@ public class PlayerBehaviour : MonoBehaviour
         multipliers = new PlayerMultipliers(1f, 1f, 1f, 1f);
     }
 
+    public void Reset()
+    {
+        InitResources.GetGameManager.InitializePlayerStats(ref player_stats);
+        player_data.position = InitResources.GetPlayer.GetPosition;
+        player_data.speed = player_stats.move_speed;
+        shoot_cooldown = 0;
+        iframe_cooldown = 0;
+        direction = float3.zero;
+        multipliers = new PlayerMultipliers(1f, 1f, 1f, 1f);
+        InitResources.GetEventChannel.TriggerHealthChange();
+    }
     public void UpdatePlayer()
     {
         if (shoot_cooldown > 0) shoot_cooldown -= Time.deltaTime * FireRate;
@@ -92,6 +103,8 @@ public class PlayerBehaviour : MonoBehaviour
     public void TakeDMG(float DMG)
     {
         player_stats.current_hp -= DMG;
+        if (player_stats.current_hp <= 0) InitResources.GetEventChannel.TriggerOnDeath();
+
         iframe_cooldown = 0.5f;
         InitResources.GetEventChannel.TriggerHealthChange();
     }

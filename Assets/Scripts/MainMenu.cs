@@ -12,11 +12,7 @@ public class MainMenu : MonoBehaviour
     }
     public void StartGame()
     {
-        InitResources.GetProjectileManager.Init();
-        InitResources.GetEnemyManagerBehaviour.Init();
-        InitResources.GetVfxManager.Init();
-        InitResources.GetUpgradeSystem.Init();
-        InitResources.GetUpgradeSystem.Init();
+        InitResources.Init();
         Cursor.visible = false;
         SceneManager.LoadSceneAsync(2);
     }

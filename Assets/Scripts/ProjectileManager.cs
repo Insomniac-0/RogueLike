@@ -41,10 +41,6 @@ public unsafe class ProjectileManager : MonoBehaviour
         mouse_pos = InitResources.GetInputReader.GetMousePositionWS();
     }
 
-    private void OnDestroy()
-    {
-        projectiles.Dispose();
-    }
 
     public void Init()
     {
@@ -52,29 +48,24 @@ public unsafe class ProjectileManager : MonoBehaviour
         projectile_objects = new List<Projectile>(InitialAllocSize);
         projectile_pool = new List<Projectile>(InitialAllocSize);
     }
-    public void CleanUp()
+    public void HardCleanUp()
     {
         projectiles.Dispose();
         projectile_objects.Clear();
         projectile_pool.Clear();
     }
 
-    // void FixedUpdate()
-    // {
-    //     delta_time = Time.deltaTime;
+    public void SoftCleanUp()
+    {
+        for (int i = 0; i < projectile_objects.Count; i++)
+        {
+            Destroy(projectile_objects[i].gameObject);
+        }
+        projectiles.Clear();
+        projectile_objects.Clear();
+        projectile_pool.Clear();
+    }
 
-    //     ProjectileMovementJob projectile_job = new ProjectileMovementJob
-    //     {
-    //         projectiles = projectiles.AsDeferredJobArray(),
-    //         delta_time = delta_time,
-    //     };
-
-    //     JobHandle handle = projectile_job.Schedule(projectile_objects.Count, ProjectileJobBatchSize);
-
-    //     handle.Complete();
-
-    //     UpdateProjectiles();
-    // }
 
     public void FixedProjectileUpdate()
     {
