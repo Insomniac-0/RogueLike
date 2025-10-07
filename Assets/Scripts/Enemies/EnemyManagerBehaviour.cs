@@ -217,6 +217,7 @@ public unsafe class EnemyManagerBehaviour : MonoBehaviour
             e.ID = newID;
             e.SetPosition(src.position);
             e.DMG = data.BaseDMG;
+            e.blink_strength = 0;
             e.gameObject.SetActive(true);
             enemy_objects.Add(e);
 
@@ -232,6 +233,7 @@ public unsafe class EnemyManagerBehaviour : MonoBehaviour
             e.ID = newID;
             e.SetPosition(src.position);
             e.DMG = data.BaseDMG;
+            e.blink_strength = 0;
             e.gameObject.SetActive(true);
             enemy_objects.Add(e);
 
@@ -255,7 +257,6 @@ public unsafe class EnemyManagerBehaviour : MonoBehaviour
         {
             //EntityData* ptr = &((EntityData*)enemies.GetUnsafePtr())[i];
             EntityData* ptr = GetEntityPtr(i);
-            EntityData e = enemies[i];
             if (!ptr->active) continue;
             if (ptr->HP > 0)
             {
@@ -265,29 +266,36 @@ public unsafe class EnemyManagerBehaviour : MonoBehaviour
             }
             else
             {
-                int last_index = enemy_objects.Count - 1;
+
                 ptr->active = false;
 
                 GameObject particle = Instantiate(GraphicsResources.GetDeathParticles);
                 particle.transform.position = enemy_objects[i].GetPosition();
                 particle.SetActive(true);
 
-                enemy_pool.Add(enemy_objects[i]);
                 enemy_objects[i].gameObject.SetActive(false);
+                enemy_pool.Add(enemy_objects[i]);
 
+                enemy_objects.RemoveAtSwapBack(i);
+                enemies.RemoveAtSwapBack(i);
+                int last_index = enemy_objects.Count - 1;
 
+                if (last_index < i)
+                {
+                    enemy_objects[last_index].ID = last_index;
+                    EntityData e = enemies[last_index];
+                    e.ID = last_index;
+                }
+                else
+                {
+                    enemy_objects[i].ID = i;
+                    EntityData e = enemies[i];
+                    e.ID = i;
+                }
 
-                enemy_objects.RemoveAt(last_index);
-                if (last_index < i) enemy_objects[i].ID = i;
-
-                *ptr = enemies[last_index];
-                enemies.RemoveAt(last_index);
-                ptr->ID = i;
-
-                InitResources.GetUpgradeSystem.AddExperience(5f);
+                InitResources.GetUpgradeSystem.AddExperience(20f);
                 InitResources.GetUpgradeSystem.AddScore(1);
                 InitResources.GetEventChannel.TriggerScoreChange();
-                //if (last_index < i) enemies[i] = e;
             }
         }
     }
