@@ -1,9 +1,5 @@
-using System.Collections;
-using System.Numerics;
 using Unity.Mathematics;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 [RequireComponent(typeof(SpriteRenderer))]
 [RequireComponent(typeof(Rigidbody2D))]
@@ -63,7 +59,7 @@ public class Enemy : MonoBehaviour
         if (line_width > 0)
         {
             line_width -= Time.deltaTime * 2f;
-            line_renderer.widthMultiplier = Mathf.Clamp01(line_width);
+            line_renderer.widthMultiplier = math.clamp(line_width, 0.1f, 1f);
         }
 
     }
@@ -78,10 +74,12 @@ public class Enemy : MonoBehaviour
     public void SetVelocity(float3 velocity) => rb.linearVelocity = velocity.xy;
     public void SetSprite(Sprite sprite) => sprite_renderer.sprite = sprite;
 
-    public void DrawRaycastLine(float3 target)
+    public void DrawRaycastLine(float3 src, float3 direction, float range)
     {
+        float3 position = src + direction * range;
         line_renderer.SetPosition(0, cache_transform.position + (UnityEngine.Vector3)line_offset);
-        line_renderer.SetPosition(1, target);
+
+        line_renderer.SetPosition(1, position);
     }
 
     public void ShowLineRenderer(bool b) => line_renderer.enabled = b;

@@ -1,4 +1,3 @@
-using NUnit.Framework.Constraints;
 using Unity.Mathematics;
 using UnityEngine;
 
@@ -11,8 +10,9 @@ public enum ScalingType
 
 public enum EnemyState
 {
-    ATTACKING,
     CHASING,
+    KITING,
+    ATTACKING,
 }
 
 public enum EnemyType
@@ -118,24 +118,26 @@ public struct ProjectileData
 
 public struct EntityData
 {
-    public TransformData transform;
-
     public RaycastHit2D rayhit;
+    public TransformData transform;
     public EnemyState state;
     public EnemyType type;
 
     public float3 direction;
-    public float3 look_direction;
     public float3 velocity;
+    public float3 aim_direction;
+
 
     public int ID;
 
-
+    public float cooldown;
+    public float counter;
     public float dmg;
     public float speed;
     public float crawl_speed;
     public float HP;
-    public float attack_delay;
+    public float attack_speed;
+    public float attack_windup;
     public float range;
     public float attack_range;
 
@@ -147,16 +149,20 @@ public struct EntityData
         state = EnemyState.CHASING;
         direction = float3.zero;
         velocity = float3.zero;
-        look_direction = float3.zero;
+        aim_direction = float3.zero;
         this.type = type;
 
         transform = t;
         ID = id;
+
+        cooldown = 0f;
+        counter = 0f;
         HP = data.MaxHealth;
         speed = data.BaseMovementSpeed;
         crawl_speed = data.CrawlSpeed;
         dmg = data.BaseDMG;
-        attack_delay = data.AttackDelay;
+        attack_speed = data.AttackSpeed;
+        attack_windup = data.AttackWindup;
         range = data.Range;
         attack_range = data.AttackRange;
 

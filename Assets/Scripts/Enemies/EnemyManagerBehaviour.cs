@@ -8,8 +8,6 @@ using Unity.Entities;
 using Unity.Jobs;
 using Unity.Mathematics;
 using Unity.Physics;
-using Unity.VisualScripting;
-using UnityEditor.Build.Pipeline.Utilities;
 using UnityEngine;
 
 [BurstCompile]
@@ -108,17 +106,6 @@ public unsafe class EnemyManagerBehaviour : MonoBehaviour
         handle.Complete();
 
         UpdateEntities();
-        // for (int i = 0; i < enemy_objects.Count; i++)
-        // {
-        //     EntityData* ptr = GetEntityPtr(i);
-        //     if (!ptr->active) continue;
-
-        //     ptr->rayhit = Physics2D.Raycast(ptr->transform.position.xy, ptr->direction.xy, ptr->attack_range, player_mask);
-        //     enemy_objects[i].DrawRaycastLine(player_position);
-        //     // if (ptr->rayhit.transform && ptr->rayhit.transform.TryGetComponent<Player>(out Player p))
-        //     // {
-        //     // }
-        // }
     }
 
     [BurstCompile]
@@ -138,53 +125,65 @@ public unsafe class EnemyManagerBehaviour : MonoBehaviour
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         void SetEntityVelocity(EntityData* ptr, float speed) => ptr->velocity = ptr->direction * speed;
 
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         float2 GetTargetDirection(EntityData* ptr) => math.normalizesafe(player_position.xy - ptr->transform.position.xy);
 
+        void SetAimDirection(EntityData* ptr) => ptr->aim_direction.xy = GetTargetDirection(ptr);
 
 
-        void SetEntityMoveDirection(EntityData* ptr, float angle_offset, float speed)
+        void SetEntityMoveDirection(EntityData* ptr, float angle_offset)
         {
             float2 target_direction = GetTargetDirection(ptr);
-            float angle_direction = math.atan2(target_direction.y, target_direction.x) + math.radians(angle_offset);
-            float2 kiting_direction = new float2(math.cos(angle_direction), math.sin(angle_direction));
-
-            float correction_amount = 0f;
-            if (GetDistanceToPlayer(ptr) < ptr->range)
+            if (angle_offset > 0f)
             {
-                correction_amount = (ptr->range / GetDistanceToPlayer(ptr)) - 1f;
+                float angle_direction = math.atan2(target_direction.y, target_direction.x) + math.radians(angle_offset);
+                float2 kiting_direction = new float2(math.cos(angle_direction), math.sin(angle_direction));
+
+                float correction_amount = 0f;
+
+                if (GetDistanceToPlayer(ptr) < ptr->range)
+                {
+                    correction_amount = (ptr->range / GetDistanceToPlayer(ptr)) - 1f;
+                }
+
+                float2 correction_direction = -target_direction * correction_amount;
+                float2 accum = kiting_direction + correction_direction;
+                ptr->direction.xy = accum;
             }
+            else
+            {
+                ptr->direction.xy = target_direction.xy;
 
-            float2 correction_direction = -target_direction * correction_amount;
-
-            float2 accum = kiting_direction + correction_direction;
-            ptr->direction.xy = accum;
-            ptr->direction.z = 0f;
-            SetEntityVelocity(ptr, speed);
-
-            ptr->direction.xy = GetTargetDirection(ptr);
+            }
             ptr->direction.z = 0f;
         }
 
 
         void UpdateState(EntityData* ptr)
         {
-            switch (ptr->state)
+            bool in_range = GetDistanceToPlayer(ptr) < ptr->range ? true : false;
+            if (!in_range && ptr->state != EnemyState.CHASING)
             {
-                case EnemyState.CHASING:
-                    if (GetDistanceToPlayer(ptr) <= ptr->range)
-                    {
-                        ptr->state = EnemyState.ATTACKING;
-                        ptr->attack_delay = 1f;
-                    }
-                    break;
-                case EnemyState.ATTACKING:
-                    if (GetDistanceToPlayer(ptr) > ptr->range)
-                    {
-                        ptr->state = EnemyState.CHASING;
-                    }
-                    break;
+                ptr->state = EnemyState.CHASING;
+                return;
             }
+
+            if (in_range && ptr->cooldown <= 0 && ptr->state != EnemyState.ATTACKING)
+            {
+                ptr->state = EnemyState.ATTACKING;
+                SetAimDirection(ptr);
+                ptr->aim_direction.z = 0;
+                ptr->velocity = float3.zero;
+                ptr->counter = ptr->attack_windup;
+                return;
+            }
+            if (in_range && ptr->cooldown > 0 && ptr->state != EnemyState.KITING)
+            {
+                ptr->state = EnemyState.KITING;
+                return;
+            }
+
         }
 
         public void Execute(int index)
@@ -192,21 +191,28 @@ public unsafe class EnemyManagerBehaviour : MonoBehaviour
             EntityData* ptr = GetEntityPtr(index);
 
             if (!ptr->active) return;
-
-
+            if (ptr->cooldown > 0f) ptr->cooldown -= delta_time * ptr->attack_speed;
+            UpdateState(ptr);
 
             switch (ptr->state)
             {
                 case EnemyState.CHASING:
-                    SetEntityMoveDirection(ptr, 0f, ptr->speed);
-                    UpdateState(ptr);
+                    SetEntityMoveDirection(ptr, 0f);
+                    SetEntityVelocity(ptr, ptr->speed);
+                    SetAimDirection(ptr);
+                    ptr->aim_direction.z = 0;
+                    break;
+                case EnemyState.KITING:
+                    SetEntityMoveDirection(ptr, 90f);
+                    SetEntityVelocity(ptr, ptr->crawl_speed);
+                    SetAimDirection(ptr);
+                    ptr->aim_direction.z = 0;
                     break;
                 case EnemyState.ATTACKING:
-                    SetEntityMoveDirection(ptr, 90f, ptr->crawl_speed);
-                    ptr->attack_delay -= delta_time;
-                    UpdateState(ptr);
+                    ptr->counter -= delta_time;
                     break;
             }
+
 
         }
     }
@@ -278,34 +284,47 @@ public unsafe class EnemyManagerBehaviour : MonoBehaviour
             {
                 enemy_objects[i].SetVelocity(ptr->velocity);
                 ptr->transform.position = enemy_objects[i].GetPosition();
-                enemy_objects[i].UpdateEnemy();
+                if (ptr->type != EnemyType.BAT || ptr->state == EnemyState.CHASING) enemy_objects[i].ShowLineRenderer(false);
 
                 if (ptr->state == EnemyState.ATTACKING && ptr->type == EnemyType.BAT)
                 {
                     enemy_objects[i].ShowLineRenderer(true);
-                    enemy_objects[i].DrawRaycastLine(ptr->direction * ptr->range);
-                }
-                else
-                {
-                    enemy_objects[i].ShowLineRenderer(false);
-                    continue;
-                }
-
-
-                if (ptr->attack_delay <= 0)
-                {
-                    ptr->attack_delay = 1f;
-                    enemy_objects[i].SetLineWidth(1f);
-                    ptr->rayhit = Physics2D.Raycast(ptr->transform.position.xy, ptr->direction.xy, ptr->range, player_mask);
-                    if (ptr->rayhit.transform && ptr->rayhit.transform.TryGetComponent<Player>(out Player p))
+                    enemy_objects[i].DrawRaycastLine(ptr->transform.position, ptr->aim_direction, ptr->attack_range);
+                    if (ptr->counter <= 0)
                     {
-                        p.GetPlayerBehaviour.TakeDMG(ptr->dmg);
+                        ptr->cooldown = 1f;
+                        ptr->counter = ptr->attack_windup;
+                        enemy_objects[i].SetLineWidth(1f);
+                        ptr->rayhit = Physics2D.Raycast(ptr->transform.position.xy, ptr->aim_direction.xy, ptr->attack_range, player_mask);
+                        if (ptr->rayhit.transform && ptr->rayhit.transform.TryGetComponent<PlayerBehaviour>(out PlayerBehaviour p))
+                        {
+                            p.TakeDMG(ptr->dmg);
+                        }
                     }
                 }
 
+                enemy_objects[i].UpdateEnemy();
             }
             else
             {
+                int score;
+                int xp;
+
+                switch (ptr->type)
+                {
+                    case EnemyType.SKULL:
+                        score = 1;
+                        xp = 5;
+                        break;
+                    case EnemyType.BAT:
+                        score = 2;
+                        xp = 10;
+                        break;
+                    default:
+                        score = 0;
+                        xp = 0;
+                        break;
+                }
 
                 ptr->active = false;
 
@@ -333,8 +352,9 @@ public unsafe class EnemyManagerBehaviour : MonoBehaviour
                     e.ID = i;
                 }
 
-                InitResources.GetUpgradeSystem.AddExperience(20f);
-                InitResources.GetUpgradeSystem.AddScore(1);
+
+                InitResources.GetUpgradeSystem.AddExperience(xp);
+                InitResources.GetUpgradeSystem.AddScore(score);
                 InitResources.GetEventChannel.TriggerScoreChange();
             }
         }

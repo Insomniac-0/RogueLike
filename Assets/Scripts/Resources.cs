@@ -47,8 +47,7 @@ public class InitResources : MonoBehaviour
 
         cursor = Instantiate(cursor_ref);
 
-        Application.targetFrameRate = 0;
-        QualitySettings.vSyncCount = -1;
+
 
     }
 

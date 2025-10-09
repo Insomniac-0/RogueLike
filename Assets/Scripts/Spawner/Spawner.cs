@@ -35,7 +35,7 @@ public class Spawner : MonoBehaviour
     int max_enemies;
     EnemyType type;
 
-    const float BaseSpawnRate = 5f;
+    const float BaseSpawnRate = 2f;
 
     void Awake()
     {
@@ -64,7 +64,8 @@ public class Spawner : MonoBehaviour
         if (!InitResources.GetPlayer) return;
         if (count >= 1 && InitResources.GetEnemyManagerBehaviour.GetEnemyCount < max_enemies)
         {
-            type = UnityEngine.Random.Range(0f, 1f) < 0.66f ? EnemyType.SKULL : EnemyType.BAT;
+            type = UnityEngine.Random.Range(0f, 1f) < 0.7f ? EnemyType.SKULL : EnemyType.BAT;
+
             index = UnityEngine.Random.Range(0, 4);
             if (index % 2 == 0)
             {
@@ -77,7 +78,7 @@ public class Spawner : MonoBehaviour
             {
                 point.y = UnityEngine.Random.Range(-10f, 10f);
                 point.x = spawn_points[index].GetPosition.x;
-                InitResources.GetEnemyManagerBehaviour.SpawnEntity(enemy_data[(int)0], new TransformData(point), type);
+                InitResources.GetEnemyManagerBehaviour.SpawnEntity(enemy_data[(int)type], new TransformData(point), type);
 
             }
             count = 0;

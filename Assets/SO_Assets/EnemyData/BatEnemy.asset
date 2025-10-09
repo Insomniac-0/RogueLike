@@ -14,8 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EnemyDataSO
   MaxHealth: 20
   BaseMovementSpeed: 3
-  CrawlSpeed: 0
-  Range: 6
-  AttackRange: 9
-  AttackDelay: 2
-  BaseDMG: 20
+  CrawlSpeed: 1.5
+  Range: 3
+  AttackRange: 6
+  AttackSpeed: 0.1
+  AttackWindup: 0.8
+  BaseDMG: 10

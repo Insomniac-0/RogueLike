@@ -1,6 +1,4 @@
-using System;
 using UnityEngine;
-using UnityEngine.PlayerLoop;
 
 public class UpgradeSystem : MonoBehaviour
 {
@@ -43,7 +41,7 @@ public class UpgradeSystem : MonoBehaviour
         if (player_lvl.current_xp >= player_lvl.max_xp)
         {
             player_lvl.current_xp -= player_lvl.max_xp;
-            player_lvl.max_xp *= 1.2f;
+            player_lvl.max_xp *= 1.1f;
             player_lvl.lvl++;
             InitResources.GetEventChannel.TriggerLvlUp();
         }
