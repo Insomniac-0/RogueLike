@@ -168,8 +168,9 @@ public unsafe class GameManager : MonoBehaviour
 
     private void PlayStateInit()
     {
-
         Cursor.visible = false;
+        InitResources.GetInputReader.inputs.GeneralActions.Enable();
+
         if (NullableObjects.GetUpgradeUI != null) NullableObjects.GetUpgradeUI.gameObject.SetActive(false);
         if (NullableObjects.GetPauseUI != null) NullableObjects.GetPauseUI.gameObject.SetActive(false);
         if (NullableObjects.GetGameOverUI != null) NullableObjects.GetGameOverUI.gameObject.SetActive(false);

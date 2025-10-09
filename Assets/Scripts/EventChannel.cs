@@ -13,6 +13,7 @@ public class EventChannel : MonoBehaviour
     // GAME EVENTS
     public event Action OnExitGame;
     public event Action OnPlayGame;
+    public event Action OnSettingsChange;
 
 
 
@@ -23,8 +24,10 @@ public class EventChannel : MonoBehaviour
     public void TriggerScoreChange() => OnScoreChange?.Invoke();
     public void TriggerOnDeath() => OnDeath?.Invoke();
 
+
     // GAME EVENTS
     public void TriggerOnExitGame() => OnExitGame?.Invoke();
     public void TriggerOnPlayGame() => OnPlayGame?.Invoke();
+    public void TriggerOnSettingsChange() => OnSettingsChange?.Invoke();
 }
 

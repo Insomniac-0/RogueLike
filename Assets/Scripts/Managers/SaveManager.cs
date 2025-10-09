@@ -8,13 +8,7 @@ using UnityEngine;
 [Serializable]
 public struct SaveData
 {
-    public int user_id;
     public int high_score;
-    public SaveData(int id, int score)
-    {
-        user_id = id;
-        high_score = score;
-    }
 }
 
 
@@ -23,22 +17,20 @@ public class SaveManager : MonoBehaviour
 {
     private SaveData data;
 
-
-    [SerializeField] string file_name;
-
-    const int InitialAllocSize = 20;
-
-
-    Dictionary<string, SaveData> HighScores = new Dictionary<string, SaveData>();
-
+    const string file_name = "SaveData";
 
     string GetPath => Application.persistentDataPath + "/" + file_name + ".json";
 
+    void Start()
+    {
+        InitResources.GetEventChannel.OnDeath += SaveScore;
+    }
 
     public void LoadData()
     {
         if (!File.Exists(GetPath))
         {
+            data.high_score = 0;
             SaveData();
             return;
         }
@@ -50,23 +42,16 @@ public class SaveManager : MonoBehaviour
     {
         string jsonfile = JsonUtility.ToJson(data);
         if (!File.Exists(GetPath)) File.Create(GetPath);
-
         File.WriteAllText(GetPath, jsonfile);
     }
-
-    public void AddUser(string user, int score)
+    public void SaveScore()
     {
-        if (HighScores.ContainsKey(user) && HighScores[user].high_score < score)
+        LoadData();
+        int score = InitResources.GetUpgradeSystem.GetScore;
+        if (data.high_score < score)
         {
-            SaveData data = HighScores[user];
             data.high_score = score;
-            HighScores[user] = data;
-        }
-        else
-        {
-            int newID = HighScores.Count;
-            SaveData data = new SaveData(newID, score);
-            HighScores.Add(user, data);
+            SaveData();
         }
     }
 }

@@ -13,7 +13,6 @@ public class MainMenuPanel : MonoBehaviour
         OPTIONS,
     }
 
-
     void Awake()
     {
         menus = new GameObject[size];
@@ -26,6 +25,9 @@ public class MainMenuPanel : MonoBehaviour
             menus[i] = transform.GetChild(i).gameObject;
         }
     }
+
+
+
 
     public void ActivateMenu(int m)
     {
@@ -47,5 +49,17 @@ public class MainMenuPanel : MonoBehaviour
                 menus[0].SetActive(false);
                 break;
         }
+    }
+
+
+    public void SetVolume(float f)
+    {
+        InitResources.GetGameSettings.SetVolume(f);
+        InitResources.GetEventChannel.TriggerOnSettingsChange();
+    }
+    public void SetVsync(bool b)
+    {
+        InitResources.GetGameSettings.SetVsync(b);
+        InitResources.GetEventChannel.TriggerOnSettingsChange();
     }
 }

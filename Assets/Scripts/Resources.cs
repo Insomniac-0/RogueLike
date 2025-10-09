@@ -23,13 +23,9 @@ public class InitResources : MonoBehaviour
     private EventChannel event_channel;
     private GraphicsResources graphics_resources;
     private GameManager game_manager;
+    private SaveManager save_manager;
+    public GameSettings game_settings;
 
-    public struct GameSettings
-    {
-        public float volume;
-        public bool vsync;
-        public bool fullscreen;
-    }
 
     void Awake()
     {
@@ -46,6 +42,8 @@ public class InitResources : MonoBehaviour
         event_channel = GetComponent<EventChannel>();
         graphics_resources = GetComponent<GraphicsResources>();
         game_manager = GetComponent<GameManager>();
+        save_manager = GetComponent<SaveManager>();
+        game_settings = GetComponent<GameSettings>();
 
         cursor = Instantiate(cursor_ref);
 
@@ -72,6 +70,8 @@ public class InitResources : MonoBehaviour
     public static EventChannel GetEventChannel => Instance.event_channel;
     public static GraphicsResources GetGraphicsResources => Instance.graphics_resources;
     public static GameManager GetGameManager => Instance.game_manager;
+    public static SaveManager GetSaveManager => Instance.save_manager;
+    public static GameSettings GetGameSettings => Instance.game_settings;
 
     public static Camera GetCamera => GetNullableObjects.cam;
     public static Player GetPlayer => GetNullableObjects.player;

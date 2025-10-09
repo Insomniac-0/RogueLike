@@ -36,6 +36,7 @@ public class SoundManager : MonoBehaviour
 
     void Start()
     {
+        audio_source.volume = InitResources.GetGameSettings.GetVolume;
         audio_source.resource = audio_resources[1];
         audio_source.loop = true;
         audio_source.Play();
