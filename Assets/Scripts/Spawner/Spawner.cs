@@ -20,8 +20,9 @@ public struct Wave
 
 public class Spawner : MonoBehaviour
 {
-
+    PrematureDespawnTrigger StopThemeSound;
     Transform cache_transform;
+    [SerializeField] SoundData MainMusic;
     [SerializeField] Spawn[] spawn_points;
     [SerializeField] EnemyDataSO[] enemy_data;
     [SerializeField] List<Wave> waves;
@@ -50,10 +51,12 @@ public class Spawner : MonoBehaviour
         InitResources.GetEventChannel.OnLvlUp += UpdateSpawnRate;
         point.z = 0;
         player = InitResources.GetPlayer;
-
-
+        StopThemeSound = InitResources.GetSoundManager.SpawnSound(MainMusic);
     }
-
+    void OnDestroy()
+    {
+        StopThemeSound();
+    }
     private void UpdateSpawnRate()
     {
         spawn_rate = BaseSpawnRate + InitResources.GetUpgradeSystem.GetPlayerLvl * 1.1f;

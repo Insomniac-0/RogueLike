@@ -42,7 +42,7 @@ public unsafe class GameManager : MonoBehaviour
     {
         if (!PlayMode) return;
 
-
+        ForcedUpdate();
         switch (_current_state)
         {
             case GameState.PLAY:
@@ -106,6 +106,7 @@ public unsafe class GameManager : MonoBehaviour
         p.attack_speed = base_stats.attack_speed;
     }
 
+    public bool IsPaused => _current_state == GameState.PAUSE || _current_state == GameState.UPGRADE;
     public void SwitchState(GameState state)
     {
         if (_current_state != state)
@@ -120,6 +121,10 @@ public unsafe class GameManager : MonoBehaviour
 
     public void SetState(GameState state) => _current_state = state;
 
+    private void ForcedUpdate()
+    {
+        InitResources.GetSoundManager.SoundUpdate();
+    }
     private void PlayUpdateLoop()
     {
         InitResources.GetPlayer.PlayerUpdate();

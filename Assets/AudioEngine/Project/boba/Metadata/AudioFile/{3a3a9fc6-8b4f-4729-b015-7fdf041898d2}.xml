@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.03.00">
+	<object class="AudioFile" id="{3a3a9fc6-8b4f-4729-b015-7fdf041898d2}">
+		<property name="assetPath">
+			<value>sfx_wpn_laser7.wav</value>
+		</property>
+		<property name="frequencyInKHz">
+			<value>44.0999985</value>
+		</property>
+		<property name="channelCount">
+			<value>1</value>
+		</property>
+		<property name="length">
+			<value>0.39287981859410431</value>
+		</property>
+		<relationship name="masterAssetFolder">
+			<destination>{47796c8d-9fcb-4c9c-a334-8f85c30ce25e}</destination>
+		</relationship>
+	</object>
+</objects>

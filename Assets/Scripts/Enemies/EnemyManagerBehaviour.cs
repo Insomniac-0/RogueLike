@@ -18,6 +18,7 @@ public unsafe class EnemyManagerBehaviour : MonoBehaviour
     // REFS
     [SerializeField] Enemy enemy_ref;
     [SerializeField] Sprite[] sprites;
+    [SerializeField] SoundData laser_sound;
 
     float delta_time;
 
@@ -292,6 +293,7 @@ public unsafe class EnemyManagerBehaviour : MonoBehaviour
                     enemy_objects[i].DrawRaycastLine(ptr->transform.position, ptr->aim_direction, ptr->attack_range);
                     if (ptr->counter <= 0)
                     {
+                        InitResources.GetSoundManager.SpawnSound(laser_sound);
                         ptr->cooldown = 1f;
                         ptr->counter = ptr->attack_windup;
                         enemy_objects[i].SetLineWidth(1f);

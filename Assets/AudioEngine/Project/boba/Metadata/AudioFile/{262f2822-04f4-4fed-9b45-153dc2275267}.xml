@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.03.00">
+	<object class="AudioFile" id="{262f2822-04f4-4fed-9b45-153dc2275267}">
+		<property name="assetPath">
+			<value>rpg_bt005-loop.ogg</value>
+		</property>
+		<property name="isStreaming">
+			<value>true</value>
+		</property>
+		<property name="frequencyInKHz">
+			<value>48</value>
+		</property>
+		<property name="channelCount">
+			<value>2</value>
+		</property>
+		<property name="length">
+			<value>102.85710416666667</value>
+		</property>
+		<relationship name="masterAssetFolder">
+			<destination>{47796c8d-9fcb-4c9c-a334-8f85c30ce25e}</destination>
+		</relationship>
+	</object>
+</objects>

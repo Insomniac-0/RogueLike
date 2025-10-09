@@ -1,3 +1,4 @@
+using FMOD;
 using Unity.Mathematics;
 using UnityEngine;
 
@@ -6,6 +7,7 @@ public class PlayerBehaviour : MonoBehaviour
     [SerializeField] private PlayerDataSO _player_template;
     [SerializeField] private ProjectileDataSO _projectile_template;
     [SerializeField] float FireRate;
+    [SerializeField] SoundData shooting_sound;
 
     private ProjectileManager _projectile_manager => InitResources.GetProjectileManager;
 
@@ -62,7 +64,6 @@ public class PlayerBehaviour : MonoBehaviour
     {
         if (shoot_cooldown > 0) shoot_cooldown -= Time.deltaTime * FireRate;
         if (iframe_cooldown > 0) iframe_cooldown -= Time.deltaTime;
-        if (player_stats.current_hp <= 0) Debug.Log($"HP : {player_stats.current_hp} - DEATH");
 
 
         player_data.position = InitResources.GetPlayer.GetPosition;
@@ -70,6 +71,7 @@ public class PlayerBehaviour : MonoBehaviour
 
         if (InitResources.GetInputReader.is_shooting && shoot_cooldown <= 0f)
         {
+            InitResources.GetSoundManager.SpawnSound(shooting_sound);
             mouse_pos = InitResources.GetInputReader.GetMousePositionWS();
             TransformData data;
             data.position = player_data.position;
