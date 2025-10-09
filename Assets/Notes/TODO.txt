@@ -11,7 +11,7 @@ FEATURES G
     [X] - Combat
         - [X] Take Dmg
         - [X] Deal Dmg
-    [/] - Upgrades
+    [X] - Upgrades
     [X] - Movement
     [X] - UI
     [X] - Camera
@@ -26,14 +26,26 @@ FEATURES G
 ====================
 
 [ ] - Architecture
-    [/] - States
-        [ ] - Game Over
-        [ ] - Pause
+    [X] - States
+        [X] - Game Over
+        [X] - Pause
         [X] - Main Menu
-        [ ] - Settings
+        [/] - Settings
     [ ] - Progression
-        [ ] - 
-        [ ] - 
+        [X] - More enemies Spawn
+        [ ] - Enemies have higher hp
+
+[ ] - Sauce
+	[ ] - Main menu music
+	[X] - Game music
+	[ ] - Sound effect lvl up
+	[ ] - Sound effect Player Die
+	[ ] - Sound effect Enemy die
+	[ ] - Sound Effect player attack
+	[ ] - Sound Effect Enemy Attack
+	[X] - Particle system enemy death
+
+
 
 ====================
 

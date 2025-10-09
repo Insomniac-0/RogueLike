@@ -1,6 +1,7 @@
 using System;
 using System.Diagnostics;
 using System.Security.Cryptography;
+using Unity.Entities.UniversalDelegates;
 using Unity.Mathematics;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -169,9 +170,9 @@ public unsafe class GameManager : MonoBehaviour
     {
 
         Cursor.visible = false;
-        NullableObjects.GetUpgradeUI.gameObject.SetActive(false);
-        NullableObjects.GetPauseUI.gameObject.SetActive(false);
-        NullableObjects.GetGameOverUI.gameObject.SetActive(false);
+        if (NullableObjects.GetUpgradeUI != null) NullableObjects.GetUpgradeUI.gameObject.SetActive(false);
+        if (NullableObjects.GetPauseUI != null) NullableObjects.GetPauseUI.gameObject.SetActive(false);
+        if (NullableObjects.GetGameOverUI != null) NullableObjects.GetGameOverUI.gameObject.SetActive(false);
     }
 
     private void PauseStateInit()
@@ -186,8 +187,8 @@ public unsafe class GameManager : MonoBehaviour
     {
 
         Cursor.visible = true;
-        NullableObjects.GetUpgradeUI.gameObject.SetActive(true);
-        NullableObjects.GetPauseUI.gameObject.SetActive(false);
+        if (NullableObjects.GetUpgradeUI != null) NullableObjects.GetUpgradeUI.gameObject.SetActive(true);
+        if (NullableObjects.GetPauseUI != null) NullableObjects.GetPauseUI.gameObject.SetActive(false);
         InitResources.GetEnemyManagerBehaviour.PauseEnemies();
     }
 

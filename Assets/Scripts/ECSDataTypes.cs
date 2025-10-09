@@ -15,6 +15,12 @@ public enum EnemyState
     CHASING,
 }
 
+public enum EnemyType
+{
+    SKULL,
+    BAT,
+}
+
 public struct Upgrade
 {
     ScalingType scaling;
@@ -116,8 +122,10 @@ public struct EntityData
 
     public RaycastHit2D rayhit;
     public EnemyState state;
+    public EnemyType type;
 
     public float3 direction;
+    public float3 look_direction;
     public float3 velocity;
 
     public int ID;
@@ -133,12 +141,14 @@ public struct EntityData
 
     public bool active;
 
-    public EntityData(EnemyDataSO data, TransformData t, int id, bool active = true)
+    public EntityData(EnemyDataSO data, TransformData t, int id, EnemyType type, bool active = true)
     {
         rayhit = new RaycastHit2D();
         state = EnemyState.CHASING;
         direction = float3.zero;
         velocity = float3.zero;
+        look_direction = float3.zero;
+        this.type = type;
 
         transform = t;
         ID = id;

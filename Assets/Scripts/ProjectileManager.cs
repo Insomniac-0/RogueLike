@@ -29,6 +29,9 @@ public unsafe class ProjectileManager : MonoBehaviour
     const int InitialAllocSize = 100;
     const int ProjectileJobBatchSize = 16;
 
+
+    private bool disposed;
+
     // ARRAYS
 
     NativeList<ProjectileData> projectiles;
@@ -41,18 +44,25 @@ public unsafe class ProjectileManager : MonoBehaviour
         mouse_pos = InitResources.GetInputReader.GetMousePositionWS();
     }
 
+    void OnDestroy()
+    {
+        if (!disposed) projectiles.Dispose();
+    }
+
 
     public void Init()
     {
         projectiles = new NativeList<ProjectileData>(InitialAllocSize, Allocator.Persistent);
         projectile_objects = new List<Projectile>(InitialAllocSize);
         projectile_pool = new List<Projectile>(InitialAllocSize);
+        disposed = false;
     }
     public void HardCleanUp()
     {
         projectiles.Dispose();
         projectile_objects.Clear();
         projectile_pool.Clear();
+        disposed = true;
     }
 
     public void SoftCleanUp()

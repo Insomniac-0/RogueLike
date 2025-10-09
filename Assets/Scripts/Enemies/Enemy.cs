@@ -46,30 +46,12 @@ public class Enemy : MonoBehaviour
         blink_speed = 4f;
         sprite_renderer.sharedMaterial = GraphicsResources.GetBlinkerFluid;
 
-        //line_renderer.enabled = false;
+        line_renderer.enabled = false;
         propblock = new MaterialPropertyBlock();
     }
 
-    // void Update()
-    // {
-    //     //if (line_width < 0f) line_width = 1f;
-    //     if (blink_strength > 0)
-    //     {
-    //         blink_strength -= Time.deltaTime * blink_speed;
-    //     }
-    //     float lerp = GraphicsResources.GetBlinkerFluidAnimation.Evaluate(Mathf.Clamp01(blink_strength));
-
-    //     propblock.SetFloat("_BlinkStrength", lerp);
-    //     sprite_renderer.SetPropertyBlock(propblock);
-    //     line_renderer.SetPosition(0, cache_transform.position + (Vector3)line_offset);
-
-    //     line_width -= Time.deltaTime * 2f;
-    //     line_renderer.widthMultiplier = Mathf.Clamp01(line_width);
-    // }
-
     public void UpdateEnemy()
     {
-        if (line_width < 0f) line_width = 1f;
         if (blink_strength > 0)
         {
             blink_strength -= Time.deltaTime * blink_speed;
@@ -78,9 +60,12 @@ public class Enemy : MonoBehaviour
 
         propblock.SetFloat("_BlinkStrength", lerp);
         sprite_renderer.SetPropertyBlock(propblock);
+        if (line_width > 0)
+        {
+            line_width -= Time.deltaTime * 2f;
+            line_renderer.widthMultiplier = Mathf.Clamp01(line_width);
+        }
 
-        line_width -= Time.deltaTime * 2f;
-        line_renderer.widthMultiplier = Mathf.Clamp01(line_width);
     }
 
     public float3 GetPosition() => cache_transform.position;
@@ -91,6 +76,7 @@ public class Enemy : MonoBehaviour
 
     public void SetPosition(float3 position) => cache_transform.position = position;
     public void SetVelocity(float3 velocity) => rb.linearVelocity = velocity.xy;
+    public void SetSprite(Sprite sprite) => sprite_renderer.sprite = sprite;
 
     public void DrawRaycastLine(float3 target)
     {
@@ -99,6 +85,7 @@ public class Enemy : MonoBehaviour
     }
 
     public void ShowLineRenderer(bool b) => line_renderer.enabled = b;
+    public void SetLineWidth(float f) => line_width = f;
 
 
 

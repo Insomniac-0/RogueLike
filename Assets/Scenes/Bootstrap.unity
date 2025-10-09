@@ -187,12 +187,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EntityManagerBehaviour
   enemy_ref: {fileID: 20494445584451619, guid: d3dffe71d1c01c1f0bc8dc5ea29f9275, type: 3}
-  EnemyDataTemplates:
-  - {fileID: 11400000, guid: 0f373118bdb11bb499ab7f48f3a2c1f5, type: 2}
-  - {fileID: 11400000, guid: 0f373118bdb11bb499ab7f48f3a2c1f5, type: 2}
-  - {fileID: 11400000, guid: 0f373118bdb11bb499ab7f48f3a2c1f5, type: 2}
-  - {fileID: 11400000, guid: 0f373118bdb11bb499ab7f48f3a2c1f5, type: 2}
-  - {fileID: 11400000, guid: 0f373118bdb11bb499ab7f48f3a2c1f5, type: 2}
+  sprites:
+  - {fileID: 549752290560513078, guid: 49457995c711c034b9cfdb727e9d36c8, type: 3}
+  - {fileID: 3093928258459738026, guid: 4f8d0538b2f31b5689a9a9e499746b3b, type: 3}
 --- !u!114 &504046914
 MonoBehaviour:
   m_ObjectHideFlags: 0

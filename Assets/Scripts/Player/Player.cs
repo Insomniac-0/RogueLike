@@ -7,17 +7,23 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
     int prevID;
-    public float Health;
+
+    public float blink_strength;
+    public float blink_speed;
+
     float3 direction;
     Transform cache_transform;
     PlayerBehaviour player_behaviour;
     UpgradeSystem upgrade_system;
     SpriteRenderer sprite_renderer;
 
+    MaterialPropertyBlock propblock;
+
     private Rigidbody2D rb;
 
     void Awake()
     {
+        blink_speed = 4f;
         player_behaviour = GetComponent<PlayerBehaviour>();
         upgrade_system = GetComponent<UpgradeSystem>();
 
@@ -30,7 +36,9 @@ public class Player : MonoBehaviour
     void Start()
     {
         sprite_renderer.sharedMaterial = GraphicsResources.GetBlinkerFluid;
+        propblock = new MaterialPropertyBlock();
     }
+
 
     public float3 GetPosition => cache_transform.position;
 
@@ -43,7 +51,20 @@ public class Player : MonoBehaviour
 
     public Transform GetTransform => cache_transform;
 
-    public void PlayerUpdate() => player_behaviour.UpdatePlayer();
+    public void PlayerUpdate()
+    {
+        player_behaviour.UpdatePlayer();
+
+        if (blink_strength > 0)
+        {
+            blink_strength -= Time.deltaTime * blink_speed;
+        }
+        float lerp = GraphicsResources.GetBlinkerFluidAnimation.Evaluate(Mathf.Clamp01(blink_strength));
+
+        propblock.SetFloat("_BlinkStrength", lerp);
+        sprite_renderer.SetPropertyBlock(propblock);
+    }
+
 
     //public void SetColor(float3 color) => _sprite_renderer.color = new Color(color.x, color.y, color.z);
     public void SetPosition(float3 pos) => cache_transform.position = pos;

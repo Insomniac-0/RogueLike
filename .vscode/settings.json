@@ -66,14 +66,17 @@
     "explorer.fileNesting.patterns": {
         "*.sln": "*.csproj"
     },
-    "dotnet.defaultSolution": "RogueLike.sln",
+    "dotnet.defaultSolution": "Roguelike.sln",
     "cSpell.words": [
         "accum",
         "behaviour",
         "coldown",
         "cooldown",
         "Defence",
+        "lerp",
+        "Mathf",
         "normalizesafe",
+        "propblock",
         "rayhit",
         "Rigidbody",
         "Scriptable",
