@@ -4,6 +4,7 @@ public class UpgradeSystem : MonoBehaviour
 {
 
     int HighScore;
+    int EnemiesKilled;
 
     public struct PlayerLvl
     {
@@ -29,6 +30,7 @@ public class UpgradeSystem : MonoBehaviour
         player_lvl.current_xp = 0f;
 
         HighScore = 0;
+        EnemiesKilled = 0;
         InitResources.GetEventChannel.TriggerXpChange();
         InitResources.GetEventChannel.TriggerLvlUp();
         InitResources.GetEventChannel.TriggerScoreChange();
@@ -72,9 +74,12 @@ public class UpgradeSystem : MonoBehaviour
     }
 
     public void AddScore(int score) => HighScore += score;
+    public void UpdateKills() => EnemiesKilled++;
+
 
     public float GetXpPercentage => player_lvl.current_xp / player_lvl.max_xp;
     public int GetPlayerLvl => player_lvl.lvl;
     public int GetScore => HighScore;
+    public int GetKills => EnemiesKilled;
 
 }

@@ -200,6 +200,12 @@ public unsafe class GameManager : MonoBehaviour
         NullableObjects.GetGameOverUI.gameObject.SetActive(true);
         InitResources.GetEnemyManagerBehaviour.PauseEnemies();
         NullableObjects.GetPlayer.SetVelocity(float3.zero);
+
+        int score = InitResources.GetUpgradeSystem.GetScore;
+        int kills = InitResources.GetUpgradeSystem.GetKills;
+
+        InitResources.GetSaveManager.SaveScore(score, kills);
+
     }
 
     private void InitializeBaseStats()

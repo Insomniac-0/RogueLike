@@ -2,13 +2,13 @@ using System;
 using System.Collections.Generic;
 using System.Data.Common;
 using System.IO;
-using Unity.Collections;
 using UnityEngine;
 
 [Serializable]
 public struct SaveData
 {
-    public int high_score;
+    public int HighScore;
+    public int EnemiesKilled;
 }
 
 
@@ -16,21 +16,20 @@ public struct SaveData
 public class SaveManager : MonoBehaviour
 {
     private SaveData data;
+    [SerializeField] string file_name;
 
-    const string file_name = "SaveData";
 
     string GetPath => Application.persistentDataPath + "/" + file_name + ".json";
 
     void Start()
     {
-        InitResources.GetEventChannel.OnDeath += SaveScore;
+        LoadData();
     }
 
     public void LoadData()
     {
         if (!File.Exists(GetPath))
         {
-            data.high_score = 0;
             SaveData();
             return;
         }
@@ -42,17 +41,24 @@ public class SaveManager : MonoBehaviour
     {
         string jsonfile = JsonUtility.ToJson(data);
         if (!File.Exists(GetPath)) File.Create(GetPath);
+
         File.WriteAllText(GetPath, jsonfile);
     }
-    public void SaveScore()
+
+    public void SaveScore(int score, int kills)
     {
-        LoadData();
-        int score = InitResources.GetUpgradeSystem.GetScore;
-        if (data.high_score < score)
+
+        if (data.HighScore < score)
         {
-            data.high_score = score;
+            data.HighScore = score;
+            data.EnemiesKilled = kills;
             SaveData();
+
+            InitResources.GetEventChannel.TriggerOnNewHighScore();
         }
     }
+
+    public SaveData GetSaveData => data;
+
 }
 

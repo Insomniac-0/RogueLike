@@ -14,6 +14,7 @@ public class EventChannel : MonoBehaviour
     public event Action OnExitGame;
     public event Action OnPlayGame;
     public event Action OnSettingsChange;
+    public event Action OnNewHighScore;
 
 
 
@@ -29,5 +30,6 @@ public class EventChannel : MonoBehaviour
     public void TriggerOnExitGame() => OnExitGame?.Invoke();
     public void TriggerOnPlayGame() => OnPlayGame?.Invoke();
     public void TriggerOnSettingsChange() => OnSettingsChange?.Invoke();
+    public void TriggerOnNewHighScore() => OnNewHighScore?.Invoke();
 }
 

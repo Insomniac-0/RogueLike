@@ -355,6 +355,7 @@ public unsafe class EnemyManagerBehaviour : MonoBehaviour
 
                 InitResources.GetUpgradeSystem.AddExperience(xp);
                 InitResources.GetUpgradeSystem.AddScore(score);
+                InitResources.GetUpgradeSystem.UpdateKills();
                 InitResources.GetEventChannel.TriggerScoreChange();
             }
         }

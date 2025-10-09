@@ -499,6 +499,23 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &2082716773 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8921037676723380241, guid: 9bf2213e97f1de444b4e45c53c805969, type: 3}
+  m_PrefabInstance: {fileID: 585727440236533345}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &2082716774
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2082716773}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a5c040b69cdca674fa374daeac3db38e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: '::'
 --- !u!1001 &585727440236533345
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -871,6 +888,10 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_IntArgument
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 8921037676723380241, guid: 9bf2213e97f1de444b4e45c53c805969, type: 3}
+      propertyPath: m_Name
+      value: HighScoreText
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -878,6 +899,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 7540961185064254635, guid: 9bf2213e97f1de444b4e45c53c805969, type: 3}
       insertIndex: -1
       addedObject: {fileID: 585727440236533347}
+    - targetCorrespondingSourceObject: {fileID: 8921037676723380241, guid: 9bf2213e97f1de444b4e45c53c805969, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2082716774}
     - targetCorrespondingSourceObject: {fileID: 1414050199973415743, guid: 9bf2213e97f1de444b4e45c53c805969, type: 3}
       insertIndex: -1
       addedObject: {fileID: 585727440236533351}
