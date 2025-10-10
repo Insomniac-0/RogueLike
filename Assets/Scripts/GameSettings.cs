@@ -8,10 +8,22 @@ public class GameSettings : MonoBehaviour
     public bool GetFullScreen => fullscreen;
     public float GetVolume => volume;
 
-    public void SetFullScreen(bool b) => fullscreen = b;
-    public void SetVolume(float f) => volume = f;
+    public void SetFullScreen(bool b)
+    {
+        if (b)
+        {
+            Screen.SetResolution(1920, 1080, b);
+        }
+        else
+        {
+            Screen.SetResolution(800, 600, b);
+        }
+    }
 
+
+    public void SetVolume(float f) => volume = f;
     public void SetVsync(bool vsync) => QualitySettings.vSyncCount = vsync ? 1 : -1;
+
 
     void Awake()
     {

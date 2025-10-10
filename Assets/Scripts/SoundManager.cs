@@ -27,28 +27,21 @@ public class SoundManager : MonoBehaviour
         sound_wrappers = new List<SoundWrapper>();
     }
 
-
-    public PrematureDespawnTrigger SpawnSound(in SoundData data)
+    void Start()
+    {
+        InitResources.GetEventChannel.OnSettingsChange += UpdateVolume;
+    }
+    public PrematureDespawnTrigger SpawnSound(SoundData data)
     {
         SoundWrapper wrapper = new SoundWrapper(data);
         sound_wrappers.Add(wrapper);
-        // return () =>
-        // {
-        //     if (sound_wrappers.Contains(wrapper))
-        //     {
-        //         wrapper.Dispose();
-        //         sound_wrappers.Remove(wrapper);
-        //     }
-        // };
-        return PrematureDespawn;
-        void PrematureDespawn()
+        return () =>
         {
-            if (sound_wrappers.Contains(wrapper))
-            {
-                wrapper.Dispose();
-                sound_wrappers.Remove(wrapper);
-            }
-        }
+            SoundWrapper wrap = wrapper;
+            wrapper.Stop();
+            wrapper.Dispose();
+            sound_wrappers.Remove(wrap);
+        };
     }
     public void SoundUpdate()
     {
@@ -60,6 +53,15 @@ public class SoundManager : MonoBehaviour
                 sound_wrappers[i].Dispose();
                 sound_wrappers.RemoveAtSwapBack(i);
             }
+        }
+    }
+
+    public void UpdateVolume()
+    {
+        float volume = InitResources.GetGameSettings.GetVolume;
+        for (int i = 0; i < sound_wrappers.Count; i++)
+        {
+            sound_wrappers[i].SetVolume(volume);
         }
     }
 }
@@ -77,24 +79,30 @@ public class SoundWrapper
         event_instance.getPlaybackState(out state);
         bool game_pause;
         game_pause = pausable && InitResources.GetGameManager.IsPaused;
-        event_instance.setPaused(game_pause);
+        if (game_pause) event_instance.setPaused(true);
     }
 
-    public SoundWrapper(in SoundData data)
+    public SoundWrapper(SoundData data)
     {
         pausable = data.pausable;
         event_instance = RuntimeManager.CreateInstance(data.event_ref);
-        PlaySound();
+        event_instance.setVolume(InitResources.GetGameSettings.GetVolume);
+        event_instance.start();
     }
 
 
+
+
+    public void SetVolume(float volume)
+    {
+        event_instance.setVolume(volume);
+    }
+    public void Stop()
+    {
+        event_instance.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
+    }
     public void Dispose()
     {
-        if (event_instance.isValid()) event_instance.release();
-    }
-    public void PlaySound()
-    {
-        event_instance.setTimelinePosition(0);
-        event_instance.start();
+        event_instance.release();
     }
 }

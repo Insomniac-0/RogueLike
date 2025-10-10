@@ -9,7 +9,6 @@ public class PlayerBehaviour : MonoBehaviour
     [SerializeField] float FireRate;
     [SerializeField] SoundData shooting_sound;
 
-    private ProjectileManager _projectile_manager => InitResources.GetProjectileManager;
 
     float shoot_cooldown;
     float iframe_cooldown;
@@ -62,7 +61,7 @@ public class PlayerBehaviour : MonoBehaviour
     }
     public void UpdatePlayer()
     {
-        if (shoot_cooldown > 0) shoot_cooldown -= Time.deltaTime * FireRate;
+        if (shoot_cooldown > 0) shoot_cooldown -= Time.deltaTime * player_stats.attack_speed;
         if (iframe_cooldown > 0) iframe_cooldown -= Time.deltaTime;
 
 
@@ -71,7 +70,7 @@ public class PlayerBehaviour : MonoBehaviour
 
         if (InitResources.GetInputReader.is_shooting && shoot_cooldown <= 0f)
         {
-            InitResources.GetSoundManager.SpawnSound(shooting_sound);
+
             mouse_pos = InitResources.GetInputReader.GetMousePositionWS();
             TransformData data;
             data.position = player_data.position;
@@ -79,15 +78,12 @@ public class PlayerBehaviour : MonoBehaviour
             direction.z = 0f;
             data.rotation = quaternion.EulerXYZ(0f, 0f, 0f);
             data.scale = new(1f, 1f, 1f);
+            InitResources.GetSoundManager.SpawnSound(shooting_sound);
             InitResources.GetProjectileManager.SpawnProjectile(_projectile_template, data, direction, multipliers.dmg_multiply);
             shoot_cooldown = 1f;
-
-            //InitResources.GetProjectileManager.SpawnProjectile()
         }
 
 
-
-        //Debug.Log($"Moving in direction: {player_data.direction}");
 
         player_data.velocity = player_data.speed * player_data.direction;
         InitResources.GetPlayer.SetVelocity(player_data.velocity);
@@ -97,6 +93,7 @@ public class PlayerBehaviour : MonoBehaviour
 
     public void SetMultipliers(PlayerMultipliers m) => multipliers = m;
     public void UpdateMoveSpeed() => player_data.speed = player_stats.move_speed * multipliers.ms_multiply;
+    public void UpdateAttackSpeed() => player_stats.attack_speed *= multipliers.as_multiply;
     public void IncreaseMaxHP(float hp) => player_stats.max_hp += hp;
     public void IncreaseCurrentHP(float hp) => player_stats.current_hp += hp;
     public void SetDamage(float dmg) => multipliers.dmg_multiply += dmg;

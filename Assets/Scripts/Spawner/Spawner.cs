@@ -22,7 +22,6 @@ public class Spawner : MonoBehaviour
 {
     PrematureDespawnTrigger StopThemeSound;
     Transform cache_transform;
-    [SerializeField] SoundData MainMusic;
     [SerializeField] Spawn[] spawn_points;
     [SerializeField] EnemyDataSO[] enemy_data;
     [SerializeField] List<Wave> waves;
@@ -44,18 +43,16 @@ public class Spawner : MonoBehaviour
         cache_transform = transform;
         count = 0f;
         spawn_rate = BaseSpawnRate;
-        max_enemies = 250;
+        max_enemies = 1000;
     }
     void Start()
     {
         InitResources.GetEventChannel.OnLvlUp += UpdateSpawnRate;
         point.z = 0;
         player = InitResources.GetPlayer;
-        StopThemeSound = InitResources.GetSoundManager.SpawnSound(MainMusic);
     }
     void OnDestroy()
     {
-        StopThemeSound();
     }
     private void UpdateSpawnRate()
     {

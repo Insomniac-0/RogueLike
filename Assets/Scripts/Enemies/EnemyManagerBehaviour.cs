@@ -19,6 +19,8 @@ public unsafe class EnemyManagerBehaviour : MonoBehaviour
     [SerializeField] Enemy enemy_ref;
     [SerializeField] Sprite[] sprites;
     [SerializeField] SoundData laser_sound;
+    [SerializeField] SoundData BatDeathSound;
+    [SerializeField] SoundData SkullDeathSound;
 
     float delta_time;
 
@@ -317,10 +319,12 @@ public unsafe class EnemyManagerBehaviour : MonoBehaviour
                     case EnemyType.SKULL:
                         score = 1;
                         xp = 5;
+                        InitResources.GetSoundManager.SpawnSound(SkullDeathSound);
                         break;
                     case EnemyType.BAT:
                         score = 2;
                         xp = 10;
+                        InitResources.GetSoundManager.SpawnSound(BatDeathSound);
                         break;
                     default:
                         score = 0;

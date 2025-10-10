@@ -270,10 +270,10 @@ MonoBehaviour:
       HasValue: 1
     DSPBufferLength:
       Value: 0
-      HasValue: 0
+      HasValue: 1
     DSPBufferCount:
       Value: 0
-      HasValue: 0
+      HasValue: 1
     Plugins:
       Value: []
       HasValue: 0
@@ -314,7 +314,7 @@ MonoBehaviour:
   ShowBankRefreshWindow: 1
   AutomaticEventLoading: 1
   BankLoadType: 0
-  AutomaticSampleLoading: 0
+  AutomaticSampleLoading: 1
   EncryptionKey: 
   ImportType: 0
   TargetAssetPath: FMODBanks
@@ -333,8 +333,11 @@ MonoBehaviour:
   MasterBanks:
   - Master
   Banks:
+  - DeathSounds
+  - Impact
   - Music
   - Shooting
+  - Upgrade
   BanksToLoad: []
   LiveUpdatePort: 9264
   EnableMemoryTracking: 0

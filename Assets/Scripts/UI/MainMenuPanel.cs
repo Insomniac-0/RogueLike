@@ -1,4 +1,5 @@
 using System;
+using JetBrains.Annotations;
 using UnityEngine;
 
 public class MainMenuPanel : MonoBehaviour
@@ -52,6 +53,11 @@ public class MainMenuPanel : MonoBehaviour
     }
 
 
+    public void SetFullscreen(bool b)
+    {
+        InitResources.GetGameSettings.SetFullScreen(b);
+        InitResources.GetEventChannel.TriggerOnSettingsChange();
+    }
     public void SetVolume(float f)
     {
         InitResources.GetGameSettings.SetVolume(f);

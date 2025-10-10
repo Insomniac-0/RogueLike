@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.03.00">
+	<object class="AudioFile" id="{59534ce4-dafe-49e2-8847-3750d77b39f7}">
+		<property name="note" />
+		<property name="assetPath">
+			<value>sfx_deathscream_alien2.wav</value>
+		</property>
+		<property name="frequencyInKHz">
+			<value>44.0999985</value>
+		</property>
+		<property name="channelCount">
+			<value>1</value>
+		</property>
+		<property name="length">
+			<value>0.78222222222222226</value>
+		</property>
+		<relationship name="masterAssetFolder">
+			<destination>{47796c8d-9fcb-4c9c-a334-8f85c30ce25e}</destination>
+		</relationship>
+	</object>
+</objects>

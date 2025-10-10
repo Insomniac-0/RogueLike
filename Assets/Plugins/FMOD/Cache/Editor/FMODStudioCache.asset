@@ -15,11 +15,38 @@ MonoBehaviour:
   Path: Assets/AudioEngine/Project/boba/Build/Desktop/Master.bank
   Name: Master
   StudioPath: bank:/Master
-  lastModified: 638956521146702088
+  lastModified: 638957066216956902
   FileSizes:
   - Name: Desktop
     Value: 1074
   Exists: 1
+--- !u!114 &-4677120080232228713
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Lasers/PlayerLaser
+  m_EditorClassIdentifier: FMODUnityEditor::FMODUnity.EditorEventRef
+  Path: event:/Lasers/PlayerLaser
+  Guid:
+    Data1: 1933096476
+    Data2: 1282351848
+    Data3: -2146597756
+    Data4: -819402262
+  Banks:
+  - {fileID: 1196306423951711153}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 491
 --- !u!114 &-4424614902847008250
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -63,11 +90,92 @@ MonoBehaviour:
   Path: Assets/AudioEngine/Project/boba/Build/Desktop/Music.bank
   Name: Music
   StudioPath: bank:/Music
-  lastModified: 638956521164041861
+  lastModified: 638957181455065190
   FileSizes:
   - Name: Desktop
-    Value: 1370624
+    Value: 4304736
   Exists: 1
+--- !u!114 &-1935311219792455402
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Music/GameMusic
+  m_EditorClassIdentifier: FMODUnityEditor::FMODUnity.EditorEventRef
+  Path: event:/Music/GameMusic
+  Guid:
+    Data1: -1229130882
+    Data2: 1166498942
+    Data3: 1824083371
+    Data4: 272687459
+  Banks:
+  - {fileID: -4235166609524696136}
+  IsStream: 1
+  Is3D: 0
+  IsOneShot: 0
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 145475
+--- !u!114 &-471109847251334738
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/DeathSounds/Enemy/SkullDeath
+  m_EditorClassIdentifier: FMODUnityEditor::FMODUnity.EditorEventRef
+  Path: event:/DeathSounds/Enemy/SkullDeath
+  Guid:
+    Data1: -586691893
+    Data2: 1112838725
+    Data3: -523380071
+    Data4: -1572520353
+  Banks:
+  - {fileID: 4276076971523177982}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 446
+--- !u!114 &-72735147359651639
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/DeathSounds/Enemy/BatDeath
+  m_EditorClassIdentifier: FMODUnityEditor::FMODUnity.EditorEventRef
+  Path: event:/DeathSounds/Enemy/BatDeath
+  Guid:
+    Data1: 1456636669
+    Data2: 1165208407
+    Data3: -1768464999
+    Data4: 744912070
+  Banks:
+  - {fileID: 4276076971523177982}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 782
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -85,21 +193,39 @@ MonoBehaviour:
   - {fileID: -9070092001988486565}
   - {fileID: 1196306423951711153}
   - {fileID: -4235166609524696136}
+  - {fileID: 4276076971523177982}
+  - {fileID: 6424392443978181148}
+  - {fileID: 1357041412978898842}
   EditorEvents:
   - {fileID: -4424614902847008250}
-  - {fileID: 7570827172643478083}
+  - {fileID: -1935311219792455402}
+  - {fileID: -471109847251334738}
+  - {fileID: -72735147359651639}
+  - {fileID: 5796798851651514025}
+  - {fileID: -4677120080232228713}
+  - {fileID: 6089713258022033560}
   EditorParameters: []
   MasterBanks:
   - {fileID: -9070092001988486565}
   StringsBanks:
   - {fileID: 3698778102824305851}
   cacheVersion: 131849
-  cacheTime: 638956521164041861
+  cacheTime: 638957181455065190
   SerializableEventsDict:
   - key: event:/Lasers/EnemyLaser
     index: 0
-  - key: event:/ThemeSongs/IngameMusic
+  - key: event:/Music/GameMusic
     index: 1
+  - key: event:/DeathSounds/Enemy/SkullDeath
+    index: 2
+  - key: event:/DeathSounds/Enemy/BatDeath
+    index: 3
+  - key: event:/Music/MenuMusic
+    index: 4
+  - key: event:/Lasers/PlayerLaser
+    index: 5
+  - key: event:/Upgrade/LVLUP
+    index: 6
 --- !u!114 &1196306423951711153
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -115,10 +241,30 @@ MonoBehaviour:
   Path: Assets/AudioEngine/Project/boba/Build/Desktop/Shooting.bank
   Name: Shooting
   StudioPath: bank:/Shooting
-  lastModified: 638956238018008125
+  lastModified: 638957173803862741
   FileSizes:
   - Name: Desktop
-    Value: 4032
+    Value: 9504
+  Exists: 1
+--- !u!114 &1357041412978898842
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c18180ecb35941f4682ae60107b85b7c, type: 3}
+  m_Name: bank:/Upgrade.bank
+  m_EditorClassIdentifier: FMODUnityEditor::FMODUnity.EditorBankRef
+  Path: Assets/AudioEngine/Project/boba/Build/Desktop/Upgrade.bank
+  Name: Upgrade
+  StudioPath: bank:/Upgrade
+  lastModified: 638957066250401859
+  FileSizes:
+  - Name: Desktop
+    Value: 6784
   Exists: 1
 --- !u!114 &3698778102824305851
 MonoBehaviour:
@@ -135,10 +281,104 @@ MonoBehaviour:
   Path: Assets/AudioEngine/Project/boba/Build/Desktop/Master.strings.bank
   Name: Master.strings
   StudioPath: bank:/Master.strings
-  lastModified: 638956521146717350
+  lastModified: 638957066216978172
   FileSizes:
   - Name: Desktop
-    Value: 998
+    Value: 1368
+  Exists: 1
+--- !u!114 &4276076971523177982
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c18180ecb35941f4682ae60107b85b7c, type: 3}
+  m_Name: bank:/DeathSounds.bank
+  m_EditorClassIdentifier: FMODUnityEditor::FMODUnity.EditorBankRef
+  Path: Assets/AudioEngine/Project/boba/Build/Desktop/DeathSounds.bank
+  Name: DeathSounds
+  StudioPath: bank:/DeathSounds
+  lastModified: 638957173804414703
+  FileSizes:
+  - Name: Desktop
+    Value: 14240
+  Exists: 1
+--- !u!114 &5796798851651514025
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Music/MenuMusic
+  m_EditorClassIdentifier: FMODUnityEditor::FMODUnity.EditorEventRef
+  Path: event:/Music/MenuMusic
+  Guid:
+    Data1: -644296304
+    Data2: 1305824177
+    Data3: 2081143708
+    Data4: -711396651
+  Banks:
+  - {fileID: -4235166609524696136}
+  IsStream: 1
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 194063
+--- !u!114 &6089713258022033560
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Upgrade/LVLUP
+  m_EditorClassIdentifier: FMODUnityEditor::FMODUnity.EditorEventRef
+  Path: event:/Upgrade/LVLUP
+  Guid:
+    Data1: 245302557
+    Data2: 1181997026
+    Data3: 431384192
+    Data4: -1400757121
+  Banks:
+  - {fileID: 1357041412978898842}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 516
+--- !u!114 &6424392443978181148
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c18180ecb35941f4682ae60107b85b7c, type: 3}
+  m_Name: bank:/Impact.bank
+  m_EditorClassIdentifier: FMODUnityEditor::FMODUnity.EditorBankRef
+  Path: Assets/AudioEngine/Project/boba/Build/Desktop/Impact.bank
+  Name: Impact
+  StudioPath: bank:/Impact
+  lastModified: 638957066249908083
+  FileSizes:
+  - Name: Desktop
+    Value: 506
   Exists: 1
 --- !u!114 &6426601914969332198
 MonoBehaviour:
@@ -164,30 +404,3 @@ MonoBehaviour:
   IsGlobal: 0
   Labels: []
   Exists: 1
---- !u!114 &7570827172643478083
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
-  m_Name: event:/ThemeSongs/IngameMusic
-  m_EditorClassIdentifier: FMODUnityEditor::FMODUnity.EditorEventRef
-  Path: event:/ThemeSongs/IngameMusic
-  Guid:
-    Data1: -1229130882
-    Data2: 1166498942
-    Data3: 1824083371
-    Data4: 272687459
-  Banks:
-  - {fileID: -4235166609524696136}
-  IsStream: 1
-  Is3D: 0
-  IsOneShot: 0
-  Parameters: []
-  MinDistance: 1
-  MaxDistance: 20
-  Length: 102857

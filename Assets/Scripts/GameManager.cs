@@ -10,6 +10,7 @@ using UnityEngine.Rendering;
 public unsafe class GameManager : MonoBehaviour
 {
     [SerializeField] PlayerDataSO _base_stats_template;
+    [SerializeField] SoundData LvlUpSound;
 
 
     public bool PlayMode;
@@ -34,6 +35,7 @@ public unsafe class GameManager : MonoBehaviour
     {
         InitResources.GetInputReader.inputs.GeneralActions.Pause.performed += _ => PauseSwitch();
         InitResources.GetEventChannel.OnLvlUp += UpgradeState;
+        InitResources.GetEventChannel.OnLvlUp += PlayLvlUpSound;
         InitResources.GetEventChannel.OnDeath += DeathState;
         PlayMode = false;
     }
@@ -211,6 +213,11 @@ public unsafe class GameManager : MonoBehaviour
 
         InitResources.GetSaveManager.SaveScore(score, kills);
 
+    }
+
+    private void PlayLvlUpSound()
+    {
+        InitResources.GetSoundManager.SpawnSound(LvlUpSound);
     }
 
     private void InitializeBaseStats()

@@ -2,9 +2,11 @@ using UnityEngine;
 
 public class UpgradeSystem : MonoBehaviour
 {
-
     int HighScore;
     int EnemiesKilled;
+
+    Upgrade[] upgrades;
+
 
     public struct PlayerLvl
     {
@@ -13,11 +15,6 @@ public class UpgradeSystem : MonoBehaviour
         public float current_xp;
     }
 
-    public struct Upgrade
-    {
-        public ScalingType scaling_type;
-        float value;
-    }
 
 
     PlayerLvl player_lvl;
@@ -51,27 +48,41 @@ public class UpgradeSystem : MonoBehaviour
         InitResources.GetEventChannel.TriggerXpChange();
     }
 
-    public void UpgradeMovementSpeed()
+    public void UpgradeMovementSpeed_M(float f)
     {
         PlayerMultipliers m = InitResources.GetPlayer.GetPlayerBehaviour.GetMultipliers;
-        m.ms_multiply *= 1.2f;
+        m.ms_multiply *= f;
         InitResources.GetPlayer.GetPlayerBehaviour.SetMultipliers(m);
         InitResources.GetPlayer.GetPlayerBehaviour.UpdateMoveSpeed();
     }
+    public void UpgradeMovementSpeed() => UpgradeMovementSpeed_M(1.2f);
 
-    public void UpgradeMaxHealth()
+    public void UpgradeMaxHealth_A(float f)
     {
-        InitResources.GetPlayer.GetPlayerBehaviour.IncreaseMaxHP(10);
-        InitResources.GetPlayer.GetPlayerBehaviour.IncreaseCurrentHP(10);
+        InitResources.GetPlayer.GetPlayerBehaviour.IncreaseMaxHP(f);
+        InitResources.GetPlayer.GetPlayerBehaviour.IncreaseCurrentHP(f);
         InitResources.GetEventChannel.TriggerHealthChange();
     }
 
-    public void UpgradeDamage()
+    public void UpgradeFireRate_M(float f)
     {
         PlayerMultipliers m = InitResources.GetPlayer.GetPlayerBehaviour.GetMultipliers;
-        m.dmg_multiply *= 1.2f;
+        m.as_multiply *= f;
+        InitResources.GetPlayer.GetPlayerBehaviour.SetMultipliers(m);
+        InitResources.GetPlayer.GetPlayerBehaviour.UpdateAttackSpeed();
+    }
+
+    public void UpgradeFireRate() => UpgradeFireRate_M(1.2f);
+
+    public void UpgradeMaxHealth() => UpgradeMaxHealth_A(10f);
+
+    public void UpgradeDamage_M(float f)
+    {
+        PlayerMultipliers m = InitResources.GetPlayer.GetPlayerBehaviour.GetMultipliers;
+        m.dmg_multiply *= f;
         InitResources.GetPlayer.GetPlayerBehaviour.SetMultipliers(m);
     }
+    public void UpgradeDamage() => UpgradeDamage_M(1.2f);
 
     public void AddScore(int score) => HighScore += score;
     public void UpdateKills() => EnemiesKilled++;

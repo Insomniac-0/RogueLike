@@ -3,8 +3,16 @@ using UnityEngine.SceneManagement;
 
 public class MenuController : MonoBehaviour
 {
+    [SerializeField] SoundData GameMusic;
+    PrematureDespawnTrigger StopGameMusic;
+
+    void Awake()
+    {
+
+    }
     void Start()
     {
+        StopGameMusic = InitResources.GetSoundManager.SpawnSound(GameMusic);
         InitResources.GetGameManager.PlayMode = true;
         InitResources.GetGameManager.SetState(GameManager.GameState.PLAY);
         InitResources.GetGameManager.StateInit(GameManager.GameState.PLAY);
@@ -12,6 +20,7 @@ public class MenuController : MonoBehaviour
     public void UpgradeMoveSpeed() => InitResources.GetUpgradeSystem.UpgradeMovementSpeed();
     public void UpgradeHealth() => InitResources.GetUpgradeSystem.UpgradeMaxHealth();
     public void UpgradeDMG() => InitResources.GetUpgradeSystem.UpgradeDamage();
+    public void UpgradeAS() => InitResources.GetUpgradeSystem.UpgradeFireRate();
 
     public void EnterPlayState()
     {
@@ -28,10 +37,11 @@ public class MenuController : MonoBehaviour
     }
     public void ExitGame()
     {
+
+        StopGameMusic();
         InitResources.GetGameManager.PlayMode = false;
         InitResources.GetInputReader.inputs.GeneralActions.Disable();
         InitResources.HardCleanUp();
         SceneManager.LoadSceneAsync(1);
-
     }
 }

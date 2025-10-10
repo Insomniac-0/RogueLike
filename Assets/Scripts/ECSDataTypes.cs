@@ -23,8 +23,17 @@ public enum EnemyType
 
 public struct Upgrade
 {
-    ScalingType scaling;
-    float value;
+    string context;
+    float dmg_multiply;
+    float ms_multiply;
+    float fr_multiply;
+    float hp_additive;
+
+    public void Execute()
+    {
+        InitResources.GetUpgradeSystem.UpgradeDamage_M(dmg_multiply);
+        InitResources.GetUpgradeSystem.UpgradeMaxHealth_A(hp_additive);
+    }
 }
 
 public struct PlayerStats
@@ -168,12 +177,5 @@ public struct EntityData
 
         this.active = active;
 
-    }
-
-    public enum ColliderType
-    {
-        ENTITY,
-        PROJECTILE,
-        ATTACK,
     }
 }
