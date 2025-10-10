@@ -1,0 +1,80 @@
+
+-3 Most Challenging features:
+
+I don't think there was alot of specific features that stood out as more challanging than the others but
+creating my systems and adding features to the systems was.
+
+Also the job system and pooling is a bit related when it comes to what made them challanging.
+
+1. Enemy/Projectile Job systems
+- What was the feature?
+    Enemy Vareiety
+
+- Why was it challenging?
+
+    Because because i did not want to create a different struct and different job for every enemy type
+    since I feel that would defeat the purpose of job system in first place, escpecially since the different enemies 
+    use alot of the same data and behaviour. so I wanted to make the job system do as much as possible.
+
+- How did you solve it?
+
+    I solved this by creating different enums for the enemy struct one for enemy type and one for enemy state
+    and then i created some functions inside the job system to be used by the enemies with different parameters depending on type and state etc.
+    I also made all enemies ranged but just made the "melee" enemies have really low range
+    It still is not the most convenient way of adding different enemies but is the choice i made and the choice I will do in the future since i prioritize performance over conveniency
+
+- Would you do it differently next time and how?
+    I would still want to use the job system but I have learnt alot more about Jobs now so It would probably be alot easier to plan out the job ahead of time.
+    I will also try to find a a better way to structure it after the assignment when i don't have a deadline to worry about
+
+
+2. Enemy/Projectile Pooling
+
+- What was the feature?
+    Object Pooling
+
+- Why was it challenging?
+    It was challanging since i used the job system for my enemies and projectiles,  and the job system don't work with managed types.
+    The hardest thing i got stuck on was probably keeping track of the order when constantly adding and removing from them.
+
+- How did you solve it?
+    I solved it by using a nativelist for my struct of enemies/projectiles that contained all the data, and then 2 regular lists one for the active objects and one for the inactive objects
+    that acted as my pool. and the nativelist I can then pass to my job with AsDefferedArray, doing all the calculations needed, after the job i updated the objects using getters and setters,
+    while checking for conditions such as lifetime and hp  to see what needs to be removed, and i kept track of the list order with an ID and iterated over the list with a reverse for loop
+    and using RemoveAtSwapBack and setting a new id to the enemy/projectile that moved from the back to the current index;
+
+
+- Would you do it differently next time and how?
+    As I said before i would still want to use the job system, but after doing alot of bugfixing I should be able to prevent them next time I do it.
+
+
+3. FMOD Audio
+- What was the feature?
+    Muisc & SFX
+
+- Why was it challenging?
+    I found it challanging because I think the API for fmod is a bit wierd,
+    and the documentation is not the best. One example of this is when i want to free/dispose a EventInstance i call EventInstance.Release()
+    and i only later found out that release does not get rid of the instance it only marks it to get destroyed whenever the state is set to not playing.
+
+- How did you solve it?
+    The way I solved the wierd API was to create a wrapper for it, so i only to interact with that instead of the api directly.
+    I still have to use the API everytime i want some new feature from fmod but i generally only have to do it and get it right once.
+
+- Would you do it differently next time and how?
+    In general I like fmod and it seems really powerful so i think i will try learn more about it and hopefully understand the api better to create a more complete wrapper to get access to more features
+    from fmod
+
+Structure of my work:
+- In what order did you do your features?
+    I don't remember the order exactly but roughly I did my Input handling first so I could get my movement going, after that I messed around with alot if different variations of combat mechanics from
+    Shooting mechanics similar to binding of isaac where you shoot with arrow keys and move with wasd, but i eventually settled on aiming with mouse and moving with wasd. after that i started to create my
+    enemies and later came jobs and pooling. and the last steps was creating spawner, ui stuff, settings, state machine.
+
+- Did you plan before you created features, or did you just iterate over time?
+    I had some sort of plan but I mostly just tried a bunch stuff i thought seemed interesting at the time. 
+    
+ What tools/resources did you use?
+    Appart from the lectures and the help from mentors, I mainly read the documentation, articles, smaller ebooks from unity, but I also watched some youtube videos on different topics.
+    And I also played some similar games to get inspiration.
+
