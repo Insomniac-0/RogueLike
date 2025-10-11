@@ -76,6 +76,4 @@ public class Player : MonoBehaviour
     public float3 GetDirection => direction;
 
     public void RaycastHit() => Debug.Log("HIT");
-
-
 }

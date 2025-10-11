@@ -24,7 +24,7 @@ public class InitResources : MonoBehaviour
     private GraphicsResources graphics_resources;
     private GameManager game_manager;
     private SaveManager save_manager;
-    public GameSettings game_settings;
+    private GameSettings game_settings;
 
 
     void Awake()

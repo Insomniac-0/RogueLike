@@ -15,7 +15,7 @@ MonoBehaviour:
   Path: Assets/AudioEngine/Project/boba/Build/Desktop/Master.bank
   Name: Master
   StudioPath: bank:/Master
-  lastModified: 638957066216956902
+  lastModified: 638957421195919722
   FileSizes:
   - Name: Desktop
     Value: 1074
@@ -90,7 +90,7 @@ MonoBehaviour:
   Path: Assets/AudioEngine/Project/boba/Build/Desktop/Music.bank
   Name: Music
   StudioPath: bank:/Music
-  lastModified: 638957181455065190
+  lastModified: 638957421195953040
   FileSizes:
   - Name: Desktop
     Value: 4304736
@@ -210,7 +210,7 @@ MonoBehaviour:
   StringsBanks:
   - {fileID: 3698778102824305851}
   cacheVersion: 131849
-  cacheTime: 638957181455065190
+  cacheTime: 638957421195953040
   SerializableEventsDict:
   - key: event:/Lasers/EnemyLaser
     index: 0
@@ -241,7 +241,7 @@ MonoBehaviour:
   Path: Assets/AudioEngine/Project/boba/Build/Desktop/Shooting.bank
   Name: Shooting
   StudioPath: bank:/Shooting
-  lastModified: 638957173803862741
+  lastModified: 638957421195953040
   FileSizes:
   - Name: Desktop
     Value: 9504
@@ -261,7 +261,7 @@ MonoBehaviour:
   Path: Assets/AudioEngine/Project/boba/Build/Desktop/Upgrade.bank
   Name: Upgrade
   StudioPath: bank:/Upgrade
-  lastModified: 638957066250401859
+  lastModified: 638957421195953040
   FileSizes:
   - Name: Desktop
     Value: 6784
@@ -281,7 +281,7 @@ MonoBehaviour:
   Path: Assets/AudioEngine/Project/boba/Build/Desktop/Master.strings.bank
   Name: Master.strings
   StudioPath: bank:/Master.strings
-  lastModified: 638957066216978172
+  lastModified: 638957421195919722
   FileSizes:
   - Name: Desktop
     Value: 1368
@@ -301,7 +301,7 @@ MonoBehaviour:
   Path: Assets/AudioEngine/Project/boba/Build/Desktop/DeathSounds.bank
   Name: DeathSounds
   StudioPath: bank:/DeathSounds
-  lastModified: 638957173804414703
+  lastModified: 638957421195919722
   FileSizes:
   - Name: Desktop
     Value: 14240
@@ -375,7 +375,7 @@ MonoBehaviour:
   Path: Assets/AudioEngine/Project/boba/Build/Desktop/Impact.bank
   Name: Impact
   StudioPath: bank:/Impact
-  lastModified: 638957066249908083
+  lastModified: 638957421195919722
   FileSizes:
   - Name: Desktop
     Value: 506

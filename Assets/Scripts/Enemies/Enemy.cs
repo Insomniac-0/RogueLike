@@ -21,10 +21,6 @@ public class Enemy : MonoBehaviour
 
     float3 line_offset;
 
-
-
-
-
     Transform cache_transform;
 
     void Awake()
