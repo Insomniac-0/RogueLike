@@ -1,18 +1,30 @@
 using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.CompilerServices;
+using AOT;
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Collections.LowLevel.Unsafe;
 using Unity.Entities;
-using Unity.Entities.UniversalDelegates;
 using Unity.Jobs;
 using Unity.Mathematics;
-using Unity.VisualScripting;
 using UnityEngine;
 
+
+
+
+[BurstCompile]
 public unsafe class ProjectileManager : MonoBehaviour
 {
+
+    [BurstCompile]
+    [MonoPInvokeCallback(typeof(ProcessFloatsDelegate))]
+    public static float AddFloats(float a, float b) => a + b;
+
+    [BurstCompile]
+    [MonoPInvokeCallback(typeof(ProcessFloatsDelegate))]
+    public static float MultiplyFloats(float a, float b) => a * b;
+
+    public delegate float ProcessFloatsDelegate(float a, float b);
 
     [SerializeField] Projectile projectile_ref;
     [SerializeField] private List<ProjectileDataSO> _projectile_templates;
@@ -23,6 +35,7 @@ public unsafe class ProjectileManager : MonoBehaviour
     Player player;
 
     float delta_time;
+    float[] randoms;
 
     float3 mouse_pos;
 
@@ -39,9 +52,19 @@ public unsafe class ProjectileManager : MonoBehaviour
     List<Projectile> projectile_objects;
     List<Projectile> projectile_pool;
 
+
+    // Function Pointers
+    //FunctionPointer<FunnyFunction>;
+
+
+    FunctionPointer<ProcessFloatsDelegate> MultFuncPtr;
+    FunctionPointer<ProcessFloatsDelegate> AddFuncPtr;
     void Start()
     {
         mouse_pos = InitResources.GetInputReader.GetMousePositionWS();
+        MultFuncPtr = BurstCompiler.CompileFunctionPointer<ProcessFloatsDelegate>(MultiplyFloats);
+        AddFuncPtr = BurstCompiler.CompileFunctionPointer<ProcessFloatsDelegate>(AddFloats);
+        randoms = new float[2];
     }
 
     void OnDestroy()
@@ -81,11 +104,17 @@ public unsafe class ProjectileManager : MonoBehaviour
     {
 
         delta_time = Time.deltaTime;
+        randoms[0] = UnityEngine.Random.Range(-1f, 1f);
+        randoms[1] = UnityEngine.Random.Range(-1f, 1f);
 
         ProjectileMovementJob projectile_job = new ProjectileMovementJob
         {
+            AddFuncPtr = AddFuncPtr,
+            MultFuncPtr = MultFuncPtr,
             projectiles = projectiles.AsDeferredJobArray(),
             delta_time = delta_time,
+            x_rand = randoms[0],
+            y_rand = randoms[1],
         };
 
         JobHandle handle = projectile_job.Schedule(projectile_objects.Count, ProjectileJobBatchSize);
@@ -98,13 +127,18 @@ public unsafe class ProjectileManager : MonoBehaviour
     [BurstCompile]
     struct ProjectileMovementJob : IJobParallelFor
     {
+        public FunctionPointer<ProcessFloatsDelegate> AddFuncPtr;
+        public FunctionPointer<ProcessFloatsDelegate> MultFuncPtr;
         public NativeArray<ProjectileData> projectiles;
         public float delta_time;
+        public float x_rand;
+        public float y_rand;
 
         public void Execute(int index)
         {
             ProjectileData* ptr = &((ProjectileData*)projectiles.GetUnsafePtr())[index];
             if (!ptr->active) return;
+            ptr->speed = AddFuncPtr.Invoke(ptr->speed, -1f);
             ptr->transform.position += ptr->direction * ptr->speed * delta_time;
         }
     }
