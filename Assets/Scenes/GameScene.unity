@@ -17632,7 +17632,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: -2393588752895506220, guid: 642e2fb9771bdc0b5ba0a55af2f2f2ee, type: 3}
+  m_Sprite: {fileID: 8326008176639351676, guid: 793520febb8d42f40bbc8331f88a3be2, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -17650,15 +17650,16 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1401951784}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3eaef751b71e048388c61418c0ea87c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerAnimation
-  _player_atlas: {fileID: 100100200, guid: cdbf30780b790707c85ec6b1122754c6, type: 3}
   sprites:
-  - {fileID: 2659223304142836206, guid: 6e8c472f4cc1e8bd5b602ed342fe404b, type: 3}
-  - {fileID: 3471232064818825078, guid: 6e8c472f4cc1e8bd5b602ed342fe404b, type: 3}
+  - {fileID: 8326008176639351676, guid: 793520febb8d42f40bbc8331f88a3be2, type: 3}
+  - {fileID: -2648765289801008986, guid: 793520febb8d42f40bbc8331f88a3be2, type: 3}
+  - {fileID: -5837697001141186974, guid: 793520febb8d42f40bbc8331f88a3be2, type: 3}
+  - {fileID: 108819031756587886, guid: 793520febb8d42f40bbc8331f88a3be2, type: 3}
 --- !u!61 &1401951792
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -17697,7 +17698,7 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 0.9375, y: 0.875}
+    oldSize: {x: 0.5625, y: 0.65625}
     newSize: {x: 0.5625, y: 1.125}
     adaptiveTilingThreshold: 0.5
     drawMode: 0

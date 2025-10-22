@@ -225,13 +225,8 @@ public unsafe class EnemyManagerBehaviour : MonoBehaviour
 
     public void TakeDmg(int ID, float dmg)
     {
-        // EntityData data = enemies[ID];
-        // data.HP -= dmg;
-        // enemies[ID] = data;
-
-        //EntityData* ptr = &((EntityData*)enemies.GetUnsafePtr())[ID];
-
         EntityData* ptr = GetEntityPtr(ID);
+        //EntityData* ptr = &((EntityData*)enemies.GetUnsafePtr())[ID];
         ptr->HP -= dmg;
     }
 
@@ -285,6 +280,7 @@ public unsafe class EnemyManagerBehaviour : MonoBehaviour
 
         for (int i = enemy_objects.Count - 1; i >= 0; i--)
         {
+            //EntityData* ptr = &((EntityData*)enemies.GetUnsafePtr())[i];
             EntityData* ptr = GetEntityPtr(i);
             if (!ptr->active) continue;
             if (ptr->HP > 0)

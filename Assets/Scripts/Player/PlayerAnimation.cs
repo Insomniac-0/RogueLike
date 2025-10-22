@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using GameUtilities.Sprites;
 using Unity.Mathematics;
@@ -7,14 +9,14 @@ using UnityEngine.U2D;
 
 public class PlayerAnimation : MonoBehaviour
 {
-    [SerializeField] private SpriteAtlas _player_atlas;
-    [SerializeField] Sprite[] sprites;
+    [SerializeField] List<Sprite> sprites;
 
 
     private SpriteRenderer _sprite_renderer;
 
 
-    AnimationState animation_state;
+
+    private int _sprite_count;
     float animation_FPS;
     float animation_timer;
     int current_index;
@@ -22,24 +24,19 @@ public class PlayerAnimation : MonoBehaviour
     void Awake()
     {
         _sprite_renderer = GetComponent<SpriteRenderer>();
-
         animation_FPS = 6;
         animation_timer = 0f;
         current_index = 0;
-
-
-
-
     }
     void Start()
     {
-
+        _sprite_count = sprites.Count;
     }
-    void Update()
+
+    public void AnimationUpdate()
     {
         animation_timer += Time.deltaTime;
-        current_index = (int)(animation_timer * animation_FPS) % 2;
+        current_index = (int)(animation_timer * animation_FPS) % _sprite_count;
         _sprite_renderer.sprite = sprites[current_index];
     }
-
 }
