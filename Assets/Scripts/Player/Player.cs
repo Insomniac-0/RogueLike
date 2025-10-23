@@ -15,6 +15,7 @@ public class Player : MonoBehaviour
     PlayerBehaviour player_behaviour;
     UpgradeSystem upgrade_system;
     SpriteRenderer sprite_renderer;
+    private PlayerAnimation _animation;
 
     MaterialPropertyBlock propblock;
 
@@ -24,6 +25,7 @@ public class Player : MonoBehaviour
     {
         blink_speed = 4f;
         player_behaviour = GetComponent<PlayerBehaviour>();
+        _animation = GetComponent<PlayerAnimation>();
         upgrade_system = GetComponent<UpgradeSystem>();
 
         rb = GetComponent<Rigidbody2D>();
@@ -52,8 +54,9 @@ public class Player : MonoBehaviour
 
     public void PlayerUpdate()
     {
-        player_behaviour.UpdatePlayer();
 
+        player_behaviour.UpdatePlayer();
+        _animation.AnimationUpdate();
         if (blink_strength > 0)
         {
             blink_strength -= Time.deltaTime * blink_speed;
